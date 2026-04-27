@@ -40,30 +40,34 @@ The payoff for doing it right is the approach to Mackinac — threading the Stra
   },
 
   {
-    legId: "lake-huron",
-    title: "Lake Huron",
-    subtitle: "Days 7–10 · ~300 nm · Mackinac to Detroit",
-    captainIntro: `You cross from Lake Michigan into Huron under the Mackinac Bridge — 199 feet of clearance, but you'll feel like a toy boat under it regardless. Huron is the quieter, longer, somehow older-feeling Great Lake. Michigan's 'Sunrise Coast' faces east and wears its name honestly: you'll have spectacular dawns breaking over the water with the forested shore to your left.
+    legId: "north-channel",
+    title: "North Channel & Manitoulin Island",
+    subtitle: "Days 7–15 · ~400 nm · Mackinac to Port Huron via Ontario",
+    captainIntro: `Most sailors who do the Great Lakes run miss the North Channel entirely — they peel south off Mackinac and run the Sunrise Coast down Michigan's thumb to Port Huron. It's efficient. It's also the greatest mistake they make on the trip.
 
-Huron is less trafficked by recreational sailors than Michigan, which means the anchorages are quieter and the marinas less crowded, but the service infrastructure is also thinner. Harbor Beach is well-equipped. The towns in between are small and self-sufficient. Plan your fuel stops carefully.
+The North Channel runs east from the Straits of Mackinac between the Canadian mainland and Manitoulin Island — the largest freshwater island in the world — through 200 miles of pink granite shore, clear anchorages, and small Ontario towns where the population is still measured in hundreds. The Benjamin Islands. Baie Fine. Killarney. These are names whispered by Great Lakes sailors the way Atlantic cruisers talk about the Chesapeake or the Maine coast. The water is cold and gin-clear. The anchorages are mostly empty. The skies at night are genuinely dark.
 
-The star of this leg is the St. Clair River — one of the great maritime spectacles in North America. The world's largest freshwater ships, the 1,000-foot lakers, squeeze through a channel that's barely 600 feet wide in places, making a combined-forces approach toward your boat feel like an air traffic control problem. Give them enormous space. Monitor VHF 13 the entire transit. It's exhilarating, it's humbling, and it's absolutely not a place to be off your game.`,
+The logistics are modest: passports for everyone, a CBSA phone check-in at Meldrum Bay, and a US CBP check-in when you return to Port Huron. The rest is sailing through some of the most beautiful freshwater in North America — at anchor, mostly, which is where the North Channel reveals itself best.`,
     sailingTips: [
-      "Lake Huron generates a steep, short chop faster than Lake Michigan because it's slightly shallower in the southern basin. Northerly and southerly winds are worst — both have a very long fetch.",
-      "Alpena (Thunder Bay National Marine Sanctuary) is an excellent diversion stop and a good bailout point if weather deteriorates south of Rogers City. The shipwreck diver community there is friendly and informative.",
-      "The St. Clair River current runs 2–3 knots southbound. You'll feel it push you through. But so will the freighters behind you — don't dally in the channel.",
-      "Lake St. Clair (between the St. Clair and Detroit Rivers) looks like a puddle on the chart but it can kick up a serious chop in 15+ knots. Follow the marked shipping channel — it's dredged to 27 feet; outside it, 6–8 feet is common.",
-      "The Detroit River has some of the heaviest commercial traffic in freshwater. VHF 13. Eyes up. Stay in your lane.",
+      "CBSA (Canadian Customs) check-in is mandatory at your first Canadian port. Meldrum Bay is a designated entry point — phone the CBSA immediately on arrival. Have all passports, vessel registration, MMSI, and crew details ready. You receive a clearance number; keep it for re-entry.",
+      "US CBP re-entry is required at Port Huron when you return. Call 1-800-973-2867 or use the CBP videophone at the marina. Have your CBSA clearance number and all passports ready.",
+      "Little Current swing bridge opens on the hour ONLY — not on demand. Do not arrive mid-hour expecting it to open. Plan your approach and idle outside with the engine in neutral. The current through the channel will set you if you're not paying attention.",
+      "The Georgian Bay crossing from Killarney to Tobermory (~48 nm) is the most exposed water of this leg. Plan for an early departure and check the forecast carefully the evening before — a westerly swell on northern Georgian Bay can be steep and uncomfortable in a 30-footer.",
+      "Top off fuel and groceries at Little Current — the last well-equipped town until Kincardine on the Ontario shore. Meldrum Bay, Kagawong, and Killarney have limited supplies.",
+      "Use Canadian Hydrographic Service (CHS) charts or Navionics with Canadian coverage. The North Channel has rocks the chart does not always emphasize clearly. Go slow when exploring anchorages you haven't read recent notes on.",
     ],
     watchFor: [
-      "Fog on Lake Huron — the temperature differential between the cold lake water and warm summer air can produce morning fog banks that burn off by 10am. Don't rush an early departure if you can't see a mile.",
-      "Freighter passing zones in the St. Clair River — the overtaking/meeting situation between two 1,000-foot ships is not subtle. Give them the whole channel.",
-      "Lake St. Clair's shoal areas outside the main channel — the shoal draft helps (4.3ft) but stay in the buoyed lane.",
+      "Shoals throughout the North Channel — beautiful but rocky. Respect the chart. Don't assume a cove is safe because it looks safe from the cockpit.",
+      "Baie Fine entrance bar — the outer sill is shallow at low water. Favor the north side and enter slowly. Worth every bit of caution.",
+      "Unlit markers in some sections of the North Channel — do not push arrivals into new anchorages after dark.",
+      "Georgian Bay westerly swell — if wind is forecast above 18 knots from the west or northwest, wait at Killarney before the Tobermory crossing. The bay can build quickly.",
     ],
     bestStops: [
-      "Rogers City, MI: Limestone quarry town with a quiet marina and a walk worth taking. The Presque Isle lighthouse (10 nm farther) is beautiful if you have time for the alternate.",
-      "Alpena, MI: Thunder Bay National Marine Sanctuary has an incredible collection of shallow, diveable Great Lakes shipwrecks. The Glass Bottom Boat tours are excellent if you're not a diver.",
-      "Detroit: The Riverwalk from GM Renaissance Center to the Ambassador Bridge is one of the best urban waterfront walks in the Midwest. If you have a crew day off, the Henry Ford Museum/Greenfield Village in nearby Dearborn is extraordinary — a full day easily.",
+      "Baie Fine / The Pool: Anchor here. There is no argument. A 10-mile fjord off the North Channel ending in a granite bowl of 50-foot-deep turquoise water. No marina, no services — just silence, herons, and reflections that look painted. Take the dinghy to the head of the pool.",
+      "Killarney, ON: Historic fishing village with a character that hasn't been sanded down. Herbert's fish & chips (order the pickerel), the Killarney Mountain Lodge for a drink with a view, and the clearest freshwater you will see on this trip. Provincial Park hiking on the La Cloche quartzite ridge if you have a day.",
+      "Little Current, ON: Best-provisioned stop on Manitoulin — grocery, LCBO, hardware, fuel, multiple marinas. The swing bridge opening at the top of each hour has a theatrical quality. The whole channel watches and waits together.",
+      "Kagawong, ON: Blink-and-miss-it village. Bridal Veil Falls is a 10-minute walk from the dock. Genuinely quiet in a way that even the North Channel's other stops are not. Worth a lunch stop at minimum.",
+      "Tobermory, ON: Gateway to Fathom Five National Marine Park. Glass-bottom boat tours over 19th-century shipwrecks in water so clear you can count the bolts from the surface. Big Tub Harbour is one of the most photographed anchorages in Ontario.",
     ],
   },
 

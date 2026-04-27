@@ -4,12 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 const legs = [
-  { label: "Lake Michigan",  days: "1–6",   nm: "~500 nm",          emoji: "🌊", color: "bg-blue-50   border-blue-200"   },
-  { label: "Lake Huron",     days: "7–10",  nm: "~300 nm",          emoji: "🌊", color: "bg-blue-50   border-blue-200"   },
-  { label: "Lake Erie",      days: "11–15", nm: "~250 nm",          emoji: "⛈️",  color: "bg-blue-50   border-blue-200"   },
-  { label: "Erie Canal",     days: "15–20", nm: "338 mi · 34 locks",emoji: "⚓", color: "bg-amber-50  border-amber-200"  },
-  { label: "Hudson River",   days: "21–24", nm: "~134 nm",          emoji: "🌉", color: "bg-emerald-50 border-emerald-200"},
-  { label: "NJ Coast / LIS", days: "25–29", nm: "~150–230 nm",      emoji: "⛵", color: "bg-sky-50    border-sky-200"    },
+  { label: "Lake Michigan",              days: "1–6",   nm: "~500 nm",          emoji: "🌊", color: "bg-blue-50    border-blue-200"  },
+  { label: "North Channel · Manitoulin", days: "7–15",  nm: "~400 nm",          emoji: "🍁", color: "bg-teal-50    border-teal-200"  },
+  { label: "Lake Erie",                  days: "16–20", nm: "~250 nm",          emoji: "⛈️",  color: "bg-blue-50    border-blue-200"  },
+  { label: "Erie Canal",                 days: "20–25", nm: "338 mi · 34 locks",emoji: "⚓", color: "bg-amber-50   border-amber-200" },
+  { label: "Hudson River",               days: "26–29", nm: "~134 nm",          emoji: "🌉", color: "bg-emerald-50  border-emerald-200"},
+  { label: "NJ Coast / LIS",             days: "30–34", nm: "~150–230 nm",      emoji: "⛵", color: "bg-sky-50     border-sky-200"   },
 ];
 
 export default function HomePage() {
@@ -52,7 +52,7 @@ export default function HomePage() {
           <div className="flex flex-wrap gap-3">
             {[
               { icon: Navigation, label: "Total Distance", value: "~1,300 nm" },
-              { icon: CalendarDays, label: "Sailing Days",  value: "~29 days"  },
+              { icon: CalendarDays, label: "Sailing Days",  value: "~34 days"  },
               { icon: "⚓",         label: "Locks",         value: "36 total"  },
               { icon: Wind,         label: "Boat",          value: "Oceanis 30.1" },
               { icon: Clock,        label: "Sabbatical",    value: "8 weeks"   },
@@ -179,12 +179,12 @@ export default function HomePage() {
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { title: "Mast Unstep",    detail: "Tonawanda/Buffalo · Day 15",   sub: "Arr — call Wardell's or Smith Boys well in advance. The crane doesn't wait for fools." },
+            { title: "Mast Unstep",    detail: "Tonawanda/Buffalo · Day 20",   sub: "Arr — call Wardell's or Smith Boys well in advance. The crane doesn't wait for fools." },
             { title: "Canal Transit",  detail: "34 locks · E-2 through E-35",  sub: "20–30 min per lock. Last lock by 4:30pm. Miss the Waterford Flight cutoff and ye sleep on the wrong side." },
-            { title: "Mast Re-step",   detail: "Catskill, NY · Day 21",        sub: "Hop-O-Nose Marina on Catskill Creek. Ring ahead — the crane master is a busy soul." },
-            { title: "Fuel Range",     detail: "~12–17 hr on 25L tank",        sub: "Two 5-gallon jerry cans are not optional on 80 nm Lake Michigan days. Ye'll learn this the hard way or the easy way." },
+            { title: "Mast Re-step",   detail: "Catskill, NY · Day 26",        sub: "Hop-O-Nose Marina on Catskill Creek. Ring ahead — the crane master is a busy soul." },
+            { title: "CBSA / CBP",     detail: "Canada Day 8 · US re-entry Day 14", sub: "Passports for all hands. Phone CBSA at Meldrum Bay on arrival, CBP at Port Huron on return. No exceptions." },
             { title: "Hudson Tides",   detail: "5–6 hr lag vs NYC Battery",    sub: "Troy tide tables, not NYC. Get this wrong and ye'll be bucking the flood all day, ye landlubber." },
-            { title: "Hell Gate",      detail: "East River · Option B Day 25", sub: "4–5 kt current. Slack water window is 45 minutes. Miss it and the current will teach ye respect." },
+            { title: "Hell Gate",      detail: "East River · Option B Day 30", sub: "4–5 kt current. Slack water window is 45 minutes. Miss it and the current will teach ye respect." },
           ].map(({ title, detail, sub }) => (
             <Card key={title} className="treasure-frame">
               <CardContent className="p-4 pt-5">

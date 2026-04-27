@@ -9,9 +9,9 @@ import { AlertTriangle, Star, ChevronDown, ChevronUp, BookOpen, Anchor } from "l
 type RouteOption = "saybrook" | "philly";
 
 const LEG_META: Record<string, { label: string; pill: string }> = {
-  "lake-michigan":  { label: "Lake Michigan",        pill: "bg-blue-100 text-blue-800 border-blue-200" },
-  "lake-huron":     { label: "Lake Huron",            pill: "bg-blue-100 text-blue-800 border-blue-200" },
-  "lake-erie":      { label: "Lake Erie",             pill: "bg-blue-100 text-blue-800 border-blue-200" },
+  "lake-michigan":  { label: "Lake Michigan",              pill: "bg-blue-100 text-blue-800 border-blue-200" },
+  "north-channel":  { label: "North Channel · Manitoulin", pill: "bg-teal-100 text-teal-800 border-teal-200" },
+  "lake-erie":      { label: "Lake Erie",                  pill: "bg-blue-100 text-blue-800 border-blue-200" },
   "erie-canal":     { label: "Erie Canal",            pill: "bg-amber-100 text-amber-800 border-amber-200" },
   "hudson":         { label: "Hudson River",          pill: "bg-emerald-100 text-emerald-800 border-emerald-200" },
   "coast-philly":   { label: "NJ Offshore Coast",     pill: "bg-purple-100 text-purple-800 border-purple-200" },
@@ -49,7 +49,7 @@ export default function ItineraryPage() {
             Ship&rsquo;s Log
           </h1>
           <p className="text-[hsl(var(--muted-foreground))] text-sm mt-1">
-            ~29 sailing days &middot; Departure mid-June 2027
+            ~34 sailing days &middot; Departure mid-June 2027
           </p>
         </div>
         <div className="flex gap-2 bg-[hsl(var(--secondary))] rounded-lg p-1 border border-[hsl(var(--border))]">
