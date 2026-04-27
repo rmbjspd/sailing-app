@@ -15,8 +15,10 @@ export default function JournalPage() {
     <div className="max-w-3xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Trip Journal</h1>
-          <p className="text-gray-500 text-sm mt-1">{entries.length} {entries.length === 1 ? "entry" : "entries"}</p>
+          <h1 className="font-[family-name:var(--font-pirata)] text-3xl text-[hsl(var(--navy))]">Captain&rsquo;s Log</h1>
+          <p className="text-[hsl(var(--muted-foreground))] text-sm mt-1">
+            {entries.length} {entries.length === 1 ? "entry" : "entries"} &mdash; all hands, record your observations
+          </p>
         </div>
         <Button
           onClick={() => setShowForm(f => !f)}
@@ -38,9 +40,9 @@ export default function JournalPage() {
 
       {entries.length === 0 && !showForm && (
         <div className="text-center py-16 text-gray-400">
-          <p className="text-4xl mb-3">📖</p>
-          <p className="font-medium">No journal entries yet</p>
-          <p className="text-sm mt-1">Start writing when the trip begins — or add notes during planning.</p>
+          <p className="text-4xl mb-3">🏴‍☠️</p>
+          <p className="font-medium">The log is empty, Captain</p>
+          <p className="text-sm mt-1">A voyage unrecorded is a voyage forgotten. Start writing.</p>
         </div>
       )}
 

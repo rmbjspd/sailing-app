@@ -1,21 +1,31 @@
 @import "tailwindcss";
+@import "mapbox-gl/dist/mapbox-gl.css";
 
 :root {
-  --background: 220 33% 98%;
-  --foreground: 220 30% 12%;
-  --card: 0 0% 100%;
-  --card-foreground: 220 30% 12%;
-  --primary: 213 74% 28%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 220 20% 94%;
-  --secondary-foreground: 220 30% 20%;
-  --muted: 220 20% 94%;
-  --muted-foreground: 220 15% 48%;
-  --accent: 38 92% 50%;
-  --accent-foreground: 220 30% 12%;
-  --border: 220 20% 88%;
-  --ring: 213 74% 28%;
+  /* Nautical parchment theme */
+  --background: 40 35% 96%;
+  --foreground: 213 50% 14%;
+  --card: 38 40% 99%;
+  --card-foreground: 213 50% 14%;
+  --primary: 213 62% 26%;
+  --primary-foreground: 40 35% 96%;
+  --secondary: 35 28% 90%;
+  --secondary-foreground: 213 40% 22%;
+  --muted: 35 22% 91%;
+  --muted-foreground: 35 18% 48%;
+  --accent: 38 72% 43%;
+  --accent-foreground: 40 35% 96%;
+  --destructive: 0 72% 52%;
+  --destructive-foreground: 40 35% 96%;
+  --border: 35 28% 80%;
+  --input: 35 28% 80%;
+  --ring: 213 62% 26%;
   --radius: 0.5rem;
+  /* custom tokens */
+  --navy: 213 62% 18%;
+  --gold: 38 72% 43%;
+  --parchment: 40 35% 96%;
+  --rope: 35 45% 55%;
 }
 
 @theme inline {
@@ -32,12 +42,39 @@
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
   --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-pirata);
 }
 
 body {
   background: hsl(var(--background));
   color: hsl(var(--foreground));
+}
+
+/* Rope divider utility */
+.rope-divider {
+  border: none;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    hsl(var(--rope)) 0px,
+    hsl(var(--rope)) 8px,
+    transparent 8px,
+    transparent 12px
+  );
+  opacity: 0.5;
+}
+
+/* Parchment card texture */
+.parchment {
+  background: linear-gradient(135deg, hsl(40 40% 98%) 0%, hsl(38 30% 95%) 100%);
+}
+
+/* Captain callout */
+.captain-callout {
+  border-left: 4px solid hsl(var(--accent));
+  background: linear-gradient(to right, hsl(38 60% 96%), transparent);
 }

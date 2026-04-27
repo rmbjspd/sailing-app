@@ -4,7 +4,6 @@ import Map, { Source, Layer, Marker, Popup, NavigationControl } from "react-map-
 import type { LayerProps } from "react-map-gl/mapbox";
 import { waypoints } from "@/lib/data/waypoints";
 import type { Waypoint } from "@/lib/types";
-import "mapbox-gl/dist/mapbox-gl.css";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 

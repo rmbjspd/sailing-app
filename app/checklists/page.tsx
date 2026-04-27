@@ -18,8 +18,8 @@ export default function ChecklistsPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-2">Checklists</h1>
-      <p className="text-gray-500 text-sm mb-6">All items persist in your browser — check off as you pack.</p>
+      <h1 className="font-[family-name:var(--font-pirata)] text-3xl text-[hsl(var(--navy))] mb-1">Provisioning Lists</h1>
+      <p className="text-[hsl(var(--muted-foreground))] text-sm mb-6">Check off as you stow it. State persists in your browser — your progress won&rsquo;t walk the plank.</p>
 
       {/* Group tabs */}
       <div className="flex flex-wrap gap-2 mb-6">
