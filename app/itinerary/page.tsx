@@ -86,6 +86,8 @@ export default function ItineraryPage() {
                   {meta.label}
                 </span>
                 <div className="flex-1 rope-divider" />
+                <span className="text-sm shrink-0" style={{ opacity: 0.45 }}>☠</span>
+                <div className="flex-1 rope-divider" />
               </div>
 
               {/* Captain Bob guide toggle */}
@@ -98,7 +100,7 @@ export default function ItineraryPage() {
                     <BookOpen className="w-4 h-4 text-[hsl(var(--accent))] mt-0.5 shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm text-[hsl(var(--accent))]">
-                        Captain&rsquo;s Briefing: {guide.title}
+                        🦜 Captain&rsquo;s Briefing: {guide.title}
                       </p>
                       <p className="text-xs text-[hsl(var(--muted-foreground))] mt-0.5 truncate">
                         {guide.subtitle}

@@ -39,10 +39,10 @@ export default function JournalPage() {
       )}
 
       {entries.length === 0 && !showForm && (
-        <div className="text-center py-16 text-gray-400">
-          <p className="text-4xl mb-3">🏴‍☠️</p>
-          <p className="font-medium">The log is empty, Captain</p>
-          <p className="text-sm mt-1">A voyage unrecorded is a voyage forgotten. Start writing.</p>
+        <div className="text-center py-16 text-[hsl(var(--muted-foreground))]">
+          <p className="text-5xl mb-3">🦜</p>
+          <p className="font-[family-name:var(--font-pirata)] text-xl text-[hsl(var(--navy))] mb-1">Squawk! Log&apos;s empty, Cap&apos;n!</p>
+          <p className="text-sm">A voyage unrecorded is a voyage forgotten. Every great captain kept a log — even Davy Jones.</p>
         </div>
       )}
 

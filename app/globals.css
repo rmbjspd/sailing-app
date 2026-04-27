@@ -78,3 +78,20 @@ body {
   border-left: 4px solid hsl(var(--accent));
   background: linear-gradient(to right, hsl(38 60% 96%), transparent);
 }
+
+/* Treasure-map card frame */
+.treasure-frame {
+  background: linear-gradient(135deg, hsl(42 45% 97%) 0%, hsl(38 35% 93%) 100%);
+  border: 2px solid hsl(var(--rope));
+  position: relative;
+}
+.treasure-frame::before,
+.treasure-frame::after {
+  content: '✦';
+  position: absolute;
+  font-size: 10px;
+  color: hsl(var(--rope));
+  line-height: 1;
+}
+.treasure-frame::before { top: -7px; left: 50%; transform: translateX(-50%); background: hsl(42 45% 97%); padding: 0 4px; }
+.treasure-frame::after  { bottom: -7px; left: 50%; transform: translateX(-50%); background: hsl(38 35% 93%); padding: 0 4px; }
