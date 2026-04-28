@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Pirata_One } from "next/font/google";
+import { IM_Fell_English, Special_Elite, Pirata_One } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+const imFellEnglish = IM_Fell_English({
+  variable: "--font-fell",
+  weight: "400",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+});
+const specialElite = Special_Elite({
+  variable: "--font-typewriter",
+  weight: "400",
+  subsets: ["latin"],
+});
 const pirataOne = Pirata_One({ variable: "--font-pirata", weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -14,8 +23,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${pirataOne.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-[hsl(var(--background))] text-[hsl(var(--foreground))]">
+    <html
+      lang="en"
+      className={`${imFellEnglish.variable} ${specialElite.variable} ${pirataOne.variable} h-full`}
+    >
+      <body className="min-h-full flex flex-col antialiased">
         <Nav />
         <main className="flex-1">{children}</main>
       </body>

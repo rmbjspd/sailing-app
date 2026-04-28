@@ -2,30 +2,39 @@
 @import "mapbox-gl/dist/mapbox-gl.css";
 
 :root {
-  /* Nautical parchment theme */
-  --background: 40 35% 96%;
-  --foreground: 213 50% 14%;
-  --card: 38 40% 99%;
-  --card-foreground: 213 50% 14%;
-  --primary: 213 62% 26%;
-  --primary-foreground: 40 35% 96%;
-  --secondary: 35 28% 90%;
-  --secondary-foreground: 213 40% 22%;
-  --muted: 35 22% 91%;
-  --muted-foreground: 35 18% 48%;
-  --accent: 38 72% 43%;
-  --accent-foreground: 40 35% 96%;
-  --destructive: 0 72% 52%;
-  --destructive-foreground: 40 35% 96%;
-  --border: 35 28% 80%;
-  --input: 35 28% 80%;
-  --ring: 213 62% 26%;
-  --radius: 0.5rem;
-  /* custom tokens */
-  --navy: 213 62% 18%;
-  --gold: 38 72% 43%;
-  --parchment: 40 35% 96%;
-  --rope: 35 45% 55%;
+  /* Deep ocean dark palette */
+  --background: 220 52% 9%;
+  --foreground: 42 55% 86%;
+  --card: 40 45% 93%;
+  --card-foreground: 220 52% 12%;
+  --primary: 188 65% 34%;
+  --primary-foreground: 42 55% 95%;
+  --secondary: 38 32% 82%;
+  --secondary-foreground: 220 48% 18%;
+  --muted: 38 22% 78%;
+  --muted-foreground: 38 30% 42%;
+  --accent: 16 78% 50%;
+  --accent-foreground: 42 55% 96%;
+  --destructive: 0 70% 48%;
+  --destructive-foreground: 42 55% 96%;
+  --border: 38 28% 72%;
+  --input: 38 28% 72%;
+  --ring: 188 65% 34%;
+  --radius: 0.375rem;
+
+  /* Maritime design tokens */
+  --navy: 220 55% 9%;
+  --navy-mid: 213 62% 17%;
+  --gold: 42 88% 50%;
+  --coral: 16 78% 50%;
+  --teal: 188 65% 34%;
+  --sea-foam: 175 45% 65%;
+  --parchment: 40 45% 93%;
+  --parchment-mid: 38 32% 82%;
+  --page-bg: 38 26% 84%;
+  --rope: 33 46% 40%;
+  --storm: 220 22% 36%;
+  --kelp: 148 45% 28%;
 }
 
 @theme inline {
@@ -44,54 +53,110 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-fell);
+  --font-mono: var(--font-typewriter);
   --font-display: var(--font-pirata);
 }
 
+/* Ocean body background */
 body {
-  background: hsl(var(--background));
+  background-color: hsl(var(--background));
+  background-image:
+    radial-gradient(ellipse 130% 80% at 12% 60%, hsl(200 60% 13% / 0.6) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 100% at 90% 18%, hsl(210 65% 10% / 0.45) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 60% at 50% 95%, hsl(188 55% 12% / 0.35) 0%, transparent 50%);
   color: hsl(var(--foreground));
 }
 
-/* Rope divider utility */
+/* Warm sepia parchment page surface — wraps main content on each page */
+.parchment-page {
+  background-color: hsl(var(--page-bg));
+  background-image:
+    repeating-linear-gradient(
+      -48deg,
+      transparent,
+      transparent 4px,
+      hsl(33 40% 50% / 0.022) 4px,
+      hsl(33 40% 50% / 0.022) 8px
+    );
+  box-shadow: inset 0 4px 12px rgba(15, 10, 5, 0.18);
+}
+
+/* Card shadow — warmer than default */
+.shadow-card {
+  box-shadow:
+    0 2px 8px hsl(var(--navy) / 0.12),
+    0 1px 2px hsl(var(--navy) / 0.08);
+}
+
+/* Braided rope divider */
 .rope-divider {
   border: none;
-  height: 2px;
-  background: repeating-linear-gradient(
-    90deg,
-    hsl(var(--rope)) 0px,
-    hsl(var(--rope)) 8px,
-    transparent 8px,
-    transparent 12px
-  );
-  opacity: 0.5;
+  height: 5px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      hsl(var(--rope))       0px,
+      hsl(var(--rope))       5px,
+      hsl(var(--rope) / 0.4) 5px,
+      hsl(var(--rope) / 0.4) 10px,
+      hsl(var(--gold) / 0.4) 10px,
+      hsl(var(--gold) / 0.4) 11px,
+      hsl(var(--rope) / 0.4) 11px,
+      hsl(var(--rope) / 0.4) 16px
+    );
+  border-radius: 2.5px;
+  opacity: 0.65;
 }
 
-/* Parchment card texture */
+/* Parchment texture — use on card-like surfaces */
 .parchment {
-  background: linear-gradient(135deg, hsl(40 40% 98%) 0%, hsl(38 30% 95%) 100%);
+  background-image:
+    repeating-linear-gradient(-45deg, transparent, transparent 3px, hsl(33 45% 45% / 0.028) 3px, hsl(33 45% 45% / 0.028) 6px),
+    linear-gradient(160deg, hsl(42 55% 94%) 0%, hsl(38 45% 89%) 60%, hsl(36 40% 86%) 100%);
 }
 
-/* Captain callout */
+/* Captain callout panels */
 .captain-callout {
-  border-left: 4px solid hsl(var(--accent));
-  background: linear-gradient(to right, hsl(38 60% 96%), transparent);
+  border-left: 4px solid hsl(var(--gold));
+  background: linear-gradient(to right, hsl(var(--gold) / 0.14), hsl(var(--gold) / 0.05), transparent);
 }
 
 /* Treasure-map card frame */
 .treasure-frame {
-  background: linear-gradient(135deg, hsl(42 45% 97%) 0%, hsl(38 35% 93%) 100%);
-  border: 2px solid hsl(var(--rope));
+  background-image:
+    repeating-linear-gradient(-45deg, transparent, transparent 2px, hsl(33 45% 45% / 0.024) 2px, hsl(33 45% 45% / 0.024) 4px),
+    linear-gradient(135deg, hsl(42 55% 93%) 0%, hsl(38 45% 88%) 100%);
+  background-color: hsl(42 55% 93%);
+  border: 2px solid hsl(var(--rope) / 0.5);
   position: relative;
 }
 .treasure-frame::before,
 .treasure-frame::after {
   content: '✦';
   position: absolute;
-  font-size: 10px;
-  color: hsl(var(--rope));
+  font-size: 11px;
+  color: hsl(var(--gold));
   line-height: 1;
 }
-.treasure-frame::before { top: -7px; left: 50%; transform: translateX(-50%); background: hsl(42 45% 97%); padding: 0 4px; }
-.treasure-frame::after  { bottom: -7px; left: 50%; transform: translateX(-50%); background: hsl(38 35% 93%); padding: 0 4px; }
+.treasure-frame::before {
+  top: -8px; left: 50%; transform: translateX(-50%);
+  background: hsl(42 55% 93%); padding: 0 5px;
+}
+.treasure-frame::after {
+  bottom: -8px; left: 50%; transform: translateX(-50%);
+  background: hsl(38 45% 88%); padding: 0 5px;
+}
+
+/* Gentle swell animation for icons/decorations */
+@keyframes swell {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-5px); }
+}
+.swell { animation: swell 3.5s ease-in-out infinite; }
+
+/* Slow spin for compass */
+@keyframes compass-drift {
+  0%   { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
