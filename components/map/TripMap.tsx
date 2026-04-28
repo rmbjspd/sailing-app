@@ -1,56 +1,17 @@
 "use client";
-import { useState, useCallback } from "react";
-import Map, { Source, Layer, Marker, Popup, NavigationControl } from "react-map-gl/mapbox";
-import type { LayerProps } from "react-map-gl/mapbox";
-import { waypoints } from "@/lib/data/waypoints";
+import { useState } from "react";
+import Map, { Marker, Popup, NavigationControl } from "react-map-gl/mapbox";
+import { waypoints, ROUTE_LEGS, type RouteOption } from "@/lib/data/waypoints";
 import type { Waypoint } from "@/lib/types";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
-type RouteOption = "philly" | "saybrook";
-
-const LEG_COLORS: Record<string, string> = {
-  "lake-michigan": "#1d4ed8",
-  "lake-huron": "#1d4ed8",
-  "lake-erie": "#1d4ed8",
-  "erie-canal": "#b45309",
-  "hudson": "#059669",
-  "coast-philly": "#7c3aed",
-  "sound-saybrook": "#0891b2",
-};
-
-function buildGeoJSON(option: RouteOption) {
-  const legs = [
-    "lake-michigan", "lake-huron", "lake-erie", "erie-canal", "hudson",
-    option === "philly" ? "coast-philly" : "sound-saybrook",
-  ];
-  return legs.map(legId => {
-    const pts = waypoints
-      .filter(w => w.leg === legId)
-      .sort((a, b) => a.day - b.day);
-    return {
-      type: "Feature" as const,
-      properties: { leg: legId, color: LEG_COLORS[legId] },
-      geometry: { type: "LineString" as const, coordinates: pts.map(w => [w.lng, w.lat]) },
-    };
-  });
-}
-
-const lineLayer = (color: string): LayerProps => ({
-  type: "line",
-  paint: { "line-color": color, "line-width": 3, "line-opacity": 0.85 },
-});
 
 export default function TripMap() {
   const [route, setRoute] = useState<RouteOption>("saybrook");
   const [popup, setPopup] = useState<Waypoint | null>(null);
 
-  const geojson = buildGeoJSON(route);
-  const visibleWaypoints = waypoints.filter(w =>
-    w.leg !== "coast-philly" && w.leg !== "sound-saybrook"
-      ? true
-      : route === "philly" ? w.leg === "coast-philly" : w.leg === "sound-saybrook"
-  );
+  const visibleWaypoints = waypoints.filter(w => ROUTE_LEGS[route].includes(w.leg as any));
 
   return (
     <div className="relative w-full h-full">
@@ -77,13 +38,6 @@ export default function TripMap() {
         onClick={() => setPopup(null)}
       >
         <NavigationControl position="top-right" />
-
-        {/* Route lines per leg */}
-        {geojson.map((feature, i) => (
-          <Source key={i} id={`route-${i}`} type="geojson" data={feature}>
-            <Layer id={`line-${i}`} {...lineLayer(feature.properties.color)} />
-          </Source>
-        ))}
 
         {/* Waypoint markers */}
         {visibleWaypoints.map(wp => (

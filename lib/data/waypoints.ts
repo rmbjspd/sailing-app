@@ -57,12 +57,9 @@ export const waypoints: Waypoint[] = [
   { id: "old-saybrook", name: "Old Saybrook", state: "CT", lat: 41.2948, lng: -72.3765, day: 29, leg: "sound-saybrook", marina: "Saybrook Point Marina", notes: "ARRIVAL. Mouth of the Connecticut River. Essex (5nm upriver) is worth a detour — charming New England town. The Essex Steam Train connects to the river by boat." } as any,
 ];
 
-// Shared Chicago-to-NYC portion + both ending options
-export const routeCoordinates: { philly: [number, number][]; saybrook: [number, number][] } = {
-  philly: waypoints
-    .filter(w => w.leg !== "sound-saybrook")
-    .map(w => [w.lng, w.lat]),
-  saybrook: waypoints
-    .filter(w => w.leg !== "coast-philly")
-    .map(w => [w.lng, w.lat]),
-};
+export const ROUTE_LEGS = {
+  saybrook: ["lake-michigan", "lake-huron", "lake-erie", "erie-canal", "hudson", "sound-saybrook"],
+  philly:   ["lake-michigan", "lake-huron", "lake-erie", "erie-canal", "hudson", "coast-philly"],
+} as const;
+
+export type RouteOption = keyof typeof ROUTE_LEGS;
