@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Map, { Marker, Popup, NavigationControl } from "react-map-gl/mapbox";
 import { waypoints, ROUTE_LEGS, type RouteOption } from "@/lib/data/waypoints";
-import type { Waypoint } from "@/lib/types";
+import type { Waypoint, Leg } from "@/lib/types";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
@@ -11,7 +11,8 @@ export default function TripMap() {
   const [route, setRoute] = useState<RouteOption>("saybrook");
   const [popup, setPopup] = useState<Waypoint | null>(null);
 
-  const visibleWaypoints = waypoints.filter(w => ROUTE_LEGS[route].includes(w.leg as any));
+  const activeLegs = ROUTE_LEGS[route] as readonly Leg[];
+  const visibleWaypoints = waypoints.filter(w => activeLegs.includes(w.leg));
 
   return (
     <div className="relative w-full h-full">
