@@ -149,35 +149,35 @@ export const itinerary: ItineraryDay[] = [
 
   // ---- ERIE CANAL ----
   {
-    day: 21, from: "Tonawanda, NY", to: "Medina or Brockport, NY", distanceNm: 0, locks: 2,
+    day: 21, from: "Tonawanda, NY", to: "Medina or Brockport, NY", distanceNm: 0, distanceMi: 40, locks: 2,
     leg: "erie-canal", route: "both", overnight: "Canal village wall (Medina or Brockport)",
     highlights: ["Locks E-35 and E-34 at Lockport: lift ~49ft combined — 'Flight of Five' history", "Medina's sandstone buildings and railroad museum", "Brockport canal visitor center wall"],
     warnings: ["First locks of the trip — go slow, fenders on both sides, crew fore and aft on lines", "Speed limit 10mph on canal"],
     notes: "After Lockport, no locks for ~60 miles. Pass through lift-bridge towns (operators see you and open). ~30–40 statute miles today."
   },
   {
-    day: 22, from: "Medina/Brockport, NY", to: "Pittsford, NY", distanceNm: 0, locks: 5,
+    day: 22, from: "Medina/Brockport, NY", to: "Pittsford, NY", distanceNm: 0, distanceMi: 60, locks: 5,
     leg: "erie-canal", route: "both", overnight: "Pittsford canal park dock (power/water)",
     highlights: ["Fairport: famous red liftbridge, Moonlight Creamery ice cream, great lunch stop", "Genesee River aqueduct crossing"],
     warnings: ["5 locks today (E-33 to E-29) — get an early start", "If locks are slow, Newark (before E-28) has a free dock as fallback"],
     notes: "Locks E-33/32 around Rochester (~25ft drop each). Locks E-31, E-30, E-29 toward Palmyra. ~60 statute miles."
   },
   {
-    day: 23, from: "Pittsford/Newark, NY", to: "Sylvan Beach, NY", distanceNm: 0, locks: 6,
+    day: 23, from: "Pittsford/Newark, NY", to: "Sylvan Beach, NY", distanceNm: 0, distanceMi: 88, locks: 6,
     leg: "erie-canal", route: "both", overnight: "Sylvan Beach wall or marina slip",
     highlights: ["Montezuma National Wildlife Refuge: herons, eagles, turtles", "Oneida Lake crossing — 20 miles of open water", "Sylvan Beach: retro amusement park, sandy beach"],
     warnings: ["Oneida Lake can be choppy — cross in daylight with good forecast only", "Lock E-24 at Baldwinsville: arrive before 5pm to ensure passage"],
     notes: "Seneca Canal junction at Montezuma. After Baldwinsville, 20nm open Oneida Lake to Sylvan Beach."
   },
   {
-    day: 24, from: "Sylvan Beach, NY", to: "Ilion or Little Falls, NY", distanceNm: 0, locks: 4,
+    day: 24, from: "Sylvan Beach, NY", to: "Ilion or Little Falls, NY", distanceNm: 0, distanceMi: 55, locks: 4,
     leg: "erie-canal", route: "both", overnight: "Ilion Municipal Marina or Little Falls Rotary Park dock",
     highlights: ["Now on the canalized Mohawk River — scenery improves", "Ilion Marina: full services, laundry, grocery 5min away", "Little Falls: limestone cliff scenery, Moss Island glacial potholes"],
     warnings: ["Ilion is the best pump-out/fuel point before the final push to the Hudson", "Little Falls: Lock E-17 just past town is the deepest single lock (40.5ft) — tackle it next morning"],
     notes: "Locks E-22, 21, 20 through Herkimer area. Stop at Ilion or push to Little Falls."
   },
   {
-    day: 25, from: "Ilion/Little Falls, NY", to: "Waterford, NY", distanceNm: 0, locks: 9,
+    day: 25, from: "Ilion/Little Falls, NY", to: "Waterford, NY", distanceNm: 0, distanceMi: 95, locks: 9,
     leg: "erie-canal", route: "both", overnight: "Waterford Visitor Center Dock (free 48hr, power, water)",
     highlights: ["Lock E-17 at Little Falls: 40.5ft drop — highest single lock on the Erie Canal", "Waterford Flight (E-6 to E-2): 169ft descent in 1.5 miles — one of the great feats of 19th-century engineering", "MILESTONE: Great Lakes to Atlantic connected!"],
     warnings: ["CRITICAL: Arrive at Lock E-6 (top of Waterford Flight) by 2:30pm to guarantee completing all 5 locks before close", "Locks E-13 through E-7 come in rapid succession — no dallying in the afternoon"],

@@ -273,6 +273,7 @@ function DayCard({ day, accentColor }: { day: (typeof itinerary)[0]; accentColor
             </div>
             <div className="flex items-center gap-3 mt-1 text-xs text-[hsl(var(--muted-foreground))] flex-wrap">
               {day.distanceNm > 0 && <span>📏 {day.distanceNm} nm</span>}
+              {!!day.distanceMi && day.distanceMi > 0 && <span>📏 {day.distanceMi} mi</span>}
               {day.locks > 0 && <span>⚓ {day.locks} lock{day.locks !== 1 ? "s" : ""}</span>}
               <span className="truncate italic">🛏 {day.overnight}</span>
             </div>
