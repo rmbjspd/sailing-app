@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { itinerary } from "@/lib/data/itinerary";
+import { legGroupsForRoute, formatLegDistance } from "@/lib/data/stats";
 import { legGuides } from "@/lib/data/legGuides";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,14 +23,7 @@ export default function ItineraryPage() {
   const [route, setRoute] = useState<RouteOption>("saybrook");
   const [openGuides, setOpenGuides] = useState<Set<string>>(new Set());
 
-  const days = itinerary.filter(d => d.route === "both" || d.route === route);
-
-  const legGroups: { legId: string; days: typeof itinerary }[] = [];
-  days.forEach(day => {
-    const last = legGroups[legGroups.length - 1];
-    if (last && last.legId === day.leg) last.days.push(day);
-    else legGroups.push({ legId: day.leg, days: [day] });
-  });
+  const legGroups = legGroupsForRoute(route);
 
   const toggleGuide = (legId: string) => {
     setOpenGuides(prev => {
@@ -89,7 +83,8 @@ export default function ItineraryPage() {
         </div>
 
         <div className="space-y-12">
-          {legGroups.map(({ legId, days: legDays }) => {
+          {legGroups.map((leg) => {
+            const { legId, days: legDays, dayStart, dayEnd, locks } = leg;
             const meta = LEG_META[legId] ?? {
               label: legId,
               accent: "hsl(var(--teal))",
@@ -117,6 +112,12 @@ export default function ItineraryPage() {
                   <span className="text-base shrink-0" style={{ opacity: 0.4 }}>☠</span>
                   <div className="flex-1 rope-divider" />
                 </div>
+
+                {/* Derived leg stats — computed from the itinerary, never hardcoded */}
+                <p className="text-xs text-[hsl(var(--muted-foreground))] -mt-3 mb-5 italic">
+                  Days {dayStart}&ndash;{dayEnd} · {formatLegDistance(leg)}
+                  {locks > 0 && ` · ${locks} lock${locks !== 1 ? "s" : ""}`}
+                </p>
 
                 {/* Captain's Briefing */}
                 {guide && (

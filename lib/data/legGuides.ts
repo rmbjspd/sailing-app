@@ -12,7 +12,7 @@ export const legGuides: LegGuide[] = [
   {
     legId: "lake-michigan",
     title: "Lake Michigan",
-    subtitle: "Days 1–6 · ~500 nm · Chicago to Mackinac Island",
+    subtitle: "Chicago to Mackinac Island",
     captainIntro: `Chicago's lakefront drops away fast once you clear the breakwaters at DuSable Harbor — and right there is your first lesson in Great Lakes humility. You're on a freshwater sea now, 307 miles of open fetch to the north, and she doesn't care about your feelings. June is the transition month: the lake is cold (surface temps still 50–55°F in early June), air-sea temperature differences can produce fog banks that materialize without warning, and afternoon thunderstorms are Lake Michigan's summer calling card.
 
 Your strategy for the whole leg: launch early, push hard before noon, and be tucked into a harbor before the afternoon sea breeze builds toward the Michigan shore. The eastern shoreline is your friend — a string of well-maintained harbor towns spaced 40–80 nm apart, each with fuel, pump-out, and a cold beer waiting. Follow the eastern shore north, and Lake Michigan will feel manageable. Try to cut corners in the middle and she'll remind you who's in charge.
@@ -42,7 +42,7 @@ The payoff for doing it right is the approach to Mackinac — threading the Stra
   {
     legId: "north-channel",
     title: "North Channel & Manitoulin Island",
-    subtitle: "Days 7–15 · ~400 nm · Mackinac to Port Huron via Ontario",
+    subtitle: "Mackinac to Port Huron via Ontario",
     captainIntro: `Most sailors who do the Great Lakes run miss the North Channel entirely — they peel south off Mackinac and run the Sunrise Coast down Michigan's thumb to Port Huron. It's efficient. It's also the greatest mistake they make on the trip.
 
 The North Channel runs east from the Straits of Mackinac between the Canadian mainland and Manitoulin Island — the largest freshwater island in the world — through 200 miles of pink granite shore, clear anchorages, and small Ontario towns where the population is still measured in hundreds. The Benjamin Islands. Baie Fine. Killarney. These are names whispered by Great Lakes sailors the way Atlantic cruisers talk about the Chesapeake or the Maine coast. The water is cold and gin-clear. The anchorages are mostly empty. The skies at night are genuinely dark.
@@ -74,7 +74,7 @@ The logistics are modest: passports for everyone, a CBSA phone check-in at Meldr
   {
     legId: "lake-erie",
     title: "Lake Erie",
-    subtitle: "Days 11–15 · ~250 nm · Detroit to Buffalo",
+    subtitle: "Detroit to Buffalo",
     captainIntro: `Lake Erie is the troublemaker of the Great Lakes family — shallow, warm, and prone to violent mood swings. At an average depth of only 62 feet (compared to Huron's 195), Erie has no thermal mass to absorb the energy of a northwest blow. What that means in practice is that a 30-knot front can transform the lake from a millpond to a confused 8-foot maelstrom in under two hours. Generations of Great Lakes sailors have been humbled by Erie, and a handful have been killed.
 
 Here is what you do: check the forecast obsessively, start early, and never — not once — trust the weather from the previous day's passage. The Toledo-to-Buffalo corridor is not where you want to get caught out.
@@ -104,7 +104,7 @@ The flip side: Erie in good conditions is a delight. The Ohio shore is flat and 
   {
     legId: "erie-canal",
     title: "The Erie Canal",
-    subtitle: "Days 15–20 · 338 statute miles · 34 locks · Tonawanda to Waterford",
+    subtitle: "Tonawanda to Waterford",
     captainIntro: `Congratulations — you've crossed the Great Lakes. Now put away the sails, set the throttle to 8 mph, and welcome to America's original highway.
 
 The Erie Canal opened in 1825 and immediately changed everything — it connected the Hudson to the Great Lakes, made New York City the dominant port on the continent, and triggered the settlement of the entire Midwest. The canal you're traveling is the 1918 re-engineering of that original ditch, deeper and wider, but following the same route through the same improbable valley. Two centuries of commerce passed through these locks before containerization made it redundant. Now it's a glorious 338-mile park.
@@ -140,7 +140,7 @@ The Waterford Flight at the end — five locks dropping 169 feet in 1.5 miles �
   {
     legId: "hudson",
     title: "The Hudson River",
-    subtitle: "Days 21–24 · ~134 nm · Waterford to New York City",
+    subtitle: "Waterford to New York City",
     captainIntro: `The Hudson changes everything. You lock through at Troy — the last lock, the Federal Lock, 14 feet down, no fee — and suddenly the water is different. It has a pulse. The tide is in it. You're no longer on a canal or a lake; you're on a tidal estuary that reaches 150 miles from the sea, and the Atlantic Ocean is now calling the shots on your departure times.
 
 The mast goes back up at Catskill, around mile 112. Hop-O-Nose Marina is on a quiet creek off the river — row up the creek, have the crane done by late afternoon, reconnect your electronics. The next morning you're a sailor again, and the Hudson has sails to fill.
@@ -170,7 +170,7 @@ This is one of America's great rivers, and it looks it. The Catskill Mountains p
   {
     legId: "coast-philly",
     title: "NJ Offshore Coast → Philadelphia",
-    subtitle: "Days 25–29 · ~230 nm · New York to Penn's Landing",
+    subtitle: "New York to Penn's Landing",
     captainIntro: `The New Jersey coastal run is where the trip earns its offshore stripes. You're on saltwater now, properly, and the rhythm is different — tide tables replace lock schedules, inlet timing replaces bridge openings, and the Atlantic weather forecast governs your day in a way the inland route never quite did.
 
 Fair warning: the prevailing summer wind on the Jersey coast is SW, which means it's directly on the nose for most of your southward run. You will mostly motorsail. Embrace it. The coast ticks by — the barrier beaches, the Atlantic City skyline emerging from the dunes, the first sight of Cape May's lighthouse. This is not the sailing highlight of the trip, but it is the transition. You're almost there.
@@ -198,7 +198,7 @@ The Delaware Bay is the last test. Wind against flood tide in the bay produces a
   {
     legId: "sound-saybrook",
     title: "Long Island Sound → Old Saybrook",
-    subtitle: "Days 25–29 · ~150 nm · New York to the Connecticut River",
+    subtitle: "New York to the Connecticut River",
     captainIntro: `Exit New York through the East River — a canyon of glass and steel with some of the most interesting tidal hydraulics in North America. Hell Gate, where the Harlem River, the Long Island Sound tidal flow, and the upper East River meet, runs up to 5 knots on a good spring tide. Time it correctly and you'll rocket through on rails at 9 knots; time it wrong and you'll be doing 2 knots against a wall of current while tugboats pass you in both directions. Check the tide tables for Hell Gate specifically, plan to pass at or just before slack, and enjoy the view.
 
 Once you clear Hell Gate and the Throgs Neck Bridge, Long Island Sound opens ahead of you like a reward. This is what the whole trip was building toward: a beam reach in southwest sea breeze, 12–15 knots, flat water, the North Fork of Long Island to starboard and the Connecticut hills to port, running east at hull speed with everything up. Summer mornings on the Sound are routinely excellent — the SW sea breeze fills in by 9–10am on most June and July days and holds until early evening. You will sail. Properly.

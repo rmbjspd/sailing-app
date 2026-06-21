@@ -20,6 +20,7 @@ export interface ItineraryDay {
   from: string;
   to: string;
   distanceNm: number;
+  distanceMi?: number; // statute miles, for canal legs measured in mi not nm
   locks: number;
   leg: Leg;
   overnight: string;
