@@ -1,7 +1,6 @@
 "use client";
-import { useMemo, useState } from "react";
-import Map, { Marker, Popup, NavigationControl, Source, Layer } from "react-map-gl/mapbox";
-import type { Feature, LineString } from "geojson";
+import { useState } from "react";
+import Map, { Marker, Popup, NavigationControl } from "react-map-gl/mapbox";
 import { waypoints } from "@/lib/data/waypoints";
 import type { Waypoint } from "@/lib/types";
 
@@ -12,16 +11,6 @@ const orderedWaypoints = [...waypoints].sort((a, b) => a.day - b.day);
 
 export default function TripMap() {
   const [popup, setPopup] = useState<Waypoint | null>(null);
-
-  // Ordered voyage path connecting the stops in day order.
-  const routeLine: Feature<LineString> = useMemo(
-    () => ({
-      type: "Feature",
-      properties: {},
-      geometry: { type: "LineString", coordinates: orderedWaypoints.map(w => [w.lng, w.lat]) },
-    }),
-    [],
-  );
 
   // Graceful fallback when the Mapbox token is missing (e.g. unset on a deploy)
   // — without it react-map-gl renders a blank/erroring canvas.
@@ -67,21 +56,6 @@ export default function TripMap() {
         onClick={() => setPopup(null)}
       >
         <NavigationControl position="top-right" />
-
-        {/* Ordered voyage route line */}
-        <Source id="route" type="geojson" data={routeLine}>
-          <Layer
-            id="route-line"
-            type="line"
-            layout={{ "line-join": "round", "line-cap": "round" }}
-            paint={{
-              "line-color": "hsl(213, 74%, 28%)",
-              "line-width": 2.5,
-              "line-opacity": 0.65,
-              "line-dasharray": [2, 1.5],
-            }}
-          />
-        </Source>
 
         {/* Waypoint markers */}
         {orderedWaypoints.map(wp => (

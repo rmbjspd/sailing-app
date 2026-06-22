@@ -325,7 +325,7 @@ export default function HomePage() {
                 },
                 {
                   title: "Hell Gate",
-                  detail: "East River · Option B Day 30",
+                  detail: "East River · Day 30",
                   sub: "4–5 kt current. Slack water window is 45 minutes. Miss it and the current will teach ye respect.",
                 },
               ].map(({ title, detail, sub }) => (
