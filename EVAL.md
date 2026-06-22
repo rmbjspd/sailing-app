@@ -1,4 +1,4 @@
-# 📋 PM Evaluation — S/V Sabbatical Sailing App
+# PM Evaluation — S/V Sabbatical Sailing App
 
 Maintained by the **sailing-app-pm-evaluator**. Re-run after every developer commit.
 Each pass tests the running product hands-on, scores it against the rubric below, and re-ranks the backlog.
@@ -7,66 +7,69 @@ Each pass tests the running product hands-on, scores it against the rubric below
 
 ## Latest pass
 
-**Commit:** `200cf57` — *B4: lock the voyage to Chicago → Old Saybrook (remove Philadelphia option)* · **Date:** 2026-06-22 · **Weighted score: 8.4 / 10** · **Verdict: SHIP**
+**Commit:** `de7d478` — *B5 real fix: hand-digitized water-following route polyline + B6: parchment/navy map theme* · **Date:** 2026-06-22 · **Weighted score: 8.8 / 10** · **Verdict: SHIP**
 
-**Product note:** this resolves B4 by **eliminating the fork** — the Philadelphia (Option A) route and all its content are removed; the voyage is now a single Chicago → Old Saybrook itinerary (33 days). Decisive and coherent; flagging the scope here so it's a conscious product call (Option A content is gone, not hidden).
+**What changed:** B5-real — `lib/data/routePath.ts` created with 131 hand-digitized `[lng,lat]` shaping points across 8 named segments (lake-michigan, north-channel, lake-huron, st-clair, lake-erie, erie-canal, hudson, sound-saybrook). 5 open-water segments rendered as navy dashed lines (#1a3a6b); 3 inland segments (St. Clair, Erie Canal, Hudson) as amber-brown dashed lines (#8B5E3C). `TripMap.tsx` restored `Source`+`Layer` (two of each) and builds two GeoJSON FeatureCollections from the segments. B6 — mapStyle changed from `outdoors-v12` to `light-v11`; route label badge now uses `hsl(40,60%,96%)` parchment background with `hsl(213,74%,28%)` navy text; popup headings/subtext/badges/notes all use hsl navy/teal tokens; zero `bg-white` or `text-gray-*` in `TripMap.tsx`.
 
-**What changed:** dropped the 5 coast-philly days, the leg type, its waypoints + guide, and the per-day `route` field; removed `ROUTE_LEGS`/`RouteOption` plumbing; `stats.ts` is now route-free; removed both route toggles (map + itinerary); home fork → single "Final Landfall — Old Saybrook" card; hero stats are single values; logo/nav/hero/title/metadata read Chicago → Old Saybrook.
+**Verified (hands-on):**
+- `tsc --noEmit` clean; `next build` clean (6/6 static routes, 8/8 pages)
+- All 5 routes return HTTP 200: /, /map, /itinerary, /journal, /checklists
+- Geographic spot-check: Chicago (-87.62,41.88), Mackinac (-84.62,45.85), Tobermory (-81.67,45.25), Port Huron (-82.42,42.97), Detroit (-83.05,42.33), Erie PA (-80.09,42.13), Buffalo/Tonawanda (-78.88,43.02), Waterford NY (-73.68,42.79), Liberty Landing (-74.04,40.69), Hell Gate (~-73.91,40.93), Old Saybrook (-72.38,41.29) — all correct
+- Regression: no Philadelphia / Option B / Option A references anywhere; Hell Gate card reads "East River · Day 30" (B10 confirmed clean)
+- Journal (useLocalStorage), checklists (useChecklist -> useLocalStorage): persistence architecture intact
 
-**Verified (hands-on):** `tsc --noEmit` clean; `next build` clean (8/8 static); **grep confirms zero residual** philly / Philadelphia / coast-philly / RouteOption / ROUTE_LEGS / `.route` references. From prerenders: home has **0 "Philadelphia"**, hero shows single values (`1,711 nm`, `33 days`, `28 total`), itinerary subtitle `33 sailing days`, map route toggle gone. ✅
+**One gap in B6:** `app/map/page.tsx:7-8` — the SSR/pre-hydration loading skeleton still uses `bg-slate-100` + `text-gray-500`. Users briefly see an off-brand gray flash (~300ms) before the Mapbox client-side map hydrates. Pre-existing from initial commit; flagged as B11 (P2).
 
-**One residual (→ B10):** the Hell Gate callout at `app/page.tsx:328` still reads "East River · **Option B** Day 30" — stale fork reference; should be "East River · Day 30."
+| # | Category | Weight | Score | Delta | Notes |
+|---|----------|-------:|:-----:|:-----:|-------|
+| 1 | Trip-data correctness & integrity | 25% | 9.0 | +0.5 | 131 shaping points verified geographically; open-water vs inland segment types reflect real navigation. |
+| 2 | Core task success | 20% | 9.0 | +0.5 | Route polyline + markers both render; all surfaces functional; persistence intact. |
+| 3 | Design — Captain Ron meets Hook | 20% | 9.5 | +0.5 | Two-color dashed route line (navy/amber-brown) is thematically perfect; parchment badge + themed popup complete the map surface. Light-v11 base is cleaner under theme. |
+| 4 | Real-world fitness (desktop + mobile) | 12% | 6.5 | — | Still unverifiable via curl (WebGL, mobile touch, offline). |
+| 5 | Reliability & robustness | 12% | 9.5 | +0.5 | Clean tsc + build; Source/Layer IDs consistent; no runtime paths that can throw. |
+| 6 | Usability & clarity | 8% | 8.5 | — | Route + color scheme communicates canal vs. lake intuitively. |
+| 7 | Code quality & maintainability | 3% | 9.5 | — | Typed RouteSegment interface; flatMap dedup on fullRoutePath; buildRouteGeoJSON pure. |
 
-| # | Category | Weight | Score | Δ | Notes |
-|---|----------|-------:|:-----:|:--:|-------|
-| 1 | Trip-data correctness & integrity | 25% | 8.5 | — | Route removal is internally consistent; single 33-day voyage. |
-| 2 | Core task success | 20% | 8.5 | — | All surfaces work; simplified single-route flows. |
-| 3 | Design — *Captain Ron meets Hook* | 20% | 9.0 | — | Cohesive; map surface still default-themed (B6). |
-| 4 | Real-world fitness (desktop + mobile) | 12% | 6.5 | — | **Biggest remaining lever** (B8): no offline story; live mobile unverified. |
-| 5 | Reliability & robustness | 12% | 8.5 | — | Clean build/tsc; missing-token fallback in place. |
-| 6 | Usability & clarity | 8% | 8.5 | ▲ +1.0 | Brand/destination now coherent end-to-end (B4). Minor B10 label residual. |
-| 7 | Code quality & maintainability | 3% | 9.0 | — | Route-free simplification; type-safe; clean. |
+**Weighted score:** (9.0x0.25) + (9.0x0.20) + (9.5x0.20) + (6.5x0.12) + (9.5x0.12) + (8.5x0.08) + (9.5x0.03) = 2.25+1.80+1.90+0.78+1.14+0.68+0.285 = **8.835 -> 8.8 / 10**
 
 ### Pass history
 | Pass | Commit | Score | Verdict | Headline |
 |------|--------|:-----:|---------|----------|
-| 1 (baseline) | `a36d9d0` | 7.8 | SHIP | First full eval; backlog B1–B8 opened. |
+| 1 (baseline) | `a36d9d0` | 7.8 | SHIP | First full eval; backlog B1-B8 opened. |
 | 2 | `52225ff` | 7.9 | SHIP | B1 (locks contradiction) resolved at root. |
 | 3 | `1255cf1` | 8.0 | SHIP | B2 (missing-token map fallback) resolved. |
 | 4 | `103b8fe` | 8.3 | SHIP | B3 + B7 + B9 — hardcode-in-copy pattern retired. |
 | 5 | `200cf57` | 8.4 | SHIP | B4 — voyage locked to Old Saybrook; Philadelphia fork removed. |
+| 6 | `423de64` | 8.5 | SHIP | B5 stopgap (line removed) + B10 (Option B label) resolved. |
+| 7 | `de7d478` | 8.8 | SHIP | B5-real (water-following polyline) + B6 (parchment map theme) resolved. |
 
 ---
 
-## Backlog (ranked by user-impact × likelihood)
+## Backlog (ranked by user-impact x likelihood)
 
-### ✅ Resolved
-- ~~**B1 · Locks contradiction**~~ — `52225ff`. Verified.
-- ~~**B2 · Map missing-token fallback**~~ — `1255cf1`. Verified.
-- ~~**B3 · Home "Pillage stops" wrong**~~ — `103b8fe`. Verified.
-- ~~**B7 · "~34 sailing days" hardcoded**~~ — `103b8fe`. Verified.
-- ~~**B9 · Canal lock precision**~~ — `103b8fe`. Verified.
-- ~~**B4 · Brand vs. recommendation mismatch**~~ — `200cf57`; fork removed, locked to Old Saybrook. Verified.
+### Resolved
+- ~~**B1 Locks contradiction**~~ — `52225ff`. Verified.
+- ~~**B2 Map missing-token fallback**~~ — `1255cf1`. Verified.
+- ~~**B3 Home "Pillage stops" wrong**~~ — `103b8fe`. Verified.
+- ~~**B7 "~34 sailing days" hardcoded**~~ — `103b8fe`. Verified.
+- ~~**B9 Canal lock precision**~~ — `103b8fe`. Verified.
+- ~~**B4 Brand vs. recommendation mismatch**~~ — `200cf57`. Verified.
+- ~~**B5 + B10 Land-crossing line + Option B label**~~ — `423de64`. Verified.
+- ~~**B5-real Water-following polyline missing**~~ — `de7d478`. Verified: 131 coords, 8 segments, geographically correct.
+- ~~**B6 Map un-themed island**~~ — `de7d478`. Verified: parchment badge, navy text, themed popup, light-v11 base.
 
 ### P0 — blockers
-_None._ 🎉
+None.
 
 ### P1 — fix soon
-- **B5 · Route line crosses land — "boat sailing on a field" (user-flagged).** `TripMap.tsx` draws the route as straight geodesic segments between waypoints, so chords cut across coastline/peninsulas/islands. _Now simpler post-B4: single route, no fork to assemble._
-  - **Plan — hand-digitized water-following polyline as static data** (no runtime routing API; route is fixed + must stay offline-friendly):
-    1. **Digitize:** new `lib/data/routePath.ts` — ordered `[lng,lat]` shaping points tracing navigable water/canal/river through each waypoint (single route now). Click the path in geojson.io, export (~80–180 vertices). Hotspots, worst first: (a) Straits of Mackinac → North Channel → Georgian Bay → Tobermory → Lake Huron; (b) East River / Hell Gate (NYC→Oyster Bay); (c) St. Clair River / Lake St. Clair (Port Huron→Detroit); (d) Hudson River + Erie Canal corridor.
-    2. **Render & signal mode:** draw the digitized path instead of the raw waypoint chord; keep dashed chart styling; style inland legs (`erie-canal`, `hudson`) distinctly to signal canal/river transit.
-    3. **Acceptance:** no segment crosses land on open-water legs (check zoom 4.5 + zoomed into the 4 hotspots); canal/river legs follow the waterway centerline; fully data-driven/offline.
-  - **Effort:** Medium (~1 session, mostly digitizing). **Stopgap:** revert to markers-only (`eb715de` state) to remove the misleading line immediately.
+None.
 
 ### P2 — should fix
-- **B6 · Map is an un-themed island.** Default Mapbox `outdoors-v12` + white/gray popups break the parchment/pirate aesthetic (cat-3 consistency).
+- **B11 (NEW) Map loading skeleton un-themed.** `app/map/page.tsx:7-8` uses `bg-slate-100` + `text-gray-500` for the SSR skeleton shown before Mapbox hydrates. Users briefly see an off-brand gray box. **Fix:** change to `bg-[hsl(var(--parchment-mid))]` (or `parchment-page` class) + `text-[hsl(var(--navy))]`. **Acceptance:** loading state uses theme colors; no off-brand gray flash visible at any network speed.
 
 ### P3 — polish
-- **B8 · Verify live in a real browser/device** *(biggest scoring lever — cat 4 @ 6.5)*: WebGL map render, mobile touch targets, sun-contrast on `muted-foreground` over parchment, and an **offline story** for on-the-water use.
-- **B10 · Stale "Option B" label (new).** `app/page.tsx:328` Hell Gate callout reads "East River · Option B Day 30" — drop "Option B" now that the fork is gone.
-
-> **Deploy hold:** `main` is fast-forwarded to the ship-scored tip and pushed, but the Vercel **production deploy is paused pending B5** (the land-crossing route line is the one thing that would look broken to a first-time visitor).
+- **B8 Verify live in a real browser/device** (biggest scoring lever — cat 4 at 6.5): WebGL map render, two-color route line visible, mobile touch targets, sun-contrast on `muted-foreground`, and an offline story for on-the-water use. **Acceptance:** smoke test confirms map tiles + route lines render at zoom 4.5, markers clickable, checklist state survives hard refresh on desktop + 375px mobile viewport.
+- **B12 St. Clair/Detroit River coarseness.** Jump from `[-82.58, 42.38]` to Detroit `[-83.05, 42.33]` is a 0.47-degree chord that may brush Grosse Ile. Both endpoints are in navigable water so not a land-crossing, but worth 1-2 intermediate channel points if visual inspection shows artifact. **Acceptance:** Detroit River segment follows main ship channel without touching island outlines at zoom 8.
 
 ---
 
@@ -76,12 +79,12 @@ Weighted categories (sum 100%). End user = **desktop + mobile, equally**. Theme 
 
 | Category | Weight | What "pass" means |
 |----------|-------:|-------------------|
-| Trip-data correctness & integrity | 25% | Single source of truth; map ↔ itinerary ↔ guides consistent; units stated; detours reflected everywhere. **Data bugs auto-float to top.** |
+| Trip-data correctness & integrity | 25% | Single source of truth; map <-> itinerary <-> guides consistent; units stated; detours reflected everywhere. Data bugs auto-float to top. |
 | Core task success | 20% | All 5 surfaces work end-to-end; journal/checklist state survives a hard refresh. |
-| Design & aesthetics — *Captain Ron meets Hook* | 20% | Breezy salty charter charm + lush theatrical pirate grandeur. Cohesive non-stock palette/type, restrained texture, micro-interactions, consistency across all surfaces, memorable. |
-| Real-world fitness | 12% | Works at a laptop *and* one-handed on a phone; sun legible; graceful on flaky signal. Tested at both viewports each pass. |
+| Design & aesthetics — Captain Ron meets Hook | 20% | Breezy salty charter charm + lush theatrical pirate grandeur. Cohesive non-stock palette/type, restrained texture, micro-interactions, consistency across all surfaces, memorable. |
+| Real-world fitness | 12% | Works at a laptop and one-handed on a phone; sun legible; graceful on flaky signal. Tested at both viewports each pass. |
 | Reliability & robustness | 12% | Clean build, no console errors, graceful empty/edge states, no white-screen on missing token. |
 | Usability & info clarity | 8% | Obvious nav, clear "where am I." |
 | Code quality & maintainability | 3% | Type safety, single-source data, no dead code. |
 
-**Per-commit procedure:** build + run → exercise changed surface hands-on at desktop **and** mobile widths → regression-sweep adjacent flows + hard-refresh persistence check → score each category → verdict (Ship / Fix-forward / Regression) → re-rank this backlog.
+**Per-commit procedure:** build + run -> exercise changed surface hands-on at desktop and mobile widths -> regression-sweep adjacent flows + hard-refresh persistence check -> score each category -> verdict (Ship / Fix-forward / Regression) -> re-rank this backlog.
