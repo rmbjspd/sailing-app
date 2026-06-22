@@ -1,7 +1,7 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Map, { Marker, Popup, NavigationControl, Source, Layer } from "react-map-gl/mapbox";
-import type { LayerProps } from "react-map-gl/mapbox";
+import type { LayerProps, MapRef } from "react-map-gl/mapbox";
 import type { FeatureCollection, LineString } from "geojson";
 import { waypoints } from "@/lib/data/waypoints";
 import { routeSegments } from "@/lib/data/routePath";
@@ -65,6 +65,7 @@ const inlandLayer: LayerProps = {
 
 export default function TripMap() {
   const [popup, setPopup] = useState<Waypoint | null>(null);
+  const mapRef = useRef<MapRef>(null);
   const { openWater, inland } = useMemo(buildRouteGeoJSON, []);
 
   // Graceful fallback when the Mapbox token is missing (e.g. unset on a deploy)
@@ -109,6 +110,7 @@ export default function TripMap() {
       </div>
 
       <Map
+        ref={mapRef}
         mapboxAccessToken={TOKEN}
         initialViewState={{ longitude: -80, latitude: 42, zoom: 4.5 }}
         style={{ width: "100%", height: "100%" }}
@@ -132,7 +134,7 @@ export default function TripMap() {
             longitude={wp.lng}
             latitude={wp.lat}
             anchor="center"
-            onClick={e => { e.originalEvent.stopPropagation(); setPopup(wp); }}
+            onClick={e => { e.originalEvent.stopPropagation(); mapRef.current?.flyTo({ center: [wp.lng, wp.lat], duration: 300 }); setPopup(wp); }}
           >
             <div
               className={`cursor-pointer transition-transform hover:scale-125 ${

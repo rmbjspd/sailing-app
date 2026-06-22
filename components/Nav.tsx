@@ -69,7 +69,7 @@ export default function Nav() {
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-1.5 px-3 py-2 text-sm rounded transition-all duration-200 ${
+                className={`flex items-center gap-1.5 px-3 py-2 min-h-[44px] text-sm rounded transition-all duration-200 ${
                   active ? "font-semibold" : "hover:bg-white/[0.06]"
                 }`}
                 style={
