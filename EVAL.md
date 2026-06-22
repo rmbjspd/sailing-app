@@ -7,30 +7,25 @@ Each pass tests the running product hands-on, scores it against the rubric below
 
 ## Latest pass
 
-**Commit:** `103b8fe` — *B3 + B7 + B9: retire the hardcode-in-copy pattern* · **Date:** 2026-06-22 · **Weighted score: 8.3 / 10** · **Verdict: SHIP**
+**Commit:** `200cf57` — *B4: lock the voyage to Chicago → Old Saybrook (remove Philadelphia option)* · **Date:** 2026-06-22 · **Weighted score: 8.4 / 10** · **Verdict: SHIP**
 
-**What changed:** the three remaining "hardcoded copy vs. derived data" drifts, all fixed by deriving from the data model:
-- **B3** (P1 data) — home Option B "Pillage stops" now derives from the `sound-saybrook` waypoints.
-- **B7** (P3) — itinerary subtitle now derives `tripTotals(route).dayEnd`.
-- **B9** (P3) — Canal Transit card now shows the Erie-Canal-only lock count.
+**Product note:** this resolves B4 by **eliminating the fork** — the Philadelphia (Option A) route and all its content are removed; the voyage is now a single Chicago → Old Saybrook itinerary (33 days). Decisive and coherent; flagging the scope here so it's a conscious product call (Option A content is gone, not hidden).
 
-**Verified (hands-on):** clean `next build` (8/8 static). From the static prerenders:
-- Home: `Pillage stops: Oyster Bay, Port Jefferson, Greenport, Old Saybrook` ✅ (matches actual overnights; Mystic/Essex removed, Port Jefferson restored).
-- Home: `34 numbered locks · 26 transited` + hero `28 total` — distinct, correctly-labeled quantities (26 canal + Black Rock + Troy = 28 trip), no contradiction. ✅
-- Itinerary: `33 sailing days` (derived, saybrook default; 34 on philly). ✅
-- Grep for `Mystic` / `Essex` / `~34 sailing` → none. ✅
+**What changed:** dropped the 5 coast-philly days, the leg type, its waypoints + guide, and the per-day `route` field; removed `ROUTE_LEGS`/`RouteOption` plumbing; `stats.ts` is now route-free; removed both route toggles (map + itinerary); home fork → single "Final Landfall — Old Saybrook" card; hero stats are single values; logo/nav/hero/title/metadata read Chicago → Old Saybrook.
 
-**Significance:** B1 → B3 → B7 → B9 all shared one root cause; the data model is now the single source for every user-facing figure on these surfaces. Pattern retired.
+**Verified (hands-on):** `tsc --noEmit` clean; `next build` clean (8/8 static); **grep confirms zero residual** philly / Philadelphia / coast-philly / RouteOption / ROUTE_LEGS / `.route` references. From prerenders: home has **0 "Philadelphia"**, hero shows single values (`1,711 nm`, `33 days`, `28 total`), itinerary subtitle `33 sailing days`, map route toggle gone. ✅
+
+**One residual (→ B10):** the Hell Gate callout at `app/page.tsx:328` still reads "East River · **Option B** Day 30" — stale fork reference; should be "East River · Day 30."
 
 | # | Category | Weight | Score | Δ | Notes |
 |---|----------|-------:|:-----:|:--:|-------|
-| 1 | Trip-data correctness & integrity | 25% | 8.5 | ▲ +1.0 | All known data drifts closed; single-source throughout. |
-| 2 | Core task success | 20% | 8.5 | — | All surfaces work end-to-end. |
-| 3 | Design — *Captain Ron meets Hook* | 20% | 9.0 | — | Cohesive & memorable; map surface still default-themed (B5/B6). |
-| 4 | Real-world fitness (desktop + mobile) | 12% | 6.5 | — | **Biggest remaining lever.** No offline story; live mobile unverified (B8). |
-| 5 | Reliability & robustness | 12% | 8.5 | — | Missing-token fallback in place; clean build. |
-| 6 | Usability & clarity | 8% | 7.5 | — | Brand says "Philadelphia" while app *recommends* Old Saybrook (B4). |
-| 7 | Code quality & maintainability | 3% | 9.0 | — | Type-safe, single-source data, clean components. |
+| 1 | Trip-data correctness & integrity | 25% | 8.5 | — | Route removal is internally consistent; single 33-day voyage. |
+| 2 | Core task success | 20% | 8.5 | — | All surfaces work; simplified single-route flows. |
+| 3 | Design — *Captain Ron meets Hook* | 20% | 9.0 | — | Cohesive; map surface still default-themed (B6). |
+| 4 | Real-world fitness (desktop + mobile) | 12% | 6.5 | — | **Biggest remaining lever** (B8): no offline story; live mobile unverified. |
+| 5 | Reliability & robustness | 12% | 8.5 | — | Clean build/tsc; missing-token fallback in place. |
+| 6 | Usability & clarity | 8% | 8.5 | ▲ +1.0 | Brand/destination now coherent end-to-end (B4). Minor B10 label residual. |
+| 7 | Code quality & maintainability | 3% | 9.0 | — | Route-free simplification; type-safe; clean. |
 
 ### Pass history
 | Pass | Commit | Score | Verdict | Headline |
@@ -39,6 +34,7 @@ Each pass tests the running product hands-on, scores it against the rubric below
 | 2 | `52225ff` | 7.9 | SHIP | B1 (locks contradiction) resolved at root. |
 | 3 | `1255cf1` | 8.0 | SHIP | B2 (missing-token map fallback) resolved. |
 | 4 | `103b8fe` | 8.3 | SHIP | B3 + B7 + B9 — hardcode-in-copy pattern retired. |
+| 5 | `200cf57` | 8.4 | SHIP | B4 — voyage locked to Old Saybrook; Philadelphia fork removed. |
 
 ---
 
@@ -47,31 +43,30 @@ Each pass tests the running product hands-on, scores it against the rubric below
 ### ✅ Resolved
 - ~~**B1 · Locks contradiction**~~ — `52225ff`. Verified.
 - ~~**B2 · Map missing-token fallback**~~ — `1255cf1`. Verified.
-- ~~**B3 · Home "Pillage stops" wrong**~~ — `103b8fe`; derived from waypoints. Verified.
-- ~~**B7 · "~34 sailing days" hardcoded**~~ — `103b8fe`; derived. Verified.
-- ~~**B9 · Canal lock precision**~~ — `103b8fe`; canal-only count (26). Verified.
+- ~~**B3 · Home "Pillage stops" wrong**~~ — `103b8fe`. Verified.
+- ~~**B7 · "~34 sailing days" hardcoded**~~ — `103b8fe`. Verified.
+- ~~**B9 · Canal lock precision**~~ — `103b8fe`. Verified.
+- ~~**B4 · Brand vs. recommendation mismatch**~~ — `200cf57`; fork removed, locked to Old Saybrook. Verified.
 
 ### P0 — blockers
 _None._ 🎉
 
 ### P1 — fix soon
-- **B4 · Brand vs. recommendation mismatch.** Hero + nav + logo all say *Chicago → Philadelphia* (Option A), yet Option B (Old Saybrook) is **Recommended** and the **map default**. Pick a canonical framing (now the most user-visible inconsistency left). _Promoted from P2._
-
-### P1 — fix soon
-- **B5 · Route line crosses land — "boat sailing on a field" (PROMOTED, user-flagged).** `TripMap.tsx` draws the route as a single `LineString` connecting the 34 waypoints in day order with **straight geodesic segments**, so chords cut across coastline/peninsulas/islands. Note: the line was deliberately added in `8534214` ("Fix 6"), so the feature is wanted — the *execution* is the bug.
+- **B5 · Route line crosses land — "boat sailing on a field" (user-flagged).** `TripMap.tsx` draws the route as straight geodesic segments between waypoints, so chords cut across coastline/peninsulas/islands. _Now simpler post-B4: single route, no fork to assemble._
   - **Plan — hand-digitized water-following polyline as static data** (no runtime routing API; route is fixed + must stay offline-friendly):
-    1. **Digitize:** new `lib/data/routePath.ts` — per-leg ordered `[lng,lat]` shaping points tracing navigable water/canal/river through each waypoint, keyed for both `saybrook`/`philly`. Click the path in geojson.io, export (~100–250 vertices total). Hotspots, worst first: (a) Straits of Mackinac → North Channel → Georgian Bay → Tobermory → Lake Huron; (b) East River / Hell Gate (NYC→Oyster Bay); (c) St. Clair River / Lake St. Clair (Port Huron→Detroit); (d) Hudson River + Erie Canal corridor.
-    2. **Render & signal mode:** draw the digitized path instead of the raw waypoint chord; keep dashed chart styling; style inland legs (`erie-canal`, `hudson`) distinctly to signal canal/river transit (correct even where no blue water renders beneath).
-    3. **Acceptance:** no segment crosses land on open-water legs (check zoom 4.5 + zoomed into the 4 hotspots); canal/river legs follow the waterway centerline; fully data-driven/offline; both route options assemble through the NYC fork.
-  - **Effort:** Medium (~1 session, mostly digitizing). **Stopgap:** revert to markers-only (`eb715de` state) to remove the misleading line immediately, polyline as fast-follow.
+    1. **Digitize:** new `lib/data/routePath.ts` — ordered `[lng,lat]` shaping points tracing navigable water/canal/river through each waypoint (single route now). Click the path in geojson.io, export (~80–180 vertices). Hotspots, worst first: (a) Straits of Mackinac → North Channel → Georgian Bay → Tobermory → Lake Huron; (b) East River / Hell Gate (NYC→Oyster Bay); (c) St. Clair River / Lake St. Clair (Port Huron→Detroit); (d) Hudson River + Erie Canal corridor.
+    2. **Render & signal mode:** draw the digitized path instead of the raw waypoint chord; keep dashed chart styling; style inland legs (`erie-canal`, `hudson`) distinctly to signal canal/river transit.
+    3. **Acceptance:** no segment crosses land on open-water legs (check zoom 4.5 + zoomed into the 4 hotspots); canal/river legs follow the waterway centerline; fully data-driven/offline.
+  - **Effort:** Medium (~1 session, mostly digitizing). **Stopgap:** revert to markers-only (`eb715de` state) to remove the misleading line immediately.
 
 ### P2 — should fix
 - **B6 · Map is an un-themed island.** Default Mapbox `outdoors-v12` + white/gray popups break the parchment/pirate aesthetic (cat-3 consistency).
 
 ### P3 — polish
-- **B8 · Verify live in a real browser/device** *(biggest scoring lever — cat 4 @ 6.5)*: WebGL map render, mobile touch targets, sun-contrast on `muted-foreground` over parchment, and an **offline story** for on-the-water use. This is the largest untouched area; a fix here moves the needle most.
+- **B8 · Verify live in a real browser/device** *(biggest scoring lever — cat 4 @ 6.5)*: WebGL map render, mobile touch targets, sun-contrast on `muted-foreground` over parchment, and an **offline story** for on-the-water use.
+- **B10 · Stale "Option B" label (new).** `app/page.tsx:328` Hell Gate callout reads "East River · Option B Day 30" — drop "Option B" now that the fork is gone.
 
-> **Data category is now clean.** Remaining work is clarity (B4), design-consistency on the map (B5/B6), and real-world/mobile fitness (B8) — the last being the lowest-scoring category and the biggest opportunity.
+> **Deploy hold:** `main` is fast-forwarded to the ship-scored tip and pushed, but the Vercel **production deploy is paused pending B5** (the land-crossing route line is the one thing that would look broken to a first-time visitor).
 
 ---
 
