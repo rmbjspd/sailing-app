@@ -57,8 +57,15 @@ _None._ 🎉
 ### P1 — fix soon
 - **B4 · Brand vs. recommendation mismatch.** Hero + nav + logo all say *Chicago → Philadelphia* (Option A), yet Option B (Old Saybrook) is **Recommended** and the **map default**. Pick a canonical framing (now the most user-visible inconsistency left). _Promoted from P2._
 
+### P1 — fix soon
+- **B5 · Route line crosses land — "boat sailing on a field" (PROMOTED, user-flagged).** `TripMap.tsx` draws the route as a single `LineString` connecting the 34 waypoints in day order with **straight geodesic segments**, so chords cut across coastline/peninsulas/islands. Note: the line was deliberately added in `8534214` ("Fix 6"), so the feature is wanted — the *execution* is the bug.
+  - **Plan — hand-digitized water-following polyline as static data** (no runtime routing API; route is fixed + must stay offline-friendly):
+    1. **Digitize:** new `lib/data/routePath.ts` — per-leg ordered `[lng,lat]` shaping points tracing navigable water/canal/river through each waypoint, keyed for both `saybrook`/`philly`. Click the path in geojson.io, export (~100–250 vertices total). Hotspots, worst first: (a) Straits of Mackinac → North Channel → Georgian Bay → Tobermory → Lake Huron; (b) East River / Hell Gate (NYC→Oyster Bay); (c) St. Clair River / Lake St. Clair (Port Huron→Detroit); (d) Hudson River + Erie Canal corridor.
+    2. **Render & signal mode:** draw the digitized path instead of the raw waypoint chord; keep dashed chart styling; style inland legs (`erie-canal`, `hudson`) distinctly to signal canal/river transit (correct even where no blue water renders beneath).
+    3. **Acceptance:** no segment crosses land on open-water legs (check zoom 4.5 + zoomed into the 4 hotspots); canal/river legs follow the waterway centerline; fully data-driven/offline; both route options assemble through the NYC fork.
+  - **Effort:** Medium (~1 session, mostly digitizing). **Stopgap:** revert to markers-only (`eb715de` state) to remove the misleading line immediately, polyline as fast-follow.
+
 ### P2 — should fix
-- **B5 · Route line resurrected + geographically crude.** `TripMap.tsx` still draws a dashed line despite commit `eb715de` ("Remove route lines from map"). It connects ports with straight rhumb lines that cut across land. Confirm intent or re-remove.
 - **B6 · Map is an un-themed island.** Default Mapbox `outdoors-v12` + white/gray popups break the parchment/pirate aesthetic (cat-3 consistency).
 
 ### P3 — polish
