@@ -1,5 +1,4 @@
 import { itinerary } from "./itinerary";
-import { ROUTE_LEGS, type RouteOption } from "./waypoints";
 import type { ItineraryDay } from "../types";
 
 // Derived voyage statistics. itinerary.ts is the single source of truth; every
@@ -20,14 +19,10 @@ export interface LegStats {
   distanceNmEquiv: number;
 }
 
-export function daysForRoute(route: RouteOption): ItineraryDay[] {
-  return itinerary.filter(d => d.route === "both" || d.route === route);
-}
-
 /** Itinerary days grouped into consecutive legs, with stats per leg. */
-export function legGroupsForRoute(route: RouteOption): LegStats[] {
+export function legGroups(): LegStats[] {
   const groups: LegStats[] = [];
-  for (const day of daysForRoute(route)) {
+  for (const day of itinerary) {
     const last = groups[groups.length - 1];
     if (last && last.legId === day.leg) last.days.push(day);
     else
@@ -58,10 +53,9 @@ export interface TripTotals {
   sailingDays: number;      // distinct day numbers
 }
 
-export function tripTotals(route: RouteOption): TripTotals {
-  const days = daysForRoute(route);
-  const legs = legGroupsForRoute(route);
-  const dayNums = days.map(d => d.day).filter(d => d > 0);
+export function tripTotals(): TripTotals {
+  const legs = legGroups();
+  const dayNums = itinerary.map(d => d.day).filter(d => d > 0);
   return {
     distanceNm: legs.reduce((s, l) => s + l.distanceNm, 0),
     distanceMi: legs.reduce((s, l) => s + l.distanceMi, 0),
@@ -72,8 +66,6 @@ export function tripTotals(route: RouteOption): TripTotals {
     sailingDays: new Set(dayNums).size,
   };
 }
-
-export const ROUTE_OPTIONS = Object.keys(ROUTE_LEGS) as RouteOption[];
 
 /** Human-readable distance for a leg: "≈275 nm" or canal "338 mi" form. */
 export function formatLegDistance(leg: LegStats): string {

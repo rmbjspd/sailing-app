@@ -2,29 +2,25 @@
 import { useMemo, useState } from "react";
 import Map, { Marker, Popup, NavigationControl, Source, Layer } from "react-map-gl/mapbox";
 import type { Feature, LineString } from "geojson";
-import { waypoints, ROUTE_LEGS, type RouteOption } from "@/lib/data/waypoints";
-import type { Waypoint, Leg } from "@/lib/types";
+import { waypoints } from "@/lib/data/waypoints";
+import type { Waypoint } from "@/lib/types";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-export default function TripMap() {
-  const [route, setRoute] = useState<RouteOption>("saybrook");
-  const [popup, setPopup] = useState<Waypoint | null>(null);
+// Single canonical voyage: Chicago → Old Saybrook, in day order.
+const orderedWaypoints = [...waypoints].sort((a, b) => a.day - b.day);
 
-  const activeLegs = ROUTE_LEGS[route] as readonly Leg[];
-  const visibleWaypoints = useMemo(
-    () => waypoints.filter(w => activeLegs.includes(w.leg)).sort((a, b) => a.day - b.day),
-    [activeLegs],
-  );
+export default function TripMap() {
+  const [popup, setPopup] = useState<Waypoint | null>(null);
 
   // Ordered voyage path connecting the stops in day order.
   const routeLine: Feature<LineString> = useMemo(
     () => ({
       type: "Feature",
       properties: {},
-      geometry: { type: "LineString", coordinates: visibleWaypoints.map(w => [w.lng, w.lat]) },
+      geometry: { type: "LineString", coordinates: orderedWaypoints.map(w => [w.lng, w.lat]) },
     }),
-    [visibleWaypoints],
+    [],
   );
 
   // Graceful fallback when the Mapbox token is missing (e.g. unset on a deploy)
@@ -58,19 +54,9 @@ export default function TripMap() {
 
   return (
     <div className="relative w-full h-full">
-      {/* Route toggle */}
-      <div className="absolute top-3 left-3 z-10 bg-white rounded-lg shadow-md p-1 flex gap-1">
-        {(["saybrook", "philly"] as RouteOption[]).map(opt => (
-          <button
-            key={opt}
-            onClick={() => setRoute(opt)}
-            className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
-              route === opt ? "bg-[hsl(213,74%,28%)] text-white" : "text-gray-600 hover:bg-gray-100"
-            }`}
-          >
-            {opt === "saybrook" ? "⛵ Old Saybrook" : "🏛️ Philadelphia"}
-          </button>
-        ))}
+      {/* Route label */}
+      <div className="absolute top-3 left-3 z-10 bg-white rounded-lg shadow-md px-3 py-1.5">
+        <span className="text-sm font-medium text-[hsl(213,74%,28%)]">⛵ Chicago → Old Saybrook</span>
       </div>
 
       <Map
@@ -98,7 +84,7 @@ export default function TripMap() {
         </Source>
 
         {/* Waypoint markers */}
-        {visibleWaypoints.map(wp => (
+        {orderedWaypoints.map(wp => (
           <Marker
             key={wp.id}
             longitude={wp.lng}

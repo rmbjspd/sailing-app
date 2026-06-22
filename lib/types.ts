@@ -1,4 +1,4 @@
-export type Leg = "lake-michigan" | "north-channel" | "lake-erie" | "erie-canal" | "hudson" | "coast-philly" | "sound-saybrook";
+export type Leg = "lake-michigan" | "north-channel" | "lake-erie" | "erie-canal" | "hudson" | "sound-saybrook";
 
 export interface Waypoint {
   id: string;
@@ -24,7 +24,6 @@ export interface ItineraryDay {
   locks: number;
   leg: Leg;
   overnight: string;
-  route: "both" | "philly" | "saybrook"; // which destination option this day belongs to
   highlights: string[];
   warnings: string[];
   notes: string;

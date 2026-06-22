@@ -1,13 +1,11 @@
 "use client";
 import { useState } from "react";
 import { itinerary } from "@/lib/data/itinerary";
-import { legGroupsForRoute, formatLegDistance, tripTotals } from "@/lib/data/stats";
+import { legGroups, formatLegDistance, tripTotals } from "@/lib/data/stats";
 import { legGuides } from "@/lib/data/legGuides";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { AlertTriangle, Star, ChevronDown, ChevronUp, BookOpen, Anchor } from "lucide-react";
-
-type RouteOption = "saybrook" | "philly";
 
 const LEG_META: Record<string, { label: string; accent: string; bg: string; text: string }> = {
   "lake-michigan":  { label: "Lake Michigan",              accent: "hsl(210 62% 40%)", bg: "hsl(210 55% 90%)", text: "hsl(210 62% 22%)" },
@@ -15,16 +13,14 @@ const LEG_META: Record<string, { label: string; accent: string; bg: string; text
   "lake-erie":      { label: "Lake Erie",                  accent: "hsl(205 60% 40%)", bg: "hsl(205 50% 90%)", text: "hsl(205 60% 22%)" },
   "erie-canal":     { label: "Erie Canal",                 accent: "hsl(42 72% 42%)",  bg: "hsl(42 60% 91%)",  text: "hsl(33 58% 24%)"  },
   "hudson":         { label: "Hudson River",               accent: "hsl(148 45% 34%)", bg: "hsl(148 35% 90%)", text: "hsl(148 45% 18%)" },
-  "coast-philly":   { label: "NJ Offshore Coast",          accent: "hsl(270 40% 45%)", bg: "hsl(270 30% 91%)", text: "hsl(270 40% 22%)" },
   "sound-saybrook": { label: "Long Island Sound",          accent: "hsl(200 65% 40%)", bg: "hsl(200 50% 90%)", text: "hsl(200 65% 22%)" },
 };
 
 export default function ItineraryPage() {
-  const [route, setRoute] = useState<RouteOption>("saybrook");
   const [openGuides, setOpenGuides] = useState<Set<string>>(new Set());
 
-  const legGroups = legGroupsForRoute(route);
-  const totalDays = tripTotals(route).dayEnd;
+  const groups = legGroups();
+  const totalDays = tripTotals().dayEnd;
 
   const toggleGuide = (legId: string) => {
     setOpenGuides(prev => {
@@ -45,46 +41,13 @@ export default function ItineraryPage() {
               Ship&rsquo;s Log
             </h1>
             <p className="text-[hsl(var(--muted-foreground))] text-sm mt-1 italic">
-              {totalDays} sailing days &middot; Departure mid-June 2027
+              {totalDays} sailing days &middot; Chicago → Old Saybrook &middot; Departure mid-June 2027
             </p>
-          </div>
-
-          {/* Route toggle */}
-          <div
-            className="flex gap-1.5 rounded-lg p-1.5"
-            style={{
-              background: "hsl(var(--parchment-mid))",
-              border: "1.5px solid hsl(var(--border))",
-            }}
-          >
-            {([
-              { val: "saybrook", label: "⛵ Old Saybrook" },
-              { val: "philly",   label: "🏛️ Philadelphia" },
-            ] as { val: RouteOption; label: string }[]).map(({ val, label }) => (
-              <button
-                key={val}
-                onClick={() => setRoute(val)}
-                className="px-4 py-1.5 rounded text-sm font-semibold transition-all duration-200"
-                style={
-                  route === val
-                    ? {
-                        background: "hsl(var(--teal))",
-                        color: "white",
-                        boxShadow: "0 2px 6px hsl(var(--teal) / 0.35)",
-                      }
-                    : {
-                        color: "hsl(var(--muted-foreground))",
-                      }
-                }
-              >
-                {label}
-              </button>
-            ))}
           </div>
         </div>
 
         <div className="space-y-12">
-          {legGroups.map((leg) => {
+          {groups.map((leg) => {
             const { legId, days: legDays, dayStart, dayEnd, locks } = leg;
             const meta = LEG_META[legId] ?? {
               label: legId,

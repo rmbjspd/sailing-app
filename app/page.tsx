@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Map, CalendarDays, CheckSquare, BookOpen, Wind, Clock, Navigation } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { legGroupsForRoute, tripTotals, formatLegDistance } from "@/lib/data/stats";
+import { legGroups, tripTotals, formatLegDistance } from "@/lib/data/stats";
 import { waypoints } from "@/lib/data/waypoints";
 
 // Per-leg presentation only. All days/distances/locks are derived from
@@ -13,51 +13,35 @@ const LEG_STYLE: Record<string, { label: string; emoji: string; accent: string; 
   "lake-erie":      { label: "Lake Erie",                  emoji: "⛈️", accent: "hsl(205 60% 40%)", bg: "hsl(205 50% 90%)", border: "hsl(205 55% 66%)" },
   "erie-canal":     { label: "Erie Canal",                 emoji: "⚓", accent: "hsl(42 78% 44%)",  bg: "hsl(42 60% 91%)",  border: "hsl(42 72% 64%)" },
   "hudson":         { label: "Hudson River",               emoji: "🌉", accent: "hsl(148 45% 34%)", bg: "hsl(148 35% 90%)", border: "hsl(148 42% 60%)" },
-  "coast-philly":   { label: "NJ Coast",                   emoji: "⛵", accent: "hsl(16 68% 46%)",  bg: "hsl(16 50% 92%)",  border: "hsl(16 62% 66%)" },
   "sound-saybrook": { label: "Long Island Sound",          emoji: "⛵", accent: "hsl(200 65% 40%)", bg: "hsl(200 50% 90%)", border: "hsl(200 60% 66%)" },
 };
 
 function buildCourseLegs() {
-  const sayb = legGroupsForRoute("saybrook");
-  const phil = legGroupsForRoute("philly");
-  const shared = sayb.slice(0, 5); // lake-michigan … hudson (identical on both routes)
-  const sound = sayb[sayb.length - 1];
-  const coast = phil[phil.length - 1];
-
-  const cards = shared.map((leg) => {
+  return legGroups().map((leg) => {
     const s = LEG_STYLE[leg.legId];
     const locks = leg.locks > 0 ? ` · ${leg.locks} lock${leg.locks !== 1 ? "s" : ""}` : "";
     return { ...s, days: `${leg.dayStart}–${leg.dayEnd}`, nm: `${formatLegDistance(leg)}${locks}` };
   });
-
-  // Final leg forks into two route options — present as a combined card.
-  const s = LEG_STYLE["sound-saybrook"];
-  cards.push({
-    label: "NJ Coast / Long Island Sound",
-    emoji: "⛵",
-    accent: s.accent, bg: s.bg, border: s.border,
-    days: `${Math.min(sound.dayStart, coast.dayStart)}–${Math.max(sound.dayEnd, coast.dayEnd)}`,
-    nm: `${Math.round(sound.distanceNm)}–${Math.round(coast.distanceNm)} nm`,
-  });
-  return cards;
 }
 
 export default function HomePage() {
   const legs = buildCourseLegs();
-  const sayb = tripTotals("saybrook");
-  const phil = tripTotals("philly");
+  const totals = tripTotals();
   const fmt = (n: number) => Math.round(n).toLocaleString("en-US");
   // Erie-Canal-only lock count (excludes Black Rock + Troy) for the Canal card.
-  const canalLocks = legGroupsForRoute("saybrook").find(l => l.legId === "erie-canal")?.locks ?? 0;
-  // Option B overnight stops, derived from waypoints so the copy can't drift.
+  const canalLocks = legGroups().find(l => l.legId === "erie-canal")?.locks ?? 0;
+  // Final leg (NY Harbor → Old Saybrook) for the destination card.
+  const finalLeg = legGroups().find(l => l.legId === "sound-saybrook");
+  const finalLegNm = Math.round(finalLeg?.distanceNm ?? 0);
+  // Long Island Sound overnight stops, derived from waypoints so copy can't drift.
   const saybrookStops = waypoints
     .filter(w => w.leg === "sound-saybrook")
     .map(w => w.name.split(" / ")[0])
     .join(", ");
   const heroStats = [
-    { icon: Navigation,  label: "Total Distance", value: `~${fmt(sayb.distanceNmEquiv)}–${fmt(phil.distanceNmEquiv)} nm` },
-    { icon: CalendarDays, label: "Sailing Days",   value: `${sayb.dayEnd}–${phil.dayEnd} days` },
-    { icon: "⚓",         label: "Locks",          value: `${sayb.locks} total` },
+    { icon: Navigation,  label: "Total Distance", value: `~${fmt(totals.distanceNmEquiv)} nm` },
+    { icon: CalendarDays, label: "Sailing Days",   value: `${totals.dayEnd} days` },
+    { icon: "⚓",         label: "Locks",          value: `${totals.locks} total` },
     { icon: Wind,         label: "Boat",           value: "Oceanis 30.1" },
     { icon: Clock,        label: "Sabbatical",     value: "8 weeks" },
   ];
@@ -136,14 +120,14 @@ export default function HomePage() {
           >
             Chicago<br />
             <span style={{ color: "hsl(42 65% 75%)", fontSize: "0.75em" }}>→</span>{" "}
-            Philadelphia
+            Old Saybrook
           </h1>
 
           <p
             className="italic text-base md:text-lg mb-8 leading-relaxed"
             style={{ color: "hsl(38 30% 62%)" }}
           >
-            Great Lakes &middot; Erie Canal &middot; Hudson River &middot; NJ Coast &nbsp;🦜
+            Great Lakes &middot; North Channel &middot; Erie Canal &middot; Hudson River &middot; Long Island Sound &nbsp;🦜
           </p>
 
           <div className="flex flex-wrap gap-3">
@@ -266,62 +250,40 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* Destination options */}
+          {/* Final landfall */}
           <section>
             <div className="flex items-center gap-3 mb-5">
               <h2 className="font-[family-name:var(--font-pirata)] text-2xl text-[hsl(var(--navy))] shrink-0">
-                Mark Your X
+                The Final Landfall
               </h2>
               <div className="flex-1 rope-divider" />
               <span className="text-lg shrink-0" style={{ opacity: 0.55 }}>🦜</span>
               <div className="flex-1 rope-divider" />
             </div>
-            <div className="grid md:grid-cols-2 gap-5">
-              {/* Option A */}
-              <Card className="border-[hsl(var(--border))] shadow-sm">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base flex items-center gap-2 flex-wrap font-[family-name:var(--font-pirata)] text-xl">
-                    🏛️ Option A — Philadelphia, PA
-                    <Badge variant="secondary" className="text-xs font-[family-name:var(--font-typewriter)]">
-                      ~230 nm post-NYC
-                    </Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-sm text-[hsl(var(--card-foreground))] space-y-2">
-                  <p className="italic text-[hsl(var(--muted-foreground))]">NJ offshore coast → Delaware Bay → Delaware River</p>
-                  <p style={{ color: "hsl(38 65% 38%)" }} className="font-semibold">
-                    ⚠ Prevailing SW winds = mostly motorsailing south. Inlet timing be critical, mate.
-                  </p>
-                  <p>Completes the full inland waterway narrative. A cheesesteak awaits the weary crew at journey&apos;s end.</p>
-                </CardContent>
-              </Card>
-
-              {/* Option B — recommended */}
-              <Card
-                className="shadow-md"
-                style={{ border: "2.5px solid hsl(var(--teal))" }}
-              >
-                <div className="h-1.5 rounded-t-lg" style={{ background: "hsl(var(--teal))" }} />
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base flex items-center gap-2 flex-wrap font-[family-name:var(--font-pirata)] text-xl">
-                    ⛵ Option B — Old Saybrook, CT
-                    <Badge
-                      className="text-xs font-[family-name:var(--font-typewriter)] border-0"
-                      style={{ background: "hsl(var(--teal))", color: "white" }}
-                    >
-                      Recommended
-                    </Badge>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-sm text-[hsl(var(--card-foreground))] space-y-2">
-                  <p className="italic text-[hsl(var(--muted-foreground))]">East River → Long Island Sound → Connecticut coast</p>
-                  <p style={{ color: "hsl(148 45% 32%)" }} className="font-semibold">
-                    ✓ SW sea breezes = beam reaching east. This, Captain, is the good stuff. This is why ye came.
-                  </p>
-                  <p>~80 nm shorter. Pillage stops: {saybrookStops}.</p>
-                </CardContent>
-              </Card>
-            </div>
+            <Card
+              className="shadow-md"
+              style={{ border: "2.5px solid hsl(var(--teal))" }}
+            >
+              <div className="h-1.5 rounded-t-lg" style={{ background: "hsl(var(--teal))" }} />
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base flex items-center gap-2 flex-wrap font-[family-name:var(--font-pirata)] text-xl">
+                  ⛵ Old Saybrook, CT
+                  <Badge
+                    className="text-xs font-[family-name:var(--font-typewriter)] border-0"
+                    style={{ background: "hsl(var(--teal))", color: "white" }}
+                  >
+                    ~{finalLegNm} nm post-NYC
+                  </Badge>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-[hsl(var(--card-foreground))] space-y-2">
+                <p className="italic text-[hsl(var(--muted-foreground))]">East River → Long Island Sound → Connecticut coast</p>
+                <p style={{ color: "hsl(148 45% 32%)" }} className="font-semibold">
+                  ✓ SW sea breezes = beam reaching east. This, Captain, is the good stuff. This is why ye came.
+                </p>
+                <p>Pillage stops: {saybrookStops}. Journey&apos;s end at the mouth of the Connecticut River.</p>
+              </CardContent>
+            </Card>
           </section>
 
           {/* Dead reckoning */}

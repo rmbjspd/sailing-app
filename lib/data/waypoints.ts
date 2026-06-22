@@ -39,25 +39,11 @@ export const waypoints: Waypoint[] = [
   // --- Hudson River (Days 26–29) ---
   { id: "catskill", name: "Catskill", state: "NY", lat: 42.2179, lng: -73.8652, day: 26, leg: "hudson", marina: "Hop-O-Nose Marina (Catskill Creek)", notes: "MAST RE-STEP here — call ahead for the crane. Troy Federal Lock (last lock, 14ft, free, VHF 13) puts you in the tidal Hudson; high tide at Troy lags NYC by 5–6hrs." },
   { id: "poughkeepsie", name: "Poughkeepsie / Newburgh", state: "NY", lat: 41.7004, lng: -73.9210, day: 27, leg: "hudson", marina: "Shadows Marina / Poughkeepsie YC", notes: "Mostly sailing now — ride the ebb south. Kingston's Hudson River Maritime Museum and the Catskills backdrop en route. Anchor option at Newburgh." },
-  { id: "nyc", name: "New York City", state: "NY", lat: 40.6947, lng: -74.0444, day: 28, leg: "hudson", fuel: true, pumpout: true, marina: "Liberty Landing Marina (Jersey City)", isLayover: true, notes: "Bannerman's Castle, West Point, and the Statue of Liberty on approach. Day 29 is a layover — refuel, West Marine run, last major provisioning. Both route options depart from NY Harbor." },
+  { id: "nyc", name: "New York City", state: "NY", lat: 40.6947, lng: -74.0444, day: 28, leg: "hudson", fuel: true, pumpout: true, marina: "Liberty Landing Marina (Jersey City)", isLayover: true, notes: "Bannerman's Castle, West Point, and the Statue of Liberty on approach. Day 29 is a layover — refuel, West Marine run, last major provisioning before the run up Long Island Sound." },
 
-  // --- Option A: NJ Coast → Philadelphia (Days 30–34) ---
-  { id: "manasquan", name: "Manasquan Inlet", state: "NJ", lat: 40.1020, lng: -74.0385, day: 30, leg: "coast-philly", marina: "Hoffman's / Clark's Landing", notes: "First offshore sailing. Prevailing SW wind = close-hauled or motorsailing south. Time the inlet near slack; a railroad and bascule bridge must open before the marinas." },
-  { id: "atlantic-city", name: "Atlantic City", state: "NJ", lat: 39.3643, lng: -74.4229, day: 31, leg: "coast-philly", fuel: true, pumpout: true, marina: "Gardner's Basin / Farley State Marina", notes: "Long offshore day (~60nm) — pre-dawn departure. Barnegat Light offshore mid-morning. Absecon Inlet well-marked; arrive before dusk." },
-  { id: "cape-may", name: "Cape May", state: "NJ", lat: 38.9351, lng: -74.9060, day: 32, leg: "coast-philly", fuel: true, marina: "Utsch's Marina / Canyon Club", notes: "Victorian town, gateway to Delaware Bay. Shorter day — good weather-wait spot. Check flood-tide timing for the bay; watch Cape May–Lewes ferry traffic." },
-  { id: "delaware-city", name: "Delaware City", state: "DE", lat: 39.5790, lng: -75.5896, day: 33, leg: "coast-philly", marina: "Delaware City Marina", notes: "Ride the flood north up Delaware Bay. Summer fog common — depart Cape May ~9–10am after burn-off rather than pre-dawn. Wind-against-tide makes the bay rough." },
-  { id: "philadelphia", name: "Philadelphia", state: "PA", lat: 39.9526, lng: -75.1652, day: 34, leg: "coast-philly", marina: "Penn's Landing Harbor", notes: "ARRIVAL. Chicago to Philadelphia complete. Heavy ship traffic on the Delaware River — monitor VHF 13. Independence Seaport Museum steps from the dock. Cheesesteak mandatory." },
-
-  // --- Option B: Long Island Sound → Old Saybrook (Days 30–33) ---
+  // --- Long Island Sound → Old Saybrook (Days 30–33) ---
   { id: "oyster-bay", name: "Oyster Bay / Cold Spring Harbor", state: "NY", lat: 40.8676, lng: -73.5337, day: 30, leg: "sound-saybrook", marina: "Oyster Bay / Cold Spring Harbor marina", notes: "East River transit to reach LIS. CRITICAL: time Hell Gate for slack — currents reach 4–5kt. Then SW sea breeze beam reaching east, the sailing highlight of the trip." },
   { id: "port-jefferson", name: "Port Jefferson", state: "NY", lat: 40.9462, lng: -73.0693, day: 31, leg: "sound-saybrook", marina: "Port Jefferson Harbor", notes: "Classic Long Island Sound beam reach. Deep, beautiful harbor with full services. Get out early before the SW breeze fills in and ferry traffic builds." },
   { id: "greenport", name: "Greenport", state: "NY", lat: 41.1009, lng: -72.3620, day: 32, leg: "sound-saybrook", marina: "Mitchell Park Marina", notes: "North Fork wine country; Shelter Island a short ferry away. Plum Gut has strong tidal currents — time your approach." },
   { id: "old-saybrook", name: "Old Saybrook", state: "CT", lat: 41.2948, lng: -72.3765, day: 33, leg: "sound-saybrook", marina: "Saybrook Point Marina", notes: "ARRIVAL. Mouth of the Connecticut River. Time Race Rock near slack, then follow the channel in. Essex (5nm upriver) is one of New England's prettiest towns." },
 ];
-
-export const ROUTE_LEGS = {
-  saybrook: ["lake-michigan", "north-channel", "lake-erie", "erie-canal", "hudson", "sound-saybrook"],
-  philly:   ["lake-michigan", "north-channel", "lake-erie", "erie-canal", "hudson", "coast-philly"],
-} as const;
-
-export type RouteOption = keyof typeof ROUTE_LEGS;

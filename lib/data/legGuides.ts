@@ -168,34 +168,6 @@ This is one of America's great rivers, and it looks it. The Catskill Mountains p
   },
 
   {
-    legId: "coast-philly",
-    title: "NJ Offshore Coast → Philadelphia",
-    subtitle: "New York to Penn's Landing",
-    captainIntro: `The New Jersey coastal run is where the trip earns its offshore stripes. You're on saltwater now, properly, and the rhythm is different — tide tables replace lock schedules, inlet timing replaces bridge openings, and the Atlantic weather forecast governs your day in a way the inland route never quite did.
-
-Fair warning: the prevailing summer wind on the Jersey coast is SW, which means it's directly on the nose for most of your southward run. You will mostly motorsail. Embrace it. The coast ticks by — the barrier beaches, the Atlantic City skyline emerging from the dunes, the first sight of Cape May's lighthouse. This is not the sailing highlight of the trip, but it is the transition. You're almost there.
-
-The Delaware Bay is the last test. Wind against flood tide in the bay produces a short, steep chop that can be uncomfortable in a 30-foot boat. Get it right: depart Cape May in the morning after any fog burns off, ride the flood north, and let the current do the work. By the time you pass the Delaware Memorial Bridge and catch your first sight of the Philadelphia skyline, you've earned what's waiting at Penn's Landing.`,
-    sailingTips: [
-      "Time every inlet entry near slack or favorable current — Manasquan and Absecon (Atlantic City) both have notable tidal flow. Arriving on a strong ebb with onshore wind is the scenario to avoid.",
-      "Delaware Bay fog is common in summer mornings. Don't rush the pre-dawn departure from Cape May — a 9–10am departure after burn-off is safer than a 5am start in pea soup.",
-      "Wind-against-tide in Delaware Bay can produce confused 4–5 foot seas surprisingly quickly. If the forecast shows 15+ knots from the south against a northbound flood, wait.",
-      "Monitor VHF 13 continuously on the Delaware River — large ships give position reports at the bridges. You'll hear them announce well in advance.",
-      "Penn's Landing arrival: call ahead to the marina. The Delaware River current can be surprising if you arrive on a flooding tide — plan your dock approach accordingly.",
-    ],
-    watchFor: [
-      "Crab pot lines along the Jersey coast — they're everywhere in 20–40 feet of water, poorly marked, and prop-eating. Keep a watch forward and slow down when transiting inshore of 2 miles.",
-      "The Cape May–Lewes ferry — fast catamaran ferry crossing your path at Cape May Inlet. It moves fast. Check ferry schedules.",
-      "Ship traffic on the Delaware — the river is deep and narrow and the ships fill it. They won't stop for you.",
-    ],
-    bestStops: [
-      "Cape May, NJ: The most beautiful Victorian town in America. Washington Street Mall, the beachfront, the lighthouse. If the schedule allows a rest day, this is where to take it.",
-      "Delaware City, DE: Tiny, unpretentious, perfectly placed. Fort Delaware on Pea Patch Island is a short ferry ride and genuinely interesting. The marina staff are seasoned Loopers and will give you excellent Delaware River timing advice.",
-      "Philadelphia, PA: Penn's Landing puts you literally at the doorstep of the Independence Seaport Museum — board the USS Olympia (Spanish-American War cruiser) and the WWII submarine Becuna. Independence Hall and the Liberty Bell are a 15-minute walk. Eat a cheesesteak from Pat's or Geno's. You're done.",
-    ],
-  },
-
-  {
     legId: "sound-saybrook",
     title: "Long Island Sound → Old Saybrook",
     subtitle: "New York to the Connecticut River",
