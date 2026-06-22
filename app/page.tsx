@@ -3,6 +3,7 @@ import { Map, CalendarDays, CheckSquare, BookOpen, Wind, Clock, Navigation } fro
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { legGroupsForRoute, tripTotals, formatLegDistance } from "@/lib/data/stats";
+import { waypoints } from "@/lib/data/waypoints";
 
 // Per-leg presentation only. All days/distances/locks are derived from
 // itinerary.ts at render time so the overview can never go stale.
@@ -46,6 +47,13 @@ export default function HomePage() {
   const sayb = tripTotals("saybrook");
   const phil = tripTotals("philly");
   const fmt = (n: number) => Math.round(n).toLocaleString("en-US");
+  // Erie-Canal-only lock count (excludes Black Rock + Troy) for the Canal card.
+  const canalLocks = legGroupsForRoute("saybrook").find(l => l.legId === "erie-canal")?.locks ?? 0;
+  // Option B overnight stops, derived from waypoints so the copy can't drift.
+  const saybrookStops = waypoints
+    .filter(w => w.leg === "sound-saybrook")
+    .map(w => w.name.split(" / ")[0])
+    .join(", ");
   const heroStats = [
     { icon: Navigation,  label: "Total Distance", value: `~${fmt(sayb.distanceNmEquiv)}–${fmt(phil.distanceNmEquiv)} nm` },
     { icon: CalendarDays, label: "Sailing Days",   value: `${sayb.dayEnd}–${phil.dayEnd} days` },
@@ -310,7 +318,7 @@ export default function HomePage() {
                   <p style={{ color: "hsl(148 45% 32%)" }} className="font-semibold">
                     ✓ SW sea breezes = beam reaching east. This, Captain, is the good stuff. This is why ye came.
                   </p>
-                  <p>~80 nm shorter. Pillage stops: Oyster Bay, Greenport, Mystic, Essex.</p>
+                  <p>~80 nm shorter. Pillage stops: {saybrookStops}.</p>
                 </CardContent>
               </Card>
             </div>
@@ -335,7 +343,7 @@ export default function HomePage() {
                 },
                 {
                   title: "Canal Transit",
-                  detail: `34 numbered locks · ${sayb.locks} transited`,
+                  detail: `34 numbered locks · ${canalLocks} transited`,
                   sub: "20–30 min per lock. Last lock by 4:30 pm. Miss the Waterford Flight cutoff and ye sleep on the wrong side.",
                 },
                 {

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { itinerary } from "@/lib/data/itinerary";
-import { legGroupsForRoute, formatLegDistance } from "@/lib/data/stats";
+import { legGroupsForRoute, formatLegDistance, tripTotals } from "@/lib/data/stats";
 import { legGuides } from "@/lib/data/legGuides";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -24,6 +24,7 @@ export default function ItineraryPage() {
   const [openGuides, setOpenGuides] = useState<Set<string>>(new Set());
 
   const legGroups = legGroupsForRoute(route);
+  const totalDays = tripTotals(route).dayEnd;
 
   const toggleGuide = (legId: string) => {
     setOpenGuides(prev => {
@@ -44,7 +45,7 @@ export default function ItineraryPage() {
               Ship&rsquo;s Log
             </h1>
             <p className="text-[hsl(var(--muted-foreground))] text-sm mt-1 italic">
-              ~34 sailing days &middot; Departure mid-June 2027
+              {totalDays} sailing days &middot; Departure mid-June 2027
             </p>
           </div>
 
