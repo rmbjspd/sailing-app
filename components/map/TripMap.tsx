@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
-import Map, { Marker, Popup, NavigationControl } from "react-map-gl/mapbox";
+import { useMemo, useState } from "react";
+import Map, { Marker, Popup, NavigationControl, Source, Layer } from "react-map-gl/mapbox";
+import type { Feature, LineString } from "geojson";
 import { waypoints, ROUTE_LEGS, type RouteOption } from "@/lib/data/waypoints";
 import type { Waypoint, Leg } from "@/lib/types";
 
@@ -12,7 +13,20 @@ export default function TripMap() {
   const [popup, setPopup] = useState<Waypoint | null>(null);
 
   const activeLegs = ROUTE_LEGS[route] as readonly Leg[];
-  const visibleWaypoints = waypoints.filter(w => activeLegs.includes(w.leg));
+  const visibleWaypoints = useMemo(
+    () => waypoints.filter(w => activeLegs.includes(w.leg)).sort((a, b) => a.day - b.day),
+    [activeLegs],
+  );
+
+  // Ordered voyage path connecting the stops in day order.
+  const routeLine: Feature<LineString> = useMemo(
+    () => ({
+      type: "Feature",
+      properties: {},
+      geometry: { type: "LineString", coordinates: visibleWaypoints.map(w => [w.lng, w.lat]) },
+    }),
+    [visibleWaypoints],
+  );
 
   return (
     <div className="relative w-full h-full">
@@ -39,6 +53,21 @@ export default function TripMap() {
         onClick={() => setPopup(null)}
       >
         <NavigationControl position="top-right" />
+
+        {/* Ordered voyage route line */}
+        <Source id="route" type="geojson" data={routeLine}>
+          <Layer
+            id="route-line"
+            type="line"
+            layout={{ "line-join": "round", "line-cap": "round" }}
+            paint={{
+              "line-color": "hsl(213, 74%, 28%)",
+              "line-width": 2.5,
+              "line-opacity": 0.65,
+              "line-dasharray": [2, 1.5],
+            }}
+          />
+        </Source>
 
         {/* Waypoint markers */}
         {visibleWaypoints.map(wp => (
