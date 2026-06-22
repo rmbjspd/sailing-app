@@ -216,21 +216,18 @@ export const routeSegments: RouteSegment[] = [
     leg: "sound-saybrook",
     inland: false,
     coords: [
-      [-74.0444, 40.6947], // NYC — Liberty Landing
-      [-74.00,   40.70],   // heading north in Kill Van Kull / Upper Bay
-      [-73.98,   40.75],   // Upper New York Bay, north
-      [-73.97,   40.78],   // passing beneath Brooklyn Bridge approach
-      [-73.96,   40.71],   // East River, lower — staying in-channel
-      [-73.96,   40.74],   // East River mid
-      [-73.94,   40.76],   // Williamsburg Bridge area
-      [-73.93,   40.78],   // Queensboro Bridge area
-      [-73.92,   40.80],   // Roosevelt Island
-      [-73.90,   40.82],   // Ward's Island approach
-      [-73.91,   40.84],   // Hell Gate narrows — follow the channel bend
-      [-73.88,   40.86],   // exiting Hell Gate northeast
-      [-73.84,   40.97],   // Throgs Neck approach
-      [-73.80,   40.96],   // entering Long Island Sound
-      [-73.70,   40.90],   // west LIS, heading east
+      [-74.0444, 40.6947], // NYC — Liberty Landing (Hudson side, Jersey City)
+      [-74.02,   40.69],   // around the Battery, south tip of Manhattan
+      [-74.00,   40.70],   // Upper Bay, East River mouth
+      [-73.99,   40.71],   // Brooklyn Bridge
+      [-73.97,   40.715],  // Williamsburg Bridge
+      [-73.96,   40.74],   // East River, Midtown east
+      [-73.95,   40.757],  // Queensboro Bridge / Roosevelt Island
+      [-73.93,   40.779],  // Hell Gate narrows
+      [-73.89,   40.79],   // past Rikers Island, heading NE
+      [-73.83,   40.80],   // Whitestone Bridge
+      [-73.79,   40.81],   // Throgs Neck — entering western Long Island Sound
+      [-73.72,   40.84],   // western LIS, heading east
       [-73.5337, 40.8676], // Oyster Bay / Cold Spring Harbor
       [-73.40,   40.89],   // east along LIS north shore
       [-73.25,   40.92],   // continuing east
