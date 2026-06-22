@@ -5,8 +5,7 @@ import type { Feature, LineString } from "geojson";
 import { waypoints, ROUTE_LEGS, type RouteOption } from "@/lib/data/waypoints";
 import type { Waypoint, Leg } from "@/lib/types";
 
-const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
-
+const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 export default function TripMap() {
   const [route, setRoute] = useState<RouteOption>("saybrook");
@@ -27,6 +26,35 @@ export default function TripMap() {
     }),
     [visibleWaypoints],
   );
+
+  // Graceful fallback when the Mapbox token is missing (e.g. unset on a deploy)
+  // — without it react-map-gl renders a blank/erroring canvas.
+  if (!TOKEN) {
+    return (
+      <div className="w-full h-full flex items-center justify-center p-6 parchment-page">
+        <div className="treasure-frame rounded-lg max-w-md text-center p-8 pt-9">
+          <p className="text-5xl mb-3" aria-hidden="true">🧭</p>
+          <p className="font-[family-name:var(--font-pirata)] text-2xl text-[hsl(var(--navy))] mb-2">
+            Chart Unavailable
+          </p>
+          <p className="text-sm text-[hsl(var(--muted-foreground))] leading-relaxed mb-4 italic">
+            The navigation charts need a Mapbox token to render. Set{" "}
+            <code className="not-italic font-[family-name:var(--font-typewriter)] text-xs bg-[hsl(var(--parchment-mid))] px-1 py-0.5 rounded">
+              NEXT_PUBLIC_MAPBOX_TOKEN
+            </code>{" "}
+            and reload to bring the seas back.
+          </p>
+          <p className="text-xs text-[hsl(var(--muted-foreground))]">
+            The full route is still charted in the{" "}
+            <a href="/itinerary" className="font-semibold underline" style={{ color: "hsl(var(--teal))" }}>
+              Ship&rsquo;s Log
+            </a>
+            .
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full h-full">
