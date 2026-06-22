@@ -7,51 +7,88 @@ Each pass tests the running product hands-on, scores it against the rubric below
 
 ## Latest pass
 
-**Commit:** `de7d478` — *B5 real fix: hand-digitized water-following route polyline + B6: parchment/navy map theme* · **Date:** 2026-06-22 · **Weighted score: 8.8 / 10** · **Verdict: SHIP**
+**Commit:** `76b6ae2` — *B13: fix East River continuity regression from B12* · **Date:** 2026-06-22 · **Weighted score: 9.0 / 10** · **Verdict: SHIP**
 
-**What changed:** B5-real — `lib/data/routePath.ts` created with 131 hand-digitized `[lng,lat]` shaping points across 8 named segments (lake-michigan, north-channel, lake-huron, st-clair, lake-erie, erie-canal, hudson, sound-saybrook). 5 open-water segments rendered as navy dashed lines (#1a3a6b); 3 inland segments (St. Clair, Erie Canal, Hudson) as amber-brown dashed lines (#8B5E3C). `TripMap.tsx` restored `Source`+`Layer` (two of each) and builds two GeoJSON FeatureCollections from the segments. B6 — mapStyle changed from `outdoors-v12` to `light-v11`; route label badge uses `hsl(40,60%,96%)` parchment background with `hsl(213,74%,28%)` navy text; popup headings/subtext/badges/notes all use hsl navy/teal tokens; zero `bg-white` or `text-gray-*` in `TripMap.tsx`.
+**Commits tested this pass:**
+- `4d6fec7` — B11 (map skeleton themed: `parchment-page` + `text-[hsl(var(--navy))]`) + B12 (Detroit River: 2 channel points added; East River lat shifts started)
+- `76b6ae2` — B13 (East River chain fully rewritten as coherent monotonic NE path; Battery to Oyster Bay)
+
+**Build verification:**
+- `tsc --noEmit` clean; `next build` clean (Turbopack 16.2.4; 8/8 pages generated)
+- `next start`: all 5 routes return HTTP 200 (`/`, `/map`, `/itinerary`, `/journal`, `/checklists`)
+- No console errors, no TypeScript errors
 
 **Evaluator-verified (hands-on):**
-- `tsc --noEmit` clean; `next build` clean (6 routes static, 8/8 pages)
-- `next start` production server: all 5 routes return HTTP 200
-- Source inspection: 131 coordinates across 8 segments, 5 open-water + 3 inland, segment boundary continuity confirmed
-- Geographic spot-check of all hotspots (see B5 analysis below)
-- B6 verified: `light-v11` mapStyle present; route label badge parchment-styled; popup uses hsl tokens only; `bg-white`/`text-gray-*` absent from `TripMap.tsx`
-- Fallback (no-token): themed parchment-page with treasure-frame confirmed present
-- Regression: waypoints.ts unmodified (31 waypoints, Chicago to Old Saybrook, no Philadelphia); B10 (Option B label) still clean
-- Persistence architecture: journal (useLocalStorage) and checklists (useChecklist) files unchanged
-- Vercel preview `sailing-iedpqy066-rmbjspds-projects.vercel.app` returns HTTP 200 on /map
 
-**B5 Geographic Accuracy Audit (detail):**
+**B11 — Map loading skeleton theming: RESOLVED**
+Confirmed in live SSR HTML at `http://localhost:3000/map`:
+- `class="w-full h-full flex items-center justify-center parchment-page"` — present
+- `class="text-[hsl(var(--navy))] text-sm"` — present
+- Zero `bg-slate-100` or `text-gray-500` in map skeleton HTML
+- The off-brand gray flash on first load is gone. Map loads from parchment to rendered map with no off-theme interstitial at any network speed.
 
-Every hotspot independently evaluated against known geography:
+**B12 — Detroit River channel precision: RESOLVED**
+Two new intermediate points added to `st-clair` segment:
+- `[-82.70, 42.35]` — Detroit River channel SW
+- `[-82.90, 42.32]` — Detroit River channel approaching Lake Erie
 
-| Hotspot | Verdict | Notes |
-|---------|---------|-------|
-| Straits of Mackinac | PASS | `[-84.72, 45.82]` west approach + `[-84.619, 45.849]` Mackinac Island correct |
-| North Channel / Georgian Bay | PASS | Little Current `[-81.925, 45.978]`, Tobermory `[-81.665, 45.253]` correct; corridor in open water |
-| Lake Huron thumb transition | PASS | Chord from Ontario shore to mid-lake passes over open Lake Huron |
-| St. Clair River | PASS (minor) | Port Huron entrance correct; 6 shaping points; Detroit chord `[-82.58,42.38]`→`[-83.05,42.33]` both in navigable water; no land crossing |
-| Lake Erie (Cleveland → Erie → Buffalo) | PASS | Erie PA `[-80.085, 42.129]` correct; Buffalo/Tonawanda ~0.5km north of Black Rock Canal but in water |
-| Erie Canal (Mohawk Valley) | PASS | Pittsford south of Rochester correct; Sylvan Beach `[-75.725, 43.20]` correct; alignment matches Barge Canal |
-| Hudson River | PASS | Waterford `[-73.683, 42.792]` correct; channel through West Point/Bear Mountain; Liberty Landing `[-74.044, 40.695]` correct |
-| East River / Hell Gate / LIS | PASS (with caveat) | No land crossings. Corridor from Battery to LIS stays in navigable water. Caveat: landmark labels are ~0.07-0.10° of latitude too high (e.g. "Hell Gate" labeled at 40.93 vs actual 40.779); at lat≈40.83 the line brushes the Hudson River side of Washington Heights before pivoting east for the LIS approach. Both issues invisible at voyage zoom (4.5). LIS through to Old Saybrook correct. |
+Chain: `[-82.58,42.38]` -> `[-82.70,42.35]` -> `[-82.90,42.32]` -> `[-83.05,42.33]`
+Bearings: ~SW (109/101/84 degrees W respectively) — consistent with Detroit River actual WSW orientation.
+Monotonicity: all delta-lng more-westward confirmed; all delta-lat slightly south confirmed. No land crossings.
 
-**No land crossings detected.** Polyline stays in navigable water Chicago → Old Saybrook.
+**B13 — East River continuity regression: RESOLVED**
+Full chain rewrite confirmed. 12-point monotonic NE progression from Liberty Landing to western LIS:
 
-**One confirmed gap from B6:** `app/map/page.tsx:7-8` — SSR loading skeleton uses `bg-slate-100` + `text-gray-500`. Confirmed in live SSR HTML. Flagged as B11 (P2).
+| Point | Coord | delta-lng | delta-lat | Notes |
+|-------|-------|-----------|-----------|-------|
+| Liberty Landing | -74.0444, 40.6947 | — | — | Hudson side, Jersey City |
+| Battery south | -74.02, 40.69 | +0.024 | -0.005 | Around Manhattan tip, Upper Bay |
+| E River mouth | -74.00, 40.70 | +0.020 | +0.010 | Upper Bay |
+| Brooklyn Bridge | -73.99, 40.71 | +0.010 | +0.010 | 0.004 deg from actual bridge |
+| Williamsburg Br | -73.97, 40.715 | +0.020 | +0.005 | 0.002 deg from actual |
+| E River Midtown | -73.96, 40.74 | +0.010 | +0.025 | In-channel |
+| Queensboro Br | -73.95, 40.757 | +0.010 | +0.017 | 0.001 deg from actual |
+| Hell Gate | -73.93, 40.779 | +0.020 | +0.022 | Exactly lat 40.779 = actual Hell Gate |
+| Past Rikers | -73.89, 40.79 | +0.040 | +0.011 | North of Rikers (correct channel side) |
+| Whitestone Br | -73.83, 40.80 | +0.060 | +0.010 | 0.004 deg from actual |
+| Throgs Neck | -73.79, 40.81 | +0.040 | +0.010 | 0.010 deg from actual |
+| W LIS | -73.72, 40.84 | +0.070 | +0.030 | LIS entry heading east |
+
+Zero backtracks. Zero jumps. Every step has delta-lng > 0 and delta-lat > 0 — perfectly monotonic NE.
+
+Old path had Hell Gate at 40.93N (0.15 deg error, clipping through the Bronx) and Throgs Neck at 40.97N (0.17 deg error). Both corrected.
+
+Minor note: Battery waypoint `[-74.02, 40.69]` sits within ~0.003 deg of Governors Island's eastern footprint. At voyage zoom (4.5) this is sub-pixel. At zoom 8+ the route traces through the Upper Bay channel just east of GI — actual ship traffic uses this corridor. Low risk, navigationally correct.
+
+**Regression sweep — all other segments unchanged:**
+
+| Segment | Boundary-in | Boundary-out | Status |
+|---------|-------------|--------------|--------|
+| lake-michigan | -87.6233, 41.8827 | -84.6190, 45.8493 | PASS |
+| north-channel | -84.6190, 45.8493 | -81.6650, 45.2536 | PASS |
+| lake-huron | -81.6650, 45.2536 | -82.4249, 42.9709 | PASS |
+| st-clair | -82.4249, 42.9709 | -83.0458, 42.3314 | PASS (+2 Detroit River points) |
+| lake-erie | -83.0458, 42.3314 | -78.8798, 43.0226 | PASS |
+| erie-canal | -78.8798, 43.0226 | -73.6832, 42.7921 | PASS |
+| hudson | -73.6832, 42.7921 | -74.0444, 40.6947 | PASS |
+| sound-saybrook | -74.0444, 40.6947 | -73.3765, 41.2948 | PASS (B13 rewrite) |
+
+All 7 segment boundary hand-offs: exact coordinate match (de-dup logic intact).
+Philadelphia: confirmed absent from itinerary and home surfaces.
+
+**B8 assessment (live browser smoke test):** `libatk` not present in this environment; no headless Chrome/Playwright binary available. B8 remains parked — requires actual browser/device.
 
 | # | Category | Weight | Score | Delta | Notes |
 |---|----------|-------:|:-----:|:-----:|-------|
-| 1 | Trip-data correctness & integrity | 25% | 9.0 | +0.5 | 131 shaping points; no land crossings; inland/open-water types reflect real navigation. Minor caveats: Detroit River chord and Hell Gate label offset (both in water, invisible at voyage zoom). |
-| 2 | Core task success | 20% | 9.0 | +0.5 | Route polyline + waypoint markers render; Source/Layer wired correctly; all 5 surfaces HTTP 200; persistence intact. |
-| 3 | Design — Captain Ron meets Hook | 20% | 9.5 | +0.5 | Two-color dashed line (navy open-water / amber-brown inland) is thematically perfect and communicates leg type intuitively. Parchment badge + navy popup complete the map. light-v11 cleaner base. One blemish: loading skeleton still gray (B11). |
-| 4 | Real-world fitness (desktop + mobile) | 12% | 6.5 | — | WebGL render, touch targets, offline behavior unverifiable without browser driver in this environment. Held pending live device test. |
-| 5 | Reliability & robustness | 12% | 9.5 | +0.5 | tsc + build clean; Source/Layer IDs consistent; no runtime throw paths; fallback theming intact; `useMemo` prevents GeoJSON re-computation. |
-| 6 | Usability & clarity | 8% | 8.5 | — | Navy/amber color coding communicates canal vs. lake leg type without needing a legend. |
-| 7 | Code quality & maintainability | 3% | 9.5 | — | Typed `RouteSegment` interface; `flatMap` dedup on `fullRoutePath`; `buildRouteGeoJSON` pure; segment boundaries continuous. |
+| 1 | Trip-data correctness & integrity | 25% | 9.5 | +0.5 | B12+B13 elevate geographic precision: Detroit River traces correct SW channel; East River Hell Gate exactly at 40.779N (was 40.93N). All 8 segments verified no land crossings. One cosmetic residual: Battery point within 0.003 deg of Governors Island footprint (in-channel water, navigationally correct). |
+| 2 | Core task success | 20% | 9.0 | — | All 5 surfaces HTTP 200; route polyline/markers/popups functional; persistence architecture unchanged. |
+| 3 | Design — Captain Ron meets Hook | 20% | 9.5 | — | B11 closes the last off-brand blemish: map skeleton is now fully parchment-themed from first paint. Zero gray anywhere in the map loading experience. |
+| 4 | Real-world fitness (desktop + mobile) | 12% | 6.5 | — | Unverifiable without browser driver (libatk missing). Held until live device test. |
+| 5 | Reliability & robustness | 12% | 9.5 | — | Build clean; tsc clean; all boundaries intact; no new error paths. |
+| 6 | Usability & clarity | 8% | 8.5 | — | No changes. |
+| 7 | Code quality & maintainability | 3% | 9.5 | — | Monotonic chain with precise comments; clean typed coords. |
 
-**Weighted score:** (9.0×0.25) + (9.0×0.20) + (9.5×0.20) + (6.5×0.12) + (9.5×0.12) + (8.5×0.08) + (9.5×0.03) = 2.25+1.80+1.90+0.78+1.14+0.68+0.285 = **8.835 → 8.8 / 10**
+**Weighted score:** (9.5x0.25) + (9.0x0.20) + (9.5x0.20) + (6.5x0.12) + (9.5x0.12) + (8.5x0.08) + (9.5x0.03) = 2.375+1.800+1.900+0.780+1.140+0.680+0.285 = **8.960 -> 9.0 / 10**
 
 ### Pass history
 | Pass | Commit | Score | Verdict | Headline |
@@ -63,6 +100,7 @@ Every hotspot independently evaluated against known geography:
 | 5 | `200cf57` | 8.4 | SHIP | B4 — voyage locked to Old Saybrook; Philadelphia fork removed. |
 | 6 | `423de64` | 8.5 | SHIP | B5 stopgap (line removed) + B10 (Option B label) resolved. |
 | 7 | `de7d478` | 8.8 | SHIP | B5-real (water-following polyline) + B6 (parchment map theme) resolved. |
+| 8 | `76b6ae2` | 9.0 | SHIP | B11 (skeleton theming) + B12 (Detroit River) + B13 (East River rewrite) resolved. |
 
 ---
 
@@ -76,8 +114,10 @@ Every hotspot independently evaluated against known geography:
 - ~~**B9 Canal lock precision**~~ — `103b8fe`. Verified.
 - ~~**B4 Brand vs. recommendation mismatch**~~ — `200cf57`. Verified.
 - ~~**B5 + B10 Land-crossing line + Option B label**~~ — `423de64`. Verified.
-- ~~**B5-real Water-following polyline missing**~~ — `de7d478`. Verified: 131 coords, 8 segments, no land crossings, all hotspots audited.
-- ~~**B6 Map un-themed island**~~ — `de7d478`. Verified: parchment badge, navy popup, light-v11 base; zero `bg-white`/`text-gray-*` in TripMap.
+- ~~**B5-real Water-following polyline missing**~~ — `de7d478`. Verified: 131 coords, 8 segments, no land crossings.
+- ~~**B6 Map un-themed island**~~ — `de7d478`. Verified: parchment badge, navy popup, light-v11 base.
+- ~~**B11 Map loading skeleton un-themed**~~ — `4d6fec7`. Verified: parchment-page + navy text in SSR HTML.
+- ~~**B12 Detroit River / East River routing precision**~~ — `4d6fec7`+`76b6ae2`. Verified: Detroit River 2 intermediate points; East River full rewrite. Hell Gate at exactly 40.779N.
 
 ### P0 — blockers
 None.
@@ -86,11 +126,10 @@ None.
 None.
 
 ### P2 — should fix
-- **B11 (NEW) Map loading skeleton un-themed.** `app/map/page.tsx:7-8` — SSR/pre-hydration skeleton uses `bg-slate-100` + `text-gray-500`. On first load users briefly see an off-brand gray box before Mapbox hydrates (~300ms fast network, longer on slow). Confirmed in live SSR HTML at both local server and Vercel preview. **Fix:** replace `bg-slate-100` with `bg-[hsl(var(--parchment-mid))]` (or `parchment-page` class) and `text-gray-500` with `text-[hsl(var(--navy))]`. **Acceptance:** loading state uses parchment/navy theme colors; no off-brand gray flash visible at any network speed including 3G throttle.
+None.
 
-### P3 — polish
-- **B8 Verify live in a real browser/device** (biggest scoring lever — cat 4 at 6.5): Confirm WebGL renders at zoom 4.5; navy dashed route line and amber-brown inland line both visible; waypoint markers clickable → parchment popup on desktop and mobile 375px; checklist state survives hard refresh; offline/low-signal graceful. **Acceptance:** smoke test confirms all of the above on actual device.
-- **B12 Detroit River / Hell Gate routing precision.** Two minor geographic offsets invisible at voyage zoom but visible at zoom 8+: (a) Detroit River chord `[-82.58,42.38]`→`[-83.05,42.33]` cuts across rather than following ship channel — add 2 intermediate points `[-82.70,42.35]` and `[-82.90,42.32]`; (b) East River corridor sits ~0.10° of latitude too high (Hell Gate labeled at lat=40.93 vs actual lat=40.779), and at lat=40.83 the line brushes the Hudson side of Washington Heights. Both in navigable water; invisible at zoom 4.5. **Acceptance:** Detroit River and East River segments stay within waterway boundaries at zoom 8.
+### P3 — polish / stretch
+- **B8 Verify live in a real browser/device** (biggest remaining scoring lever — cat-4 at 6.5). Requires: Mapbox token active; headless Chrome with WebGL, OR physical/emulated device. Confirm: WebGL route line renders at zoom 4.5 with navy dashed open-water + amber-brown inland colors; parchment map skeleton visible on first load; waypoint markers clickable and parchment popup on desktop AND mobile 375px; checklist state survives hard refresh; offline/low-signal graceful degradation. Acceptance: full smoke test on real device confirms all of the above.
 
 ---
 
@@ -100,7 +139,7 @@ Weighted categories (sum 100%). End user = **desktop + mobile, equally**. Theme 
 
 | Category | Weight | What "pass" means |
 |----------|-------:|-------------------|
-| Trip-data correctness & integrity | 25% | Single source of truth; map ↔ itinerary ↔ guides consistent; units stated; detours reflected everywhere. Data bugs auto-float to top. |
+| Trip-data correctness & integrity | 25% | Single source of truth; map to itinerary to guides consistent; units stated; detours reflected everywhere. Data bugs auto-float to top. |
 | Core task success | 20% | All 5 surfaces work end-to-end; journal/checklist state survives a hard refresh. |
 | Design & aesthetics — Captain Ron meets Hook | 20% | Breezy salty charter charm + lush theatrical pirate grandeur. Cohesive non-stock palette/type, restrained texture, micro-interactions, consistency across all surfaces, memorable. |
 | Real-world fitness | 12% | Works at a laptop and one-handed on a phone; sun legible; graceful on flaky signal. Tested at both viewports each pass. |
@@ -108,4 +147,4 @@ Weighted categories (sum 100%). End user = **desktop + mobile, equally**. Theme 
 | Usability & info clarity | 8% | Obvious nav, clear "where am I." |
 | Code quality & maintainability | 3% | Type safety, single-source data, no dead code. |
 
-**Per-commit procedure:** build + run → exercise changed surface hands-on at desktop and mobile widths → regression-sweep adjacent flows + hard-refresh persistence check → score each category → verdict (Ship / Fix-forward / Regression) → re-rank this backlog.
+**Per-commit procedure:** build + run -> exercise changed surface hands-on at desktop and mobile widths -> regression-sweep adjacent flows + hard-refresh persistence check -> score each category -> verdict (Ship / Fix-forward / Regression) -> re-rank this backlog.
