@@ -2,65 +2,57 @@ import Link from "next/link";
 import { Map, CalendarDays, CheckSquare, BookOpen, Wind, Clock, Navigation } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { legGroupsForRoute, tripTotals, formatLegDistance } from "@/lib/data/stats";
 
-const legs = [
-  {
-    label: "Lake Michigan",
-    days: "1–6",
-    nm: "~500 nm",
-    emoji: "🌊",
-    accent: "hsl(210 65% 42%)",
-    bg: "hsl(210 55% 90%)",
-    border: "hsl(210 60% 68%)",
-  },
-  {
-    label: "North Channel · Manitoulin",
-    days: "7–15",
-    nm: "~400 nm",
-    emoji: "🍁",
-    accent: "hsl(165 52% 36%)",
-    bg: "hsl(165 38% 90%)",
-    border: "hsl(165 48% 62%)",
-  },
-  {
-    label: "Lake Erie",
-    days: "16–20",
-    nm: "~250 nm",
-    emoji: "⛈️",
-    accent: "hsl(205 60% 40%)",
-    bg: "hsl(205 50% 90%)",
-    border: "hsl(205 55% 66%)",
-  },
-  {
-    label: "Erie Canal",
-    days: "20–25",
-    nm: "338 mi · 34 locks",
-    emoji: "⚓",
-    accent: "hsl(42 78% 44%)",
-    bg: "hsl(42 60% 91%)",
-    border: "hsl(42 72% 64%)",
-  },
-  {
-    label: "Hudson River",
-    days: "26–29",
-    nm: "~134 nm",
-    emoji: "🌉",
-    accent: "hsl(148 45% 34%)",
-    bg: "hsl(148 35% 90%)",
-    border: "hsl(148 42% 60%)",
-  },
-  {
-    label: "NJ Coast / LIS",
-    days: "30–34",
-    nm: "~150–230 nm",
+// Per-leg presentation only. All days/distances/locks are derived from
+// itinerary.ts at render time so the overview can never go stale.
+const LEG_STYLE: Record<string, { label: string; emoji: string; accent: string; bg: string; border: string }> = {
+  "lake-michigan":  { label: "Lake Michigan",              emoji: "🌊", accent: "hsl(210 65% 42%)", bg: "hsl(210 55% 90%)", border: "hsl(210 60% 68%)" },
+  "north-channel":  { label: "North Channel · Manitoulin", emoji: "🍁", accent: "hsl(165 52% 36%)", bg: "hsl(165 38% 90%)", border: "hsl(165 48% 62%)" },
+  "lake-erie":      { label: "Lake Erie",                  emoji: "⛈️", accent: "hsl(205 60% 40%)", bg: "hsl(205 50% 90%)", border: "hsl(205 55% 66%)" },
+  "erie-canal":     { label: "Erie Canal",                 emoji: "⚓", accent: "hsl(42 78% 44%)",  bg: "hsl(42 60% 91%)",  border: "hsl(42 72% 64%)" },
+  "hudson":         { label: "Hudson River",               emoji: "🌉", accent: "hsl(148 45% 34%)", bg: "hsl(148 35% 90%)", border: "hsl(148 42% 60%)" },
+  "coast-philly":   { label: "NJ Coast",                   emoji: "⛵", accent: "hsl(16 68% 46%)",  bg: "hsl(16 50% 92%)",  border: "hsl(16 62% 66%)" },
+  "sound-saybrook": { label: "Long Island Sound",          emoji: "⛵", accent: "hsl(200 65% 40%)", bg: "hsl(200 50% 90%)", border: "hsl(200 60% 66%)" },
+};
+
+function buildCourseLegs() {
+  const sayb = legGroupsForRoute("saybrook");
+  const phil = legGroupsForRoute("philly");
+  const shared = sayb.slice(0, 5); // lake-michigan … hudson (identical on both routes)
+  const sound = sayb[sayb.length - 1];
+  const coast = phil[phil.length - 1];
+
+  const cards = shared.map((leg) => {
+    const s = LEG_STYLE[leg.legId];
+    const locks = leg.locks > 0 ? ` · ${leg.locks} lock${leg.locks !== 1 ? "s" : ""}` : "";
+    return { ...s, days: `${leg.dayStart}–${leg.dayEnd}`, nm: `${formatLegDistance(leg)}${locks}` };
+  });
+
+  // Final leg forks into two route options — present as a combined card.
+  const s = LEG_STYLE["sound-saybrook"];
+  cards.push({
+    label: "NJ Coast / Long Island Sound",
     emoji: "⛵",
-    accent: "hsl(16 68% 46%)",
-    bg: "hsl(16 50% 92%)",
-    border: "hsl(16 62% 66%)",
-  },
-];
+    accent: s.accent, bg: s.bg, border: s.border,
+    days: `${Math.min(sound.dayStart, coast.dayStart)}–${Math.max(sound.dayEnd, coast.dayEnd)}`,
+    nm: `${Math.round(sound.distanceNm)}–${Math.round(coast.distanceNm)} nm`,
+  });
+  return cards;
+}
 
 export default function HomePage() {
+  const legs = buildCourseLegs();
+  const sayb = tripTotals("saybrook");
+  const phil = tripTotals("philly");
+  const fmt = (n: number) => Math.round(n).toLocaleString("en-US");
+  const heroStats = [
+    { icon: Navigation,  label: "Total Distance", value: `~${fmt(sayb.distanceNmEquiv)}–${fmt(phil.distanceNmEquiv)} nm` },
+    { icon: CalendarDays, label: "Sailing Days",   value: `${sayb.dayEnd}–${phil.dayEnd} days` },
+    { icon: "⚓",         label: "Locks",          value: `${sayb.locks} total` },
+    { icon: Wind,         label: "Boat",           value: "Oceanis 30.1" },
+    { icon: Clock,        label: "Sabbatical",     value: "8 weeks" },
+  ];
   return (
     <div>
 
@@ -147,13 +139,7 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-wrap gap-3">
-            {[
-              { icon: Navigation, label: "Total Distance", value: "~1,300 nm" },
-              { icon: CalendarDays, label: "Sailing Days", value: "~34 days" },
-              { icon: "⚓", label: "Locks", value: "36 total" },
-              { icon: Wind, label: "Boat", value: "Oceanis 30.1" },
-              { icon: Clock, label: "Sabbatical", value: "8 weeks" },
-            ].map((s, i) => (
+            {heroStats.map((s, i) => (
               <div
                 key={i}
                 className="flex items-center gap-2.5 rounded-lg px-3.5 py-2.5"
