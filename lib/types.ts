@@ -1,4 +1,4 @@
-export type Leg = "lake-michigan" | "north-channel" | "lake-erie" | "erie-canal" | "hudson" | "sound-saybrook";
+export type Leg = "lake-michigan" | "north-channel" | "lake-huron" | "st-clair" | "lake-erie" | "erie-canal" | "hudson" | "sound-saybrook";
 
 export interface Waypoint {
   id: string;

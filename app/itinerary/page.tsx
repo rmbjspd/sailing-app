@@ -10,6 +10,8 @@ import { AlertTriangle, Star, ChevronDown, ChevronUp, BookOpen, Anchor } from "l
 const LEG_META: Record<string, { label: string; accent: string; bg: string; text: string }> = {
   "lake-michigan":  { label: "Lake Michigan",              accent: "hsl(210 62% 40%)", bg: "hsl(210 55% 90%)", text: "hsl(210 62% 22%)" },
   "north-channel":  { label: "North Channel · Manitoulin", accent: "hsl(165 52% 36%)", bg: "hsl(165 38% 90%)", text: "hsl(165 52% 18%)" },
+  "lake-huron":     { label: "Lake Huron",                 accent: "hsl(195 55% 38%)", bg: "hsl(195 45% 90%)", text: "hsl(195 55% 20%)" },
+  "st-clair":       { label: "St. Clair · Detroit River",  accent: "hsl(220 48% 40%)", bg: "hsl(220 40% 90%)", text: "hsl(220 48% 22%)" },
   "lake-erie":      { label: "Lake Erie",                  accent: "hsl(205 60% 40%)", bg: "hsl(205 50% 90%)", text: "hsl(205 60% 22%)" },
   "erie-canal":     { label: "Erie Canal",                 accent: "hsl(42 72% 42%)",  bg: "hsl(42 60% 91%)",  text: "hsl(33 58% 24%)"  },
   "hudson":         { label: "Hudson River",               accent: "hsl(148 45% 34%)", bg: "hsl(148 35% 90%)", text: "hsl(148 45% 18%)" },

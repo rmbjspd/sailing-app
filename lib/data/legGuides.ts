@@ -20,7 +20,7 @@ Your strategy for the whole leg: launch early, push hard before noon, and be tuc
 The payoff for doing it right is the approach to Mackinac — threading the Straits under that 5-mile suspension bridge with the smell of fudge drifting out from the island. There's no arrival in the Great Lakes quite like Mackinac Island for the first time.`,
     sailingTips: [
       "Best winds are NE to SW in mornings before the afternoon sea breeze sets in from the west. Plan to be at anchor or in a slip by 3–4pm if you can.",
-      "The 25L diesel tank is your limiting factor on calm days. Carry two 5-gallon jerry cans and top off at every fuel stop — some legs (Grand Haven to Ludington) will tax the range in light air.",
+      "The 130 L / 34 US gal diesel tank gives you 350+ nm of motoring range — a realistic safety margin for the entire Lake Michigan leg. Carry two 5-gallon jerry cans anyway, but reserve them for the North Channel where fuel docks are sparse (Little Current to Kincardine). Top off at every fuel stop on Lake Michigan as a matter of discipline, not emergency.",
       "Big Sable Point is a notorious wind accelerator. Rounding it before noon dramatically reduces your exposure.",
       "The Manitou Passage between North and South Manitou Islands and the mainland concentrates and accelerates wind. When the lake forecast and passage forecast disagree, believe the passage.",
       "Don't ignore NOAA WX3 and WX4 — the Great Lakes-specific weather radio channels. Check them every morning before departing, and again at noon.",
@@ -68,6 +68,62 @@ The logistics are modest: passports for everyone, a CBSA phone check-in at Meldr
       "Little Current, ON: Best-provisioned stop on Manitoulin — grocery, LCBO, hardware, fuel, multiple marinas. The swing bridge opening at the top of each hour has a theatrical quality. The whole channel watches and waits together.",
       "Kagawong, ON: Blink-and-miss-it village. Bridal Veil Falls is a 10-minute walk from the dock. Genuinely quiet in a way that even the North Channel's other stops are not. Worth a lunch stop at minimum.",
       "Tobermory, ON: Gateway to Fathom Five National Marine Park. Glass-bottom boat tours over 19th-century shipwrecks in water so clear you can count the bolts from the surface. Big Tub Harbour is one of the most photographed anchorages in Ontario.",
+    ],
+  },
+
+
+  {
+    legId: "lake-huron",
+    title: "Lake Huron",
+    subtitle: "Tobermory to Port Huron via the Ontario Shore",
+    captainIntro: `After the North Channel's granite intimacy, Lake Huron's Ontario shore is a different kind of sailing — open, exposed, and honest. Tobermory to Port Huron runs 150 nautical miles down Ontario's eastern shore of Lake Huron, past the nuclear-plant chimneys at Kincardine, across the lake's wide southern basin, and through the Blue Water Bridge into the controlled current of the St. Clair River.
+
+This is a working stretch. The Ontario shore has fewer emergency harbors than Michigan's side — the plan is correct to note this, and correct to advise watching the forecast. In good conditions it rewards patience: the water is deeper and more settled than Erie, the coast has a quiet dignity, and Kincardine's Scottish heritage makes for a memorable stop. If a Saturday alignment is possible, the bagpiper ceremony at the lighthouse at sunset is one of those quietly extraordinary moments that stays with you.
+
+The day 14 run (85 nm from Kincardine to Port Huron) is the longest single open-water day of the entire voyage. Pre-dawn departure, eyes on the barometer, and consider intermediate bail-outs at Bayfield or Grand Bend on the Ontario side if the weather turns.`,
+    sailingTips: [
+      "Day 13 (Tobermory → Kincardine, 65 nm) is long and relatively exposed. Southampton or Port Elgin (~45 nm from Tobermory) make natural intermediate bail-outs if the forecast sours — worth noting for peace of mind.",
+      "Day 14 (Kincardine → Port Huron, 85 nm) is the longest open-water day of the whole trip. Pre-dawn departure is not optional. Bayfield or Grand Bend (Ontario side, ~40 nm) or Harbor Beach (Michigan side, ~55 nm) are your mid-run shelters.",
+      "Re-entering US waters at Port Huron requires immediate contact with US CBP — call 1-800-973-2867 or use the CBP videophone at the marina. Have all passports, vessel documents, and your CBSA clearance number ready. Don't tie up and go to dinner first.",
+      "Fuel up before leaving Kincardine — Lake Huron's open-water stretch between Tobermory and Port Huron has fewer stops than you'd like.",
+      "Watch for shoaling near the Michigan 'Thumb' peninsula as you round into the southern approach to Port Huron. The chart is your friend.",
+    ],
+    watchFor: [
+      "The Ontario lee shore — if a NW front builds while you're between Kincardine and Port Huron, your options are limited. Treat a 24-hour forecast deterioration as a go/no-go signal before departure.",
+      "Shipping traffic increases dramatically approaching Port Huron and the St. Clair River entrance. Monitor VHF 16 and switch to VHF 13 for the river.",
+      "Shoal water off Harbor Beach and the Michigan Thumb — stay in the deeper water when rounding south.",
+      "Lake St. Clair current begins immediately after the Blue Water Bridge — the current has you now. Plan accordingly.",
+    ],
+    bestStops: [
+      "Kincardine, ON (Day 13): Scottish heritage town with a genuine character. The Saturday-evening bagpiper-at-the-lighthouse ceremony is the most unexpectedly moving 20 minutes on the Ontario coast. Try to schedule Day 13 for a Saturday.",
+      "Southampton/Port Elgin, ON: Quiet, photogenic Lake Huron towns with basic marina services. Good bail-out or optional lunch stop on Day 13.",
+    ],
+  },
+
+  {
+    legId: "st-clair",
+    title: "St. Clair River · Lake St. Clair · Detroit River",
+    subtitle: "Port Huron to Detroit",
+    captainIntro: `Welcome back to the United States — and to the most traffic-dense water you've seen since leaving Chicago. The St. Clair River is 40 miles of regulated shipping highway running from Port Huron south to Lake St. Clair, carrying a substantial fraction of all commercial tonnage between the upper and lower Great Lakes. You will share this channel with 1,000-foot self-unloading lakers, Canadian salties, and cement ships — all moving faster than you, all unable to stop quickly, and none of whom can yield their lane.
+
+The good news: the current is with you. Two to three knots of south-flowing current adds free speed throughout the river transit. From Port Huron to Detroit is roughly 68 nautical miles, but your effective made-good will be 8–9 knots in the river — it's the most efficient nautical miles of the whole trip.
+
+The discipline here is lane discipline. Stay out of the dredged commercial channel where depth allows, monitor VHF 13 continuously, and give every downbound freighter the entire channel. Lake St. Clair, at the midpoint, is shallow (average 11 feet) with a well-marked commercial channel — follow the buoyed lane without deviation. The Detroit River on the south end is busier still. Watch the commercial traffic, enjoy the skyline, and fuel up in Detroit before Lake Erie.`,
+    sailingTips: [
+      "Monitor VHF 13 (bridge-to-bridge) continuously from the moment you enter the St. Clair River. This is how freighters communicate their intentions and positions — it's not optional.",
+      "Never cross ahead of a downbound freighter in the St. Clair current. The river current is adding 2–3 kn to their speed and their stopping distance is measured in miles. Cross behind, not ahead.",
+      "Lake St. Clair's 'Middle Channel' is the marked commercial lane. The Oceanis 30.1 draws ~5 ft, and there is effectively no margin outside the buoyed lane in the western and southern portions. Stay in the channel.",
+      "Fuel up in Detroit before entering Lake Erie — it's your last convenient fuel stop before the open-lake run east.",
+      "The Detroit River has some of the most complex traffic of the entire trip — ferries, casino boat shuttles, tugs, commercial vessels, and pleasure craft all converging. Remain alert from Grosse Ile north to the river mouth.",
+    ],
+    watchFor: [
+      "1,000-foot lakers — they have right of way, they fill the channel, and their wake is impressive. Treat every downbound laker as a channel obstruction and maneuver accordingly.",
+      "Shoal water outside the buoyed channel on Lake St. Clair. The marked channel is the route — deviation is not rewarded.",
+      "Commercial traffic density increases approaching the Ambassador Bridge and Detroit River. This is not a leg for distraction.",
+      "Reconfirm US CBP clearance is complete before departing Port Huron. Running the St. Clair without cleared customs status is a federal violation.",
+    ],
+    bestStops: [
+      "Detroit, MI (Day 15): The Detroit Riverwalk has transformed the waterfront. Detroit City Marina is well-positioned for a night in the city. Fuel up before Lake Erie.",
     ],
   },
 
@@ -121,7 +177,7 @@ The Waterford Flight at the end — five locks dropping 169 feet in 1.5 miles �
       "Weeds and floating debris ('canalligators' in canal lore — logs and branches just awash) can foul your prop. Go slow through weedy stretches and have a mask and sharp knife ready.",
     ],
     watchFor: [
-      "Low bridges — your air draft must be under 15.5 feet. Double-check after mast-step at Tonawanda that every antenna, GPS puck, and wind instrument is either removed or below the limit.",
+      "Low bridges — design to a 14 ft 6 in (≈4.4 m) air-draft target, not 15 ft. The controlling westbound clearance (Guard Gate West at max pool) is approximately 14 ft 8 in. Double-check after mast-step at Tonawanda: measure to the top of every antenna, GPS puck, and wind instrument — not just the mast truck.",
       "Lift bridges in small towns — most open automatically when they see you coming, but some require a VHF hail (Ch. 13) or a wave. Slow down and be patient.",
       "The Oneida Lake crossing (Day 18) — 20 miles of open water that can get choppy. The only truly open-water section on the canal. Cross in the morning before afternoon winds build.",
       "Lock E-17 at Little Falls — the highest single lock at 40.5 feet. It's dramatic but well-operated. Follow crew instructions from the lock tender exactly.",

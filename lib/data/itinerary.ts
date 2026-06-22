@@ -20,7 +20,7 @@ export const itinerary: ItineraryDay[] = [
     day: 3, from: "Grand Haven, MI", to: "Ludington, MI", distanceNm: 80, locks: 0,
     leg: "lake-michigan", overnight: "Ludington Municipal Marina",
     highlights: ["Sleeping Bear Dunes visible from offshore", "Ludington is a major refueling and resupply point"],
-    warnings: ["Big Sable Point: afternoon westerlies can generate steep, short chop — round the point before noon if possible", "Carry at least one jerry can — 80nm motoring in calm air exceeds tank range; top off at Pentwater (40nm) if conditions are light"],
+    warnings: ["Big Sable Point: afternoon westerlies can generate steep, short chop — round the point before noon if possible", "Pentwater (~40nm) is a good fuel and weather check stop if conditions look dicey; the 130 L tank easily covers this day, but topping off is good practice"],
     notes: "Pass Muskegon (possible fuel stop at 40nm) and Pentwater en route. Arrive Ludington by mid-afternoon."
   },
   {
@@ -90,21 +90,21 @@ export const itinerary: ItineraryDay[] = [
   },
   {
     day: 13, from: "Tobermory, ON", to: "Kincardine, ON", distanceNm: 65, locks: 0,
-    leg: "north-channel", overnight: "Kincardine Marina",
+    leg: "lake-huron", overnight: "Kincardine Marina",
     highlights: ["Scottish heritage town — famous Saturday evening bagpiper ceremony at sunset", "Wind farm coast along Ontario's Lake Huron shore", "Good restaurant options and a genuine local character"],
     warnings: ["Long day — depart Tobermory early", "Ontario's Lake Huron shore has fewer emergency harbors than Michigan's side — watch the forecast"],
     notes: "Head south down Ontario's Lake Huron coast. Kincardine is welcoming with a solid marina. If you arrive Saturday, the bagpiper ceremony at the lighthouse at sunset is not to be missed."
   },
   {
     day: 14, from: "Kincardine, ON", to: "Sarnia, ON / Port Huron, MI", distanceNm: 85, locks: 0,
-    leg: "north-channel", overnight: "Sarnia Bay Marina (Canada) or Port Huron area marina (US)",
+    leg: "lake-huron", overnight: "Sarnia Bay Marina (Canada) or Port Huron area marina (US)",
     highlights: ["Blue Water Bridge twin spans — same visual landmark as the original route entry to St. Clair River", "Re-entering US waters after Ontario's finest"],
     warnings: ["CRITICAL: Contact US Customs and Border Protection immediately upon re-entering US waters — Port Huron is a formal entry point. Call 1-800-973-2867 or use CBP videophone at marina.", "Long day — pre-dawn departure from Kincardine recommended"],
     notes: "Long push south. Re-clear US Customs at Port Huron. Once cleared, the St. Clair River current will carry you south toward Detroit. Fuel up before the river transit."
   },
   {
     day: 15, from: "Port Huron, MI", to: "Detroit, MI", distanceNm: 68, locks: 0,
-    leg: "north-channel", overnight: "Detroit City Marina or Wyandotte area",
+    leg: "st-clair", overnight: "Detroit City Marina or Wyandotte area",
     highlights: ["St. Clair River 2–3 knot current carries you south at a satisfying pace", "1,000-foot lake freighters sharing the same narrow channel", "Detroit Riverwalk and skyline"],
     warnings: ["Heavy commercial traffic on St. Clair River — monitor VHF 13 continuously, give freighters the whole channel", "Lake St. Clair is shallow outside the marked channel — stay in the buoyed lane"],
     notes: "The St. Clair current is free speed — enjoy it. Across Lake St. Clair (follow the channel), then the Detroit River. You've rejoined the main route. Fuel and rest in Detroit."
@@ -143,7 +143,7 @@ export const itinerary: ItineraryDay[] = [
     day: 20, from: "Tonawanda (mast prep)", to: "Tonawanda", distanceNm: 0, locks: 0,
     leg: "erie-canal", overnight: "Tonawanda boatyard",
     highlights: ["Mast down — major transition from Great Lakes sailing to canal mode"],
-    warnings: ["Verify air draft under 15ft after unstep", "Secure all deck hardware that could snag under low bridges", "Mast must be well-padded and tied — it will overhang bow or stern"],
+    warnings: ["Verify air draft meets the 14 ft 6 in (≈4.4 m) design target after unstep — measure to the top of every antenna, GPS puck, and wind transducer, not just the mast", "Secure all deck hardware that could snag under low bridges", "Mast must be well-padded and tied — it will overhang bow or stern"],
     notes: "Unstep and cradle mast. Rig extra fenders (8+ needed for locks — both sides). Set up dedicated lock lines (2× 50ft). Fill water tank. Grocery run."
   },
 
