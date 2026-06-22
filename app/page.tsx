@@ -335,7 +335,7 @@ export default function HomePage() {
                 },
                 {
                   title: "Canal Transit",
-                  detail: "34 locks · E-2 through E-35",
+                  detail: `34 numbered locks · ${sayb.locks} transited`,
                   sub: "20–30 min per lock. Last lock by 4:30 pm. Miss the Waterford Flight cutoff and ye sleep on the wrong side.",
                 },
                 {
