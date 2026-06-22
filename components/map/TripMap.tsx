@@ -1,7 +1,10 @@
 "use client";
-import { useState } from "react";
-import Map, { Marker, Popup, NavigationControl } from "react-map-gl/mapbox";
+import { useMemo, useState } from "react";
+import Map, { Marker, Popup, NavigationControl, Source, Layer } from "react-map-gl/mapbox";
+import type { LayerProps } from "react-map-gl/mapbox";
+import type { FeatureCollection, LineString } from "geojson";
 import { waypoints } from "@/lib/data/waypoints";
+import { routeSegments } from "@/lib/data/routePath";
 import type { Waypoint } from "@/lib/types";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
@@ -9,8 +12,60 @@ const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 // Single canonical voyage: Chicago → Old Saybrook, in day order.
 const orderedWaypoints = [...waypoints].sort((a, b) => a.day - b.day);
 
+// Build two GeoJSON line features: open-water legs and inland (canal/river) legs.
+function buildRouteGeoJSON(): {
+  openWater: FeatureCollection<LineString>;
+  inland: FeatureCollection<LineString>;
+} {
+  const openWaterCoords: [number, number][][] = [];
+  const inlandCoords: [number, number][][] = [];
+
+  for (const seg of routeSegments) {
+    if (seg.inland) {
+      inlandCoords.push(seg.coords);
+    } else {
+      openWaterCoords.push(seg.coords);
+    }
+  }
+
+  const toFC = (coordArrays: [number, number][][]): FeatureCollection<LineString> => ({
+    type: "FeatureCollection",
+    features: coordArrays.map(coords => ({
+      type: "Feature",
+      geometry: { type: "LineString", coordinates: coords },
+      properties: {},
+    })),
+  });
+
+  return { openWater: toFC(openWaterCoords), inland: toFC(inlandCoords) };
+}
+
+// Layer paint styles
+const openWaterLayer: LayerProps = {
+  id: "route-open-water",
+  type: "line",
+  paint: {
+    "line-color": "#1a3a6b",   // deep navy — matches hsl(213,74%,28%)
+    "line-width": 2.5,
+    "line-opacity": 0.85,
+    "line-dasharray": [6, 3],
+  },
+};
+
+const inlandLayer: LayerProps = {
+  id: "route-inland",
+  type: "line",
+  paint: {
+    "line-color": "#8B5E3C",   // warm amber-brown for canal/river legs
+    "line-width": 2,
+    "line-opacity": 0.80,
+    "line-dasharray": [4, 4],
+  },
+};
+
 export default function TripMap() {
   const [popup, setPopup] = useState<Waypoint | null>(null);
+  const { openWater, inland } = useMemo(buildRouteGeoJSON, []);
 
   // Graceful fallback when the Mapbox token is missing (e.g. unset on a deploy)
   // — without it react-map-gl renders a blank/erroring canvas.
@@ -44,18 +99,31 @@ export default function TripMap() {
   return (
     <div className="relative w-full h-full">
       {/* Route label */}
-      <div className="absolute top-3 left-3 z-10 bg-white rounded-lg shadow-md px-3 py-1.5">
-        <span className="text-sm font-medium text-[hsl(213,74%,28%)]">⛵ Chicago → Old Saybrook</span>
+      <div
+        className="absolute top-3 left-3 z-10 rounded-lg shadow-md px-3 py-1.5"
+        style={{ background: "hsl(40, 60%, 96%)", border: "1px solid hsl(213, 74%, 28%, 0.25)" }}
+      >
+        <span className="text-sm font-medium" style={{ color: "hsl(213, 74%, 28%)" }}>
+          ⛵ Chicago → Old Saybrook
+        </span>
       </div>
 
       <Map
         mapboxAccessToken={TOKEN}
         initialViewState={{ longitude: -80, latitude: 42, zoom: 4.5 }}
         style={{ width: "100%", height: "100%" }}
-        mapStyle="mapbox://styles/mapbox/outdoors-v12"
+        mapStyle="mapbox://styles/mapbox/light-v11"
         onClick={() => setPopup(null)}
       >
         <NavigationControl position="top-right" />
+
+        {/* Water-following route lines */}
+        <Source id="route-open-water" type="geojson" data={openWater}>
+          <Layer {...openWaterLayer} />
+        </Source>
+        <Source id="route-inland" type="geojson" data={inland}>
+          <Layer {...inlandLayer} />
+        </Source>
 
         {/* Waypoint markers */}
         {orderedWaypoints.map(wp => (
@@ -79,7 +147,7 @@ export default function TripMap() {
           </Marker>
         ))}
 
-        {/* Popup */}
+        {/* Popup — parchment-themed */}
         {popup && (
           <Popup
             longitude={popup.lng}
@@ -87,15 +155,53 @@ export default function TripMap() {
             anchor="bottom"
             onClose={() => setPopup(null)}
             closeButton={true}
-            maxWidth="280px"
+            maxWidth="300px"
           >
-            <div className="p-1">
-              <p className="font-semibold text-sm">{popup.name}, {popup.state}</p>
-              <p className="text-xs text-gray-500 mt-0.5">Day {popup.day} · {popup.leg.replace(/-/g, " ")}</p>
-              {popup.marina && <p className="text-xs mt-1">⚓ {popup.marina}</p>}
-              {popup.fuel && <span className="inline-block text-xs bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded mr-1 mt-1">⛽ Fuel</span>}
-              {popup.pumpout && <span className="inline-block text-xs bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded mt-1">🚿 Pump-out</span>}
-              {popup.notes && <p className="text-xs text-gray-600 mt-1.5 border-t pt-1.5">{popup.notes}</p>}
+            <div
+              className="p-2 rounded"
+              style={{
+                background: "hsl(40, 60%, 96%)",
+                color: "hsl(213, 74%, 20%)",
+                fontFamily: "inherit",
+              }}
+            >
+              <p className="font-semibold text-sm" style={{ color: "hsl(213, 74%, 22%)" }}>
+                {popup.name}, {popup.state}
+              </p>
+              <p className="text-xs mt-0.5" style={{ color: "hsl(213, 40%, 45%)" }}>
+                Day {popup.day} · {popup.leg.replace(/-/g, " ")}
+              </p>
+              {popup.marina && (
+                <p className="text-xs mt-1" style={{ color: "hsl(213, 50%, 35%)" }}>
+                  ⚓ {popup.marina}
+                </p>
+              )}
+              <div className="flex flex-wrap gap-1 mt-1">
+                {popup.fuel && (
+                  <span
+                    className="inline-block text-xs px-1.5 py-0.5 rounded"
+                    style={{ background: "hsl(38, 92%, 88%)", color: "hsl(38, 70%, 30%)" }}
+                  >
+                    ⛽ Fuel
+                  </span>
+                )}
+                {popup.pumpout && (
+                  <span
+                    className="inline-block text-xs px-1.5 py-0.5 rounded"
+                    style={{ background: "hsl(213, 60%, 88%)", color: "hsl(213, 70%, 30%)" }}
+                  >
+                    🚿 Pump-out
+                  </span>
+                )}
+              </div>
+              {popup.notes && (
+                <p
+                  className="text-xs mt-1.5 border-t pt-1.5"
+                  style={{ color: "hsl(213, 35%, 40%)", borderColor: "hsl(213, 30%, 80%)" }}
+                >
+                  {popup.notes}
+                </p>
+              )}
             </div>
           </Popup>
         )}
