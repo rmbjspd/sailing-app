@@ -7,22 +7,20 @@ Each pass tests the running product hands-on, scores it against the rubric below
 
 ## Latest pass
 
-**Commit:** `52225ff` — *B1: resolve landing-page locks contradiction* · **Date:** 2026-06-22 · **Weighted score: 7.9 / 10** · **Verdict: SHIP**
+**Commit:** `1255cf1` — *B2: graceful fallback when Mapbox token is missing* · **Date:** 2026-06-22 · **Weighted score: 8.0 / 10** · **Verdict: SHIP**
 
-**What changed:** Canal Transit card detail went from hardcoded `"34 locks · E-2 through E-35"` to derived `` `34 numbered locks · ${sayb.locks} transited` ``. Both the hero stat and the card now flow from `tripTotals`, so they can no longer disagree.
+**What changed:** Dropped the `!` non-null assertion on `NEXT_PUBLIC_MAPBOX_TOKEN`; when the token is absent, `TripMap` now early-returns an on-theme "Chart Unavailable" parchment panel (explains the missing env var, links to the Ship's Log) instead of a blank/erroring canvas.
 
-**Verified (hands-on):** clean `next build` (compiled OK, 8/8 static); read the static prerender of `/` — hero shows **"28 total"**, Canal Transit shows **"34 numbered locks · 28 transited"**, zero leftover `34 locks ·` literals; independently summed `itinerary.ts` locks = **28**. ✅ Contradiction resolved at the root (derivation, not a re-typed constant).
-
-**Minor note (not a reopen):** "28 transited" under the *Canal Transit* heading includes Black Rock + Troy Federal locks, which aren't Erie Canal numbered locks (canal-only = 26). Figures now agree, so this is cosmetic precision only — logged as B9 (P3).
+**Verified (hands-on):** clean `next build` (compiled OK, 8/8 static, `/map` still prerenders). Confirmed the early-return sits **after** all hooks (`useState` ×2, `useMemo` ×2 → `if (!TOKEN)` at line 32) so rules-of-hooks holds; TS narrows `TOKEN` to `string` for the live-map path. Fallback uses `treasure-frame` + Pirata font → stays in theme. ✅
 
 | # | Category | Weight | Score | Δ | Notes |
 |---|----------|-------:|:-----:|:--:|-------|
-| 1 | Trip-data correctness & integrity | 25% | 7.5 | ▲ +0.5 | B1 fixed at root; B3 & B7 (same hardcode-in-copy pattern) still open. |
+| 1 | Trip-data correctness & integrity | 25% | 7.5 | — | B3 & B7 (hardcode-in-copy) still open. |
 | 2 | Core task success | 20% | 8.5 | — | All surfaces work; journal CRUD + empty state; checklist toggle/reset/progress; map route toggle. |
-| 3 | Design — *Captain Ron meets Hook* | 20% | 9.0 | — | Cohesive & memorable. Pirata One + IM Fell + Special Elite; parchment/rope/treasure-frame; salty voice. |
-| 4 | Real-world fitness (desktop + mobile) | 12% | 6.5 | — | Responsive patterns present; no offline story; live mobile unverified. |
-| 5 | Reliability & robustness | 12% | 7.5 | — | Clean build, good empty states, SSR-safe storage. Map hard-crashes if Mapbox token missing (B2). |
-| 6 | Usability & clarity | 8% | 7.5 | — | Charming labels, but brand says "Philadelphia" while app *recommends* Old Saybrook (B4). |
+| 3 | Design — *Captain Ron meets Hook* | 20% | 9.0 | — | Cohesive & memorable; fallback panel stays on-theme. |
+| 4 | Real-world fitness (desktop + mobile) | 12% | 6.5 | — | Responsive patterns present; no offline story; live mobile unverified (B8). |
+| 5 | Reliability & robustness | 12% | 8.5 | ▲ +1.0 | Missing-token map crash fixed with a graceful, hooks-safe fallback (B2). |
+| 6 | Usability & clarity | 8% | 7.5 | — | Brand says "Philadelphia" while app *recommends* Old Saybrook (B4). |
 | 7 | Code quality & maintainability | 3% | 9.0 | — | Type-safe, single-source data, clean components. |
 
 ### Pass history
@@ -30,32 +28,33 @@ Each pass tests the running product hands-on, scores it against the rubric below
 |------|--------|:-----:|---------|----------|
 | 1 (baseline) | `a36d9d0` | 7.8 | SHIP | First full eval; backlog B1–B8 opened. |
 | 2 | `52225ff` | 7.9 | SHIP | B1 (locks contradiction) resolved at root. |
+| 3 | `1255cf1` | 8.0 | SHIP | B2 (missing-token map fallback) resolved. |
 
 ---
 
 ## Backlog (ranked by user-impact × likelihood)
 
 ### ✅ Resolved
-- ~~**B1 · Locks contradiction**~~ — fixed in `52225ff`; both figures now derive from `tripTotals` (28). Verified.
+- ~~**B1 · Locks contradiction**~~ — `52225ff`; both figures derive from `tripTotals` (28). Verified.
+- ~~**B2 · Map missing-token fallback**~~ — `1255cf1`; on-theme "Chart Unavailable" panel, hooks-safe. Verified.
 
 ### P0 — blockers
 _None._ 🎉
 
 ### P1 — fix soon
-- **B2 · Map has no missing-token fallback.** `TripMap.tsx:8` `TOKEN = process.env…!` → blank map if `NEXT_PUBLIC_MAPBOX_TOKEN` is unset on a deploy. Add a guard + friendly "chart unavailable" panel.
+- **B3 · Home "Pillage stops" list is wrong (data).** `app/page.tsx:313` advertises *"Oyster Bay, Greenport, Mystic, Essex"* — but Mystic & Essex aren't overnight stops, and Port Jefferson (a real stop) is omitted. Align with `waypoints.ts`. _Data bug → auto-floated to top P1. Same hardcode-in-copy root cause as the old B1._
 
 ### P2 — should fix
-- **B3 · Home "Pillage stops" list is wrong (data).** `app/page.tsx:313` advertises *"Oyster Bay, Greenport, Mystic, Essex"* — but Mystic & Essex aren't overnight stops, and Port Jefferson (a real stop) is omitted. Align with `waypoints.ts`. _Same hardcode-in-copy root cause as the old B1._
 - **B4 · Brand vs. recommendation mismatch.** Hero + nav + logo all say *Chicago → Philadelphia* (Option A), yet Option B (Old Saybrook) is **Recommended** and the **map default**. Pick a canonical framing.
-- **B5 · Route line resurrected + geographically crude.** `TripMap.tsx:57-70` still draws a dashed line despite commit `eb715de` ("Remove route lines from map"). It connects ports with straight rhumb lines that cut across land. Confirm intent or re-remove.
+- **B5 · Route line resurrected + geographically crude.** `TripMap.tsx` still draws a dashed line despite commit `eb715de` ("Remove route lines from map"). It connects ports with straight rhumb lines that cut across land. Confirm intent or re-remove.
 - **B6 · Map is an un-themed island.** Default Mapbox `outdoors-v12` + white/gray popups break the parchment/pirate aesthetic (cat-3 consistency).
 
 ### P3 — polish
-- **B7 · `app/itinerary/page.tsx:47`** hardcodes "~34 sailing days" — derive (33 saybrook / 34 philly). _Same root cause as the old B1 / B3._
+- **B7 · `app/itinerary/page.tsx:47`** hardcodes "~34 sailing days" — derive (33 saybrook / 34 philly). _Same root cause as B1 / B3._
 - **B8 · Verify live in a real browser/device:** WebGL map render, mobile touch targets, sun-contrast on `muted-foreground` over parchment.
-- **B9 · Canal lock precision (new).** "28 transited" under *Canal Transit* counts Black Rock + Troy (non-canal); Erie-Canal-only is 26. Cosmetic — figures already agree.
+- **B9 · Canal lock precision.** "28 transited" under *Canal Transit* counts Black Rock + Troy (non-canal); Erie-Canal-only is 26. Cosmetic — figures already agree.
 
-> **Recurring theme:** B3 and B7 share the root cause B1 just fixed — hardcoded values in presentational copy contradicting the derived data model. Knocking those out next would close the pattern entirely.
+> **Recurring theme:** B3 and B7 share the root cause B1 fixed — hardcoded values in presentational copy contradicting the derived data model. B3 is next up; closing it (and B7) would retire the pattern entirely.
 
 ---
 
