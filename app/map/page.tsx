@@ -4,8 +4,8 @@ import dynamic from "next/dynamic";
 const TripMap = dynamic(() => import("@/components/map/TripMap"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full flex items-center justify-center bg-slate-100">
-      <p className="text-gray-500 text-sm">Loading map…</p>
+    <div className="w-full h-full flex items-center justify-center parchment-page">
+      <p className="text-[hsl(var(--navy))] text-sm">Loading map…</p>
     </div>
   ),
 });

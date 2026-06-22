@@ -121,6 +121,8 @@ export const routeSegments: RouteSegment[] = [
       [-82.54,   42.58],   // Lake St. Clair approach
       [-82.55,   42.48],   // southern Lake St. Clair main channel
       [-82.58,   42.38],   // Detroit River entrance
+      [-82.70,   42.35],   // Detroit River channel SW
+      [-82.90,   42.32],   // Detroit River channel, approaching Lake Erie
       [-83.0458, 42.3314], // Detroit
     ],
   },
@@ -218,14 +220,14 @@ export const routeSegments: RouteSegment[] = [
       [-74.00,   40.70],   // heading north in Kill Van Kull / Upper Bay
       [-73.98,   40.75],   // Upper New York Bay, north
       [-73.97,   40.78],   // passing beneath Brooklyn Bridge approach
-      [-73.96,   40.80],   // East River, lower — staying in-channel
-      [-73.96,   40.83],   // East River mid
-      [-73.94,   40.85],   // Williamsburg Bridge area
-      [-73.93,   40.87],   // Queensboro Bridge area
-      [-73.92,   40.89],   // Roosevelt Island
-      [-73.90,   40.91],   // Ward's Island approach
-      [-73.91,   40.93],   // Hell Gate narrows — follow the channel bend
-      [-73.88,   40.95],   // exiting Hell Gate northeast
+      [-73.96,   40.71],   // East River, lower — staying in-channel
+      [-73.96,   40.74],   // East River mid
+      [-73.94,   40.76],   // Williamsburg Bridge area
+      [-73.93,   40.78],   // Queensboro Bridge area
+      [-73.92,   40.80],   // Roosevelt Island
+      [-73.90,   40.82],   // Ward's Island approach
+      [-73.91,   40.84],   // Hell Gate narrows — follow the channel bend
+      [-73.88,   40.86],   // exiting Hell Gate northeast
       [-73.84,   40.97],   // Throgs Neck approach
       [-73.80,   40.96],   // entering Long Island Sound
       [-73.70,   40.90],   // west LIS, heading east
