@@ -179,7 +179,7 @@ The Waterford Flight at the end — five locks dropping 169 feet in 1.5 miles �
     watchFor: [
       "Low bridges — design to a 14 ft 6 in (≈4.4 m) air-draft target, not 15 ft. The controlling westbound clearance (Guard Gate West at max pool) is approximately 14 ft 8 in. Double-check after mast-step at Tonawanda: measure to the top of every antenna, GPS puck, and wind instrument — not just the mast truck.",
       "Lift bridges in small towns — most open automatically when they see you coming, but some require a VHF hail (Ch. 13) or a wave. Slow down and be patient.",
-      "The Oneida Lake crossing (Day 18) — 20 miles of open water that can get choppy. The only truly open-water section on the canal. Cross in the morning before afternoon winds build.",
+      "The Oneida Lake crossing (Day 24) — 20 miles of open water that can get choppy. The only truly open-water section on the canal. Stage at Brewerton the evening before and cross in the morning calm before afternoon winds build.",
       "Lock E-17 at Little Falls — the highest single lock at 40.5 feet. It's dramatic but well-operated. Follow crew instructions from the lock tender exactly.",
       "The Waterford Flight (Locks E-6 to E-2) — arrive at the top lock (E-6) by 2:30pm at the absolute latest. Once you start, you go through all five without stopping.",
     ],

@@ -13,7 +13,7 @@ export const itinerary: ItineraryDay[] = [
     day: 2, from: "St. Joseph, MI", to: "Grand Haven, MI", distanceNm: 75, locks: 0,
     leg: "lake-michigan", overnight: "Grand Haven Municipal Marina",
     highlights: ["Pass South Haven and Saugatuck en route", "Grand Haven waterfront music fountain show in the evenings"],
-    warnings: ["Longest Lake Michigan day — ensure full tank departing St. Joseph", "Afternoon NW winds can build 2–4ft chop; plan to be in by 3pm"],
+    warnings: ["Longest Lake Michigan day — ensure full tank departing St. Joseph", "Afternoon NW winds can build 2–4ft chop; plan to be in by 3pm", "Bail-out harbors if it kicks up: Holland (~35 nm) or South Haven (~20 nm)"],
     notes: "Long day sail hugging Michigan's eastern shore. Refuel and pump out at Grand Haven."
   },
   {
@@ -98,8 +98,8 @@ export const itinerary: ItineraryDay[] = [
   {
     day: 14, from: "Kincardine, ON", to: "Sarnia, ON / Port Huron, MI", distanceNm: 85, locks: 0,
     leg: "lake-huron", overnight: "Sarnia Bay Marina (Canada) or Port Huron area marina (US)",
-    highlights: ["Blue Water Bridge twin spans — same visual landmark as the original route entry to St. Clair River", "Re-entering US waters after Ontario's finest"],
-    warnings: ["CRITICAL: Contact US Customs and Border Protection immediately upon re-entering US waters — Port Huron is a formal entry point. Call 1-800-973-2867 or use CBP videophone at marina.", "Long day — pre-dawn departure from Kincardine recommended"],
+    highlights: ["Blue Water Bridge twin spans mark the St. Clair River entrance", "Re-entering US waters after Ontario's finest"],
+    warnings: ["CRITICAL: Contact US Customs and Border Protection immediately upon re-entering US waters — Port Huron is a formal entry point. Call 1-800-973-2867 or use CBP videophone at marina.", "Longest open-water day of the trip (85 nm) on an exposed lee shore — pre-dawn departure from Kincardine is not optional", "Plan staged shelters in case the forecast sours: Bayfield or Grand Bend (ON side, ~40 nm) or Harbor Beach (MI side, ~55 nm)"],
     notes: "Long push south. Re-clear US Customs at Port Huron. Once cleared, the St. Clair River current will carry you south toward Detroit. Fuel up before the river transit."
   },
   {
@@ -107,7 +107,7 @@ export const itinerary: ItineraryDay[] = [
     leg: "st-clair", overnight: "Detroit City Marina or Wyandotte area",
     highlights: ["St. Clair River 2–3 knot current carries you south at a satisfying pace", "1,000-foot lake freighters sharing the same narrow channel", "Detroit Riverwalk and skyline"],
     warnings: ["Heavy commercial traffic on St. Clair River — monitor VHF 13 continuously, give freighters the whole channel", "Lake St. Clair is shallow outside the marked channel — stay in the buoyed lane"],
-    notes: "The St. Clair current is free speed — enjoy it. Across Lake St. Clair (follow the channel), then the Detroit River. You've rejoined the main route. Fuel and rest in Detroit."
+    notes: "The St. Clair current is free speed — enjoy it. Across Lake St. Clair (follow the channel), then the Detroit River. Fuel and rest in Detroit."
   },
 
   // ---- LAKE ERIE ----
@@ -129,14 +129,14 @@ export const itinerary: ItineraryDay[] = [
     day: 18, from: "Cleveland, OH", to: "Erie, PA", distanceNm: 80, locks: 0,
     leg: "lake-erie", overnight: "Presque Isle State Park Marina",
     highlights: ["Presque Isle State Park: sandy beaches and calm bay", "U.S. Brig Niagara replica at Erie Maritime Museum"],
-    warnings: ["Another long day — early departure"],
+    warnings: ["Another long day — early departure", "Bail-out harbors along the south shore: Fairport Harbor (~20 nm) or Ashtabula (~45 nm)"],
     notes: "Presque Isle Bay is well-protected. Last fuel before Buffalo."
   },
   {
     day: 19, from: "Erie, PA", to: "Buffalo/Tonawanda, NY", distanceNm: 70, locks: 1,
     leg: "lake-erie", overnight: "Smith Boys or Wardell's Marina, Tonawanda",
     highlights: ["Black Rock Lock: hail VHF 13, bypasses Niagara River current", "Buffalo Canalside: USS Little Rock, waterfront dining", "Niagara Falls 20min by Uber from Tonawanda"],
-    warnings: ["CRITICAL: Call Wardell's or Smith Boys NOW to schedule crane for mast-unstep tomorrow", "Buffalo/Tonawanda is the last chance to source major parts until NYC"],
+    warnings: ["CRITICAL: Call Wardell's or Smith Boys NOW to schedule crane for mast-unstep tomorrow", "Buffalo/Tonawanda is the last chance to source major parts until NYC", "Bail-out harbor if eastern Erie turns: Dunkirk, NY (~35 nm) before committing to the Buffalo approach"],
     notes: "Final Great Lakes leg. Arrive by late afternoon. Begin mast-unstep logistics. Stock up at big-box stores (West Marine is here)."
   },
   {
@@ -163,51 +163,65 @@ export const itinerary: ItineraryDay[] = [
     notes: "Locks E-33/32 around Rochester (~25ft drop each). Locks E-31, E-30, E-29 toward Palmyra. ~60 statute miles."
   },
   {
-    day: 23, from: "Pittsford/Newark, NY", to: "Sylvan Beach, NY", distanceNm: 0, distanceMi: 88, locks: 6,
-    leg: "erie-canal", overnight: "Sylvan Beach wall or marina slip",
-    highlights: ["Montezuma National Wildlife Refuge: herons, eagles, turtles", "Oneida Lake crossing — 20 miles of open water", "Sylvan Beach: retro amusement park, sandy beach"],
-    warnings: ["Oneida Lake can be choppy — cross in daylight with good forecast only", "Lock E-24 at Baldwinsville: arrive before 5pm to ensure passage"],
-    notes: "Seneca Canal junction at Montezuma. After Baldwinsville, 20nm open Oneida Lake to Sylvan Beach."
+    day: 23, from: "Pittsford/Newark, NY", to: "Brewerton, NY", distanceNm: 0, distanceMi: 68, locks: 6,
+    leg: "erie-canal", overnight: "Ess-Kay Yards / Winter Harbor Marina, Brewerton",
+    highlights: ["Montezuma National Wildlife Refuge: herons, eagles, turtles", "Seneca-Cayuga Canal junction at Montezuma", "Brewerton: full-service marinas at the calm west end of Oneida Lake"],
+    warnings: ["Lock E-24 at Baldwinsville: arrive before 5pm to ensure passage", "Stage at Brewerton for the night — do NOT push across Oneida Lake late in the day"],
+    notes: "Run the lock-heavy stretch through Montezuma and Baldwinsville and stop on the west shore of Oneida Lake. Ess-Kay Yards has fuel, pump-out, and laundry. Cross the lake fresh tomorrow morning."
   },
   {
-    day: 24, from: "Sylvan Beach, NY", to: "Ilion or Little Falls, NY", distanceNm: 0, distanceMi: 55, locks: 4,
+    day: 24, from: "Brewerton, NY", to: "Sylvan Beach, NY", distanceNm: 0, distanceMi: 20, locks: 0,
+    leg: "erie-canal", overnight: "Sylvan Beach wall or marina slip",
+    highlights: ["Oneida Lake crossing — 20 miles of open water, the only true open stretch on the canal", "Sylvan Beach: retro amusement park, sandy beach"],
+    warnings: ["Oneida Lake can be choppy — cross in the morning calm with a good forecast only", "No locks today: a deliberate short day so the lake is crossed fresh and early"],
+    notes: "Cross Oneida Lake first thing while the water is flat. A short, easy day by design — arrive Sylvan Beach with the afternoon free."
+  },
+  {
+    day: 25, from: "Sylvan Beach, NY", to: "Ilion or Little Falls, NY", distanceNm: 0, distanceMi: 55, locks: 4,
     leg: "erie-canal", overnight: "Ilion Municipal Marina or Little Falls Rotary Park dock",
     highlights: ["Now on the canalized Mohawk River — scenery improves", "Ilion Marina: full services, laundry, grocery 5min away", "Little Falls: limestone cliff scenery, Moss Island glacial potholes"],
     warnings: ["Ilion is the best pump-out/fuel point before the final push to the Hudson", "Little Falls: Lock E-17 just past town is the deepest single lock (40.5ft) — tackle it next morning"],
     notes: "Locks E-22, 21, 20 through Herkimer area. Stop at Ilion or push to Little Falls."
   },
   {
-    day: 25, from: "Ilion/Little Falls, NY", to: "Waterford, NY", distanceNm: 0, distanceMi: 95, locks: 9,
+    day: 26, from: "Ilion/Little Falls, NY", to: "Amsterdam, NY", distanceNm: 0, distanceMi: 55, locks: 5,
+    leg: "erie-canal", overnight: "Amsterdam Riverlink Park dock (free wall, power, water)",
+    highlights: ["Lock E-17 at Little Falls: 40.5ft drop — highest single lock on the Erie Canal", "Canajoharie: Arkell Museum and the 'Canajoharie Boiling Pot' gorge", "Amsterdam's pedestrian bridge and revitalized Mohawk waterfront"],
+    warnings: ["Tackle Lock E-17 early while you're fresh — it's dramatic but well-operated", "Stage at Amsterdam so the Waterford Flight can be run first thing tomorrow, not against the afternoon clock"],
+    notes: "Through Little Falls, Canajoharie, and Fonda down the Mohawk Valley. Stop at Amsterdam's free Riverlink Park wall — this sets up an unhurried, dawn run at the Waterford Flight."
+  },
+  {
+    day: 27, from: "Amsterdam, NY", to: "Waterford, NY", distanceNm: 0, distanceMi: 40, locks: 4,
     leg: "erie-canal", overnight: "Waterford Visitor Center Dock (free 48hr, power, water)",
-    highlights: ["Lock E-17 at Little Falls: 40.5ft drop — highest single lock on the Erie Canal", "Waterford Flight (E-6 to E-2): 169ft descent in 1.5 miles — one of the great feats of 19th-century engineering", "MILESTONE: Great Lakes to Atlantic connected!"],
-    warnings: ["CRITICAL: Arrive at Lock E-6 (top of Waterford Flight) by 2:30pm to guarantee completing all 5 locks before close", "Locks E-13 through E-7 come in rapid succession — no dallying in the afternoon"],
-    notes: "Big day: 8–9 locks. Canajoharie and Amsterdam are optional breaks. Once in the Waterford Flight, lock operators will see you through. Celebrate at the bottom."
+    highlights: ["Waterford Flight (E-6 to E-2): 169ft descent in 1.5 miles — one of the great feats of 19th-century engineering", "MILESTONE: Great Lakes to Atlantic connected!"],
+    warnings: ["Run the Waterford Flight in the morning with the whole day in hand — once you start E-6, you go through all five without stopping", "Locks E-13 through E-7 come in succession ahead of the Flight — an early start clears them with margin"],
+    notes: "A short morning down the lower Mohawk into the Waterford Flight. Staging at Amsterdam last night means you reach Lock E-6 with hours to spare instead of racing a 2:30pm cutoff. Celebrate at the bottom."
   },
 
   // ---- HUDSON RIVER ----
   {
-    day: 26, from: "Waterford, NY", to: "Catskill, NY", distanceNm: 40, locks: 1,
+    day: 28, from: "Waterford, NY", to: "Catskill, NY", distanceNm: 40, locks: 1,
     leg: "hudson", overnight: "Hop-O-Nose Marina, Catskill Creek",
     highlights: ["Troy Federal Lock: last lock, 14ft drop, free, hail VHF 13", "Now in tidal Hudson — current changes with tide", "MAST RE-STEP at Hop-O-Nose Marina, Catskill Creek (call ahead for crane)"],
     warnings: ["Tidal timing: high tide at Troy is ~5–6hrs AFTER high tide at NYC Battery — check Troy specifically on a tide app", "Hop-O-Nose is 1nm up Catskill Creek from the Hudson — easy approach in calm water"],
     notes: "Through Albany (mile 145). Arrive Catskill (mile 112) by early-to-mid afternoon to complete mast-step before dark. Allow 2–3hrs for re-rigging. Reconnect all electronics after stepping."
   },
   {
-    day: 27, from: "Catskill, NY", to: "Poughkeepsie or Newburgh, NY", distanceNm: 60, locks: 0,
+    day: 29, from: "Catskill, NY", to: "Poughkeepsie or Newburgh, NY", distanceNm: 60, locks: 0,
     leg: "hudson", overnight: "Shadows Marina or Poughkeepsie YC; or anchor at Newburgh",
     highlights: ["Hudson-Athens Lighthouse", "Kingston/Rondout Creek: Hudson River Maritime Museum (optional stop)", "Catskill Mountains backdrop to the west"],
     warnings: ["Ride the ebb tide south — time departure for 1–2hrs after high water at your location"],
     notes: "Mostly sailing now! SW breezes common in afternoon. Ride the ebb, motorsail if wind is light."
   },
   {
-    day: 28, from: "Poughkeepsie, NY", to: "New York City", distanceNm: 75, locks: 0,
+    day: 30, from: "Poughkeepsie, NY", to: "New York City", distanceNm: 75, locks: 0,
     leg: "hudson", overnight: "Liberty Landing Marina, Jersey City",
     highlights: ["Bannerman's Castle ruins on Pollepel Island, just north of West Point", "West Point Military Academy perched on the bluffs", "Statue of Liberty and Ellis Island on approach to NY Harbor", "Manhattan skyline"],
     warnings: ["Time the ebb through the Hudson Highlands — can run 2kt", "High ferry and commercial traffic near NYC; stay alert last 20nm", "Reserve Liberty Landing in advance — NYC slips fill fast"],
-    notes: "Arrive NYC mid-to-late afternoon. Day 29 is a layover: refuel, West Marine run, provision, enjoy the city."
+    notes: "Arrive NYC mid-to-late afternoon. Day 31 is a layover: refuel, West Marine run, provision, enjoy the city."
   },
   {
-    day: 29, from: "New York City", to: "New York City", distanceNm: 0, locks: 0,
+    day: 31, from: "New York City", to: "New York City", distanceNm: 0, locks: 0,
     leg: "hudson", overnight: "Liberty Landing Marina",
     highlights: ["Rest, reprovisioning, city sightseeing"],
     warnings: ["Check the extended Long Island Sound forecast — especially the Hell Gate slack-water window — before committing to a departure day"],
@@ -216,28 +230,28 @@ export const itinerary: ItineraryDay[] = [
 
   // ---- LONG ISLAND SOUND → OLD SAYBROOK ----
   {
-    day: 30, from: "New York Harbor", to: "Oyster Bay or Cold Spring Harbor, NY", distanceNm: 28, locks: 0,
+    day: 32, from: "New York Harbor", to: "Oyster Bay or Cold Spring Harbor, NY", distanceNm: 28, locks: 0,
     leg: "sound-saybrook", overnight: "Oyster Bay or Cold Spring Harbor marina",
     highlights: ["East River transit through Manhattan — dramatic urban sailing", "Long Island Sound opens up — excellent sailing begins", "SW sea breezes = beam reaching east"],
     warnings: ["CRITICAL: Time the East River / Hell Gate carefully. Currents reach 4–5 knots at Hell Gate. Aim to pass Hell Gate at or just before slack water on a favorable ebb.", "Do NOT attempt Hell Gate on a strong opposing current"],
     notes: "Short day to get onto LIS. Once through Hell Gate, the sailing is typically glorious — consistent SW sea breeze for a beam reach east."
   },
   {
-    day: 31, from: "Oyster Bay, NY", to: "Port Jefferson, NY", distanceNm: 38, locks: 0,
+    day: 33, from: "Oyster Bay, NY", to: "Port Jefferson, NY", distanceNm: 38, locks: 0,
     leg: "sound-saybrook", overnight: "Port Jefferson Harbor",
     highlights: ["Classic Long Island Sound beam reach", "Port Jefferson: beautiful harbor, ferry terminal, great waterfront restaurants"],
     warnings: ["Summer SW sea breezes fill in by mid-morning — get out early before traffic"],
     notes: "Beautiful sailing day. Port Jefferson has full services."
   },
   {
-    day: 32, from: "Port Jefferson, NY", to: "Greenport, NY", distanceNm: 40, locks: 0,
+    day: 34, from: "Port Jefferson, NY", to: "Greenport, NY", distanceNm: 40, locks: 0,
     leg: "sound-saybrook", overnight: "Mitchell Park Marina, Greenport",
     highlights: ["North Fork wine country — some of the best in the Northeast", "Shelter Island accessible by short ferry from Greenport", "Eastern LIS: more open water, great sailing"],
     warnings: ["Plum Gut (between Plum Island and Orient Point) has strong tidal currents — time your approach"],
     notes: "Another excellent sailing day. Greenport is a great overnight — walk to wine tasting or ferry to Shelter Island."
   },
   {
-    day: 33, from: "Greenport, NY", to: "Old Saybrook, CT", distanceNm: 50, locks: 0,
+    day: 35, from: "Greenport, NY", to: "Old Saybrook, CT", distanceNm: 50, locks: 0,
     leg: "sound-saybrook", overnight: "Saybrook Point Marina",
     highlights: ["Plum Gut to Race Rock — exhilarating tidal current if timed right", "Mouth of the Connecticut River — a beautiful finish", "Essex (5nm upriver): one of the prettiest New England towns, Essex Steam Train connects to river boat tours", "Saybrook Point lighthouse"],
     warnings: ["Connecticut River entrance can shoal; follow the marked channel", "Race Rock and The Race: tidal currents are fierce — cross near slack"],

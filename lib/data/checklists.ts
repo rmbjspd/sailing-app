@@ -65,7 +65,7 @@ export const checklists: ChecklistGroup[] = [
       { id: "b5", label: "Boat hooks (2 recommended for locks)", category: "boat-gear", priority: "critical" },
       { id: "b6", label: "Primary anchor + chain/rope rode (150ft minimum)", category: "boat-gear", priority: "critical" },
       { id: "b7", label: "Secondary (Danforth/Fortress) anchor", category: "boat-gear", priority: "important" },
-      { id: "b8", label: "Jerry cans: 2× 5-gallon diesel", category: "boat-gear", priority: "critical", notes: "Required for 80nm days on Lake Michigan in light air" },
+      { id: "b8", label: "Jerry cans: 2× 5-gallon diesel", category: "boat-gear", priority: "critical", notes: "North Channel reserve — fuel docks are sparse from Little Current to Kincardine" },
       { id: "b9", label: "Engine oil (full change qty + top-ups)", category: "boat-gear", priority: "critical" },
       { id: "b10", label: "Fuel filters: primary + secondary (2 sets)", category: "boat-gear", priority: "critical" },
       { id: "b11", label: "Raw water pump impeller (2 spares + gasket)", category: "boat-gear", priority: "critical" },
