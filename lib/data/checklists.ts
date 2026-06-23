@@ -24,6 +24,7 @@ export const checklists: ChecklistGroup[] = [
       { id: "s16", label: "Radar reflector (for coastal/offshore legs)", category: "safety", priority: "important" },
       { id: "s17", label: "SOS strobe light", category: "safety", priority: "important" },
       { id: "s18", label: "Bosun's chair + halyard setup for going aloft", category: "safety", priority: "important", notes: "Needed for mast unstep/restep" },
+      { id: "s19", label: "Abandon-ship grab bag (one consolidated, labeled bag)", category: "safety", priority: "important", notes: "PLB, handheld VHF, flares, water, signal mirror, first-aid — one grab-and-go bag stowed by the companionway" },
     ]
   },
   {
@@ -52,6 +53,7 @@ export const checklists: ChecklistGroup[] = [
       { id: "n19", label: "Logbook + pencils + parallel rulers + dividers", category: "navigation", priority: "nice" },
       { id: "n20", label: "Binoculars", category: "navigation", priority: "nice" },
       { id: "n21", label: "Radar (active — broadband/dome)", category: "navigation", priority: "important", notes: "Collision avoidance in Great Lakes fog and dense commercial traffic — complements the AIS transceiver and the passive reflector" },
+      { id: "n22", label: "Laminated tide & current cheat-card", category: "navigation", priority: "nice", notes: "Quick-reference slack/current windows for Troy, Hell Gate, Plum Gut, and Race Rock — the gates that make or break the back half of the trip" },
     ]
   },
   {
@@ -74,6 +76,7 @@ export const checklists: ChecklistGroup[] = [
       { id: "b13", label: "Oil filters (2 spares)", category: "boat-gear", priority: "important" },
       { id: "b14", label: "Coolant (premixed)", category: "boat-gear", priority: "important" },
       { id: "b15", label: "Underwater knife / prop cutter for fouled prop", category: "boat-gear", priority: "important" },
+      { id: "b15a", label: "Wetsuit + mask/fins for clearing a fouled prop", category: "boat-gear", priority: "important", notes: "Canal weeds and 'canalligators' foul props — water is cold, so a wetsuit makes an in-water clearance survivable" },
       { id: "b16", label: "Full tool kit (sockets, wrenches, screwdrivers, pliers, vise-grips)", category: "boat-gear", priority: "critical" },
       { id: "b17", label: "Multimeter + spare fuses (all ratings) + spare wire", category: "boat-gear", priority: "important" },
       { id: "b18", label: "Sail repair kit (sail tape, palm, needle, thread)", category: "boat-gear", priority: "important" },
@@ -88,6 +91,9 @@ export const checklists: ChecklistGroup[] = [
       { id: "b27", label: "Head repair kit (spare joker valve, pump seal)", category: "boat-gear", priority: "important" },
       { id: "b28", label: "Hacksaw + blades", category: "boat-gear", priority: "nice" },
       { id: "b29", label: "Mast cradle wood / crutch materials for unstep", category: "boat-gear", priority: "critical", notes: "Wardell's/Smith Boys usually supply; confirm in advance" },
+      { id: "b30", label: "Lee cloths for sea berths", category: "boat-gear", priority: "important", notes: "Keeps an off-watch crew member in the bunk on the long, lumpy open-water days" },
+      { id: "b31", label: "Sealed engine-spares box (filters, impellers, belts, gaskets)", category: "boat-gear", priority: "important", notes: "One waterproof box, inventoried — the engine is the trip on the canal and in light air" },
+      { id: "b32", label: "Proper dodger / spray hood", category: "boat-gear", priority: "important", notes: "Cold spray on the open Lakes wears the crew down fast — a real dodger is a safety item, not a luxury" },
     ]
   },
   {
@@ -121,12 +127,13 @@ export const checklists: ChecklistGroup[] = [
       { id: "p10", label: "Quick-dry microfiber towels", category: "personal", priority: "important" },
       { id: "p11", label: "Bug spray with DEET", category: "personal", priority: "important", notes: "Canal evenings can be buggy" },
       { id: "p12", label: "Dry bags (for phones, wallet, documents)", category: "personal", priority: "important" },
-      { id: "p13", label: "Headlamp (each crew member)", category: "personal", priority: "important" },
+      { id: "p13", label: "Headlamp with red-light mode (each crew member)", category: "personal", priority: "important", notes: "Red mode preserves night vision on watch and in the cockpit" },
       { id: "p14", label: "Passport (required for any Canadian port)", category: "personal", priority: "critical" },
       { id: "p15", label: "Vessel documentation + insurance + registration", category: "personal", priority: "critical" },
       { id: "p16", label: "Personal medications (6+ week supply)", category: "personal", priority: "critical" },
       { id: "p17", label: "Cash (small bills for canal walls, tips, farmers markets)", category: "personal", priority: "important" },
       { id: "p18", label: "Earplugs (marina noise, engine noise)", category: "personal", priority: "nice" },
+      { id: "p19", label: "Offshore foul-weather bibs + sea boots (helm crew)", category: "personal", priority: "important", notes: "A jacket isn't enough for a cold, wet 85 nm day on Lake Huron — bibs and proper boots keep the watch functional" },
     ]
   },
   {
@@ -166,6 +173,7 @@ export const checklists: ChecklistGroup[] = [
       { id: "pr14", label: "Portable water jugs (2× 5-gallon) for extending tank", category: "provisioning", priority: "important" },
       { id: "pr15", label: "3rd 5-gallon water jug for the remote North Channel stretch", category: "provisioning", priority: "important", notes: "Potable water is scarce between Little Current and Kincardine — carry extra reserve" },
       { id: "pr16", label: "Perishables resupply plan (buy fresh in 3–4 day cycles)", category: "provisioning", priority: "important", notes: "Key reprovisioning towns: Mackinac Island, Little Current, Cleveland, Ilion, and NYC — provision heavily before the North Channel" },
+      { id: "pr17", label: "Insulated thermos for night watches", category: "provisioning", priority: "nice", notes: "Hot coffee or soup makes a cold pre-dawn departure or two-watch rotation far more bearable" },
     ]
   },
   {

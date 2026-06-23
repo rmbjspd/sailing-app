@@ -188,7 +188,7 @@ The Waterford Flight at the end — five locks dropping 169 feet in 1.5 miles �
     bestStops: [
       "Lockport, NY: The 'Flight of Five' — the original 1825 canal locks run parallel to the modern ones. The Lockport Cave tour goes underneath the canal. Fascinating.",
       "Fairport, NY: The red liftbridge, the towpath trail, Moonlight Creamery ice cream. The most photogenic canal town. Great lunch stop.",
-      "Lyons, NY: The town smells like peppermint. This is not a joke — it's the peppermint oil capital of America. Stop for a walk.",
+      "Lyons, NY (optional diversion — not a scheduled overnight): The town smells like peppermint. This is not a joke — it's the peppermint oil capital of America. Worth a walk if you're ahead of schedule between Pittsford and Brewerton.",
       "Sylvan Beach, NY: Retro amusement park at the east end of Oneida Lake. Something surreal about a Ferris wheel next to a canal lock.",
       "Little Falls, NY: Nestled in limestone cliffs. The Rotary Park dock is free and pretty. Moss Island and its glacial potholes are a 20-minute walk. Strongly recommend.",
       "Waterford, NY: Oldest continuously inhabited settlement in the US (they say). The welcome center at the bottom of the Flight often has volunteers who will literally hand you a beer. True story.",
@@ -251,7 +251,7 @@ The Sound is one of the great cruising grounds on the East Coast, and it's at it
       "Oyster Bay, NY: Theodore Roosevelt's Sagamore Hill home is here. Beautiful harbor. Brilliant for a first-night stop after the East River chaos.",
       "Port Jefferson, NY: Deep harbor, charming town, excellent waterfront restaurants. One of the best natural harbors on the Sound's south shore.",
       "Greenport, NY: The gem of the North Fork. Mitchell Park Marina is well-run. The town has excellent wine tasting rooms (North Fork AVA is seriously good), a maritime museum, and good restaurants. Shelter Island is accessible by ferry from here.",
-      "Mystic, CT: Mystic Seaport Museum is outstanding — Charles W. Morgan, the last surviving wooden whaleship, is here. The town is charming, the seafood is exceptional.",
+      "Mystic, CT (optional side-trip from Old Saybrook — the voyage's official finish is Saybrook Point): Mystic Seaport Museum is outstanding — Charles W. Morgan, the last surviving wooden whaleship, is here. An easy day-sail east if you want to extend the trip; the Mystic River drawbridge has a limited opening schedule, so call ahead.",
       "Old Saybrook / Essex, CT: The Connecticut River at its most beautiful. Essex (5 nm upriver) is arguably the most handsome town in New England. The Griswold Inn has been operating since 1776. Steam train connects to a riverboat tour. A genuinely lovely place to end a voyage.",
     ],
   },

@@ -79,7 +79,7 @@ export const itinerary: ItineraryDay[] = [
     leg: "north-channel", overnight: "Anchor in Baie Fine 'The Pool', or slip at Killarney Municipal Marina",
     highlights: ["Baie Fine: a 10-mile fjord ending in 'The Pool' — pink granite walls, gin-clear water, absolute silence", "Benjamin Islands (detour south): legendary anchorage on bare pink granite islands", "Killarney: charming historic fishing village, Herbert's fish & chips"],
     warnings: ["Baie Fine entrance bar is shallow at low water — favor the north side and go slow", "If anchoring in The Pool, arrive before 5pm in peak summer for a spot", "Carry full water reserves through here — potable water is scarce until Kincardine; top off all tanks and jugs at Little Current"],
-    notes: "The crown jewel of the North Channel. If you anchor anywhere on this entire voyage, The Pool in Baie Fine is it — granite walls 200 feet above, the water runs 50 feet clear to the bottom. Killarney (10nm further) has fuel and a marina if you prefer a dock."
+    notes: "The crown jewel of the North Channel. If you anchor anywhere on this entire voyage, The Pool in Baie Fine is it — granite walls 200 feet above, the water runs 50 feet clear to the bottom. Killarney (10nm further) has fuel and a marina if you prefer a dock. Advisory: a second night at anchor here is the best schedule splurge on the trip — the buffer days at Mackinac and NYC give you the slack to take it if the weather is kind."
   },
   {
     day: 12, from: "Killarney, ON", to: "Tobermory, ON", distanceNm: 48, locks: 0,
@@ -216,7 +216,7 @@ export const itinerary: ItineraryDay[] = [
   {
     day: 30, from: "Poughkeepsie, NY", to: "New York City", distanceNm: 75, locks: 0,
     leg: "hudson", overnight: "Liberty Landing Marina, Jersey City",
-    highlights: ["Bannerman's Castle ruins on Pollepel Island, just north of West Point", "West Point Military Academy perched on the bluffs", "Statue of Liberty and Ellis Island on approach to NY Harbor", "Manhattan skyline"],
+    highlights: ["Bannerman's Castle ruins on Pollepel Island, just north of West Point", "West Point Military Academy perched on the bluffs", "Statue of Liberty and Ellis Island on approach to NY Harbor", "Time the final approach for golden hour — the Manhattan skyline lit by the low evening sun is the landfall of the whole voyage"],
     warnings: ["Time the ebb through the Hudson Highlands — can run 2kt", "High ferry and commercial traffic near NYC; stay alert last 20nm", "Reserve Liberty Landing in advance — NYC slips fill fast"],
     notes: "Arrive NYC mid-to-late afternoon. Day 31 is a layover: refuel, West Marine run, provision, enjoy the city."
   },
