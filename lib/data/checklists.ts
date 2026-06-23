@@ -50,7 +50,7 @@ export const checklists: ChecklistGroup[] = [
       { id: "n17", label: "Waterproof phone/tablet cases", category: "navigation", priority: "important" },
       { id: "n18", label: "Magnetic compass — calibrated", category: "navigation", priority: "important" },
       { id: "n19", label: "Logbook + pencils + parallel rulers + dividers", category: "navigation", priority: "nice" },
-      { id: "n20", label: "Binoculars", category: "navigation", priority: "nice" },
+      { id: "n20", label: "Binoculars", category: "navigation", priority: "nice", notes: "Covered — Athlon Midas 8x42 (ED glass, waterproof) already owned; no purchase needed" },
     ]
   },
   {
