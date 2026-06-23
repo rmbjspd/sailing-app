@@ -78,7 +78,7 @@ export const itinerary: ItineraryDay[] = [
     day: 11, from: "Little Current, ON", to: "Baie Fine / The Pool, or Killarney, ON", distanceNm: 42, locks: 0,
     leg: "north-channel", overnight: "Anchor in Baie Fine 'The Pool', or slip at Killarney Municipal Marina",
     highlights: ["Baie Fine: a 10-mile fjord ending in 'The Pool' — pink granite walls, gin-clear water, absolute silence", "Benjamin Islands (detour south): legendary anchorage on bare pink granite islands", "Killarney: charming historic fishing village, Herbert's fish & chips"],
-    warnings: ["Baie Fine entrance bar is shallow at low water — favor the north side and go slow", "If anchoring in The Pool, arrive before 5pm in peak summer for a spot"],
+    warnings: ["Baie Fine entrance bar is shallow at low water — favor the north side and go slow", "If anchoring in The Pool, arrive before 5pm in peak summer for a spot", "Carry full water reserves through here — potable water is scarce until Kincardine; top off all tanks and jugs at Little Current"],
     notes: "The crown jewel of the North Channel. If you anchor anywhere on this entire voyage, The Pool in Baie Fine is it — granite walls 200 feet above, the water runs 50 feet clear to the bottom. Killarney (10nm further) has fuel and a marina if you prefer a dock."
   },
   {

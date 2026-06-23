@@ -25,6 +25,8 @@ The payoff for doing it right is the approach to Mackinac — threading the Stra
       "The Manitou Passage between North and South Manitou Islands and the mainland concentrates and accelerates wind. When the lake forecast and passage forecast disagree, believe the passage.",
       "Don't ignore NOAA WX3 and WX4 — the Great Lakes-specific weather radio channels. Check them every morning before departing, and again at noon.",
       "Lake Michigan water temps stay below 60°F well into July. If someone goes overboard, cold water incapacitation is your biggest danger — jacklines and tethers for all crew whenever offshore.",
+      "Standing order for the open Lakes: inflatable PFD-harnesses worn and tethers clipped on every open-water leg, day or night. Brief a cold-water MOB recovery (Lifesling-and-winch hoist) before you leave Chicago — the plan is recovery, not just retrieval.",
+      "For the long open-water days, run a simple two-watch rotation so the helm is always fresh and rested — fatigue is the quiet hazard on 70–85 nm passages. If conditions deteriorate, the natural haul-out / wait-it-out points down the route are Mackinac, Detroit, Buffalo, and NYC; don't be too proud to use them.",
     ],
     watchFor: [
       "Afternoon convective thunderstorms — they build fast over the warm land and move east over the lake. If you see anvil-top cumulonimbus to the west, get in.",
