@@ -4,6 +4,8 @@ import { LoginForm } from "@/components/crew/LoginForm";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = { title: "Sign In | Crew Manifest" };
+
 export default async function CrewLoginPage({
   searchParams,
 }: {

@@ -5,6 +5,8 @@ import { CrewManifest } from "@/components/crew/CrewManifest";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = { title: "Crew Manifest | S/V Sabbatical" };
+
 export default async function CrewPage() {
   // Authoritative gate (proxy is only an optimistic presence check).
   if (!(await hasValidSession())) redirect("/crew/login?from=/crew");

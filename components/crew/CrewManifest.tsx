@@ -10,6 +10,8 @@ import {
   UserPlus,
   LogOut,
   Users,
+  RefreshCw,
+  AlertTriangle,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { FIELD_LIMITS, type RosterLeg, type RosterMember } from "@/lib/crew/types";
@@ -18,14 +20,34 @@ export function CrewManifest({ initialLegs }: { initialLegs: RosterLeg[] }) {
   const router = useRouter();
   const [legs, setLegs] = useState<RosterLeg[]>(initialLegs);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
+  const goLogin = useCallback(() => {
+    router.push("/crew/login?from=/crew");
+    router.refresh();
+  }, [router]);
+
+  // Refetch with a visible loading state and an error branch (CM-001): a failed
+  // refresh must never leave the roster silently stale.
   const refetch = useCallback(async () => {
-    const res = await fetch("/api/crew/roster", { cache: "no-store" });
-    if (res.ok) {
+    setRefreshing(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/crew/roster", { cache: "no-store" });
+      if (res.status === 401) {
+        goLogin();
+        return;
+      }
+      if (!res.ok) throw new Error("refresh failed");
       const data = await res.json();
       setLegs(data.legs as RosterLeg[]);
+    } catch {
+      setError("Couldn’t refresh the roster — please reload the page.");
+    } finally {
+      setRefreshing(false);
     }
-  }, []);
+  }, [goLogin]);
 
   async function logout() {
     if (loggingOut) return;
@@ -60,6 +82,7 @@ export function CrewManifest({ initialLegs }: { initialLegs: RosterLeg[] }) {
           <button
             onClick={logout}
             disabled={loggingOut}
+            aria-label="Sign out"
             className="flex items-center gap-1.5 px-3 min-h-[44px] rounded-md text-sm font-medium shrink-0 transition-colors hover:bg-black/[0.04] disabled:opacity-60"
             style={{ color: "hsl(var(--muted-foreground))", border: "1px solid hsl(var(--border))" }}
           >
@@ -68,16 +91,39 @@ export function CrewManifest({ initialLegs }: { initialLegs: RosterLeg[] }) {
         </div>
 
         <div
-          className="flex items-center gap-1.5 text-xs mb-7"
+          className="flex items-center gap-2 text-xs mb-7"
           style={{ color: "hsl(var(--muted-foreground))" }}
         >
           <Users className="w-3.5 h-3.5" />
           {totalOpen} berth{totalOpen === 1 ? "" : "s"} open across {openLegs.length} legs
+          {refreshing && (
+            <span className="flex items-center gap-1" role="status" aria-live="polite">
+              <RefreshCw className="w-3 h-3 animate-spin" /> Updating…
+            </span>
+          )}
         </div>
+
+        {error && (
+          <div
+            role="alert"
+            className="flex items-center justify-between gap-3 rounded-md px-3 py-2.5 mb-5 text-sm"
+            style={{ background: "hsl(0 60% 95%)", color: "hsl(0 65% 38%)", border: "1px solid hsl(0 55% 85%)" }}
+          >
+            <span className="flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0" /> {error}
+            </span>
+            <button
+              onClick={() => router.refresh()}
+              className="font-semibold underline shrink-0 min-h-[36px] px-2"
+            >
+              Reload
+            </button>
+          </div>
+        )}
 
         <div className="grid gap-5 sm:grid-cols-2">
           {legs.map((leg) => (
-            <LegCard key={leg.legId} leg={leg} onChanged={refetch} />
+            <LegCard key={leg.legId} leg={leg} onChanged={refetch} onUnauthorized={goLogin} />
           ))}
         </div>
       </div>
@@ -85,7 +131,15 @@ export function CrewManifest({ initialLegs }: { initialLegs: RosterLeg[] }) {
   );
 }
 
-function LegCard({ leg, onChanged }: { leg: RosterLeg; onChanged: () => Promise<void> }) {
+function LegCard({
+  leg,
+  onChanged,
+  onUnauthorized,
+}: {
+  leg: RosterLeg;
+  onChanged: () => Promise<void>;
+  onUnauthorized: () => void;
+}) {
   const full = !leg.closed && leg.spotsRemaining === 0;
 
   return (
@@ -108,8 +162,18 @@ function LegCard({ leg, onChanged }: { leg: RosterLeg; onChanged: () => Promise<
           <ClosedNotice />
         ) : (
           <>
-            <Roster members={leg.members} legTitle={leg.title} onChanged={onChanged} />
-            <SignAboard leg={leg} full={full} onChanged={onChanged} />
+            <Roster
+              members={leg.members}
+              legTitle={leg.title}
+              onChanged={onChanged}
+              onUnauthorized={onUnauthorized}
+            />
+            <SignAboard
+              leg={leg}
+              full={full}
+              onChanged={onChanged}
+              onUnauthorized={onUnauthorized}
+            />
           </>
         )}
       </CardContent>
@@ -164,10 +228,12 @@ function Roster({
   members,
   legTitle,
   onChanged,
+  onUnauthorized,
 }: {
   members: RosterMember[];
   legTitle: string;
   onChanged: () => Promise<void>;
+  onUnauthorized: () => void;
 }) {
   if (members.length === 0) {
     return (
@@ -179,7 +245,13 @@ function Roster({
   return (
     <ul className="flex flex-col gap-1.5">
       {members.map((m) => (
-        <MemberRow key={m.id} member={m} legTitle={legTitle} onChanged={onChanged} />
+        <MemberRow
+          key={m.id}
+          member={m}
+          legTitle={legTitle}
+          onChanged={onChanged}
+          onUnauthorized={onUnauthorized}
+        />
       ))}
     </ul>
   );
@@ -189,10 +261,12 @@ function MemberRow({
   member,
   legTitle,
   onChanged,
+  onUnauthorized,
 }: {
   member: RosterMember;
   legTitle: string;
   onChanged: () => Promise<void>;
+  onUnauthorized: () => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -201,9 +275,20 @@ function MemberRow({
     if (busy) return;
     if (!window.confirm(`Withdraw ${member.name} from ${legTitle}?`)) return;
     setBusy(true);
-    const res = await fetch(`/api/crew/signup/${member.id}`, { method: "DELETE" });
-    if (res.ok) await onChanged();
-    else setBusy(false);
+    try {
+      const res = await fetch(`/api/crew/signup/${member.id}`, { method: "DELETE" });
+      if (res.status === 401) {
+        onUnauthorized();
+        return;
+      }
+      if (res.ok) {
+        await onChanged();
+        return;
+      }
+      setBusy(false);
+    } catch {
+      setBusy(false);
+    }
   }
 
   return (
@@ -214,16 +299,32 @@ function MemberRow({
       <div className="flex items-center gap-1">
         <button
           onClick={() => setExpanded((e) => !e)}
-          className="flex items-center gap-1.5 flex-1 text-left px-3 min-h-[44px] rounded-md"
+          className="group flex items-center gap-1.5 flex-1 text-left px-3 min-h-[44px] rounded-md transition-colors hover:bg-black/[0.03]"
           aria-expanded={expanded}
+          aria-label={
+            expanded
+              ? `Hide contact details for ${member.name}`
+              : `Show contact details for ${member.name}`
+          }
         >
           <ChevronDown
-            className="w-3.5 h-3.5 shrink-0 transition-transform"
-            style={{ transform: expanded ? "rotate(180deg)" : "none", color: "hsl(var(--muted-foreground))" }}
+            className="w-4 h-4 shrink-0 transition-transform"
+            style={{
+              transform: expanded ? "rotate(180deg)" : "none",
+              color: "hsl(var(--teal))",
+            }}
           />
-          <span className="text-sm font-medium" style={{ color: "hsl(var(--card-foreground))" }}>
+          <span
+            className="text-sm font-medium group-hover:underline decoration-dotted underline-offset-2"
+            style={{ color: "hsl(var(--card-foreground))" }}
+          >
             {member.name}
           </span>
+          {!expanded && (
+            <span className="text-[0.65rem] ml-1" style={{ color: "hsl(var(--muted-foreground))" }}>
+              contact
+            </span>
+          )}
         </button>
         <button
           onClick={withdraw}
@@ -250,10 +351,12 @@ function SignAboard({
   leg,
   full,
   onChanged,
+  onUnauthorized,
 }: {
   leg: RosterLeg;
   full: boolean;
   onChanged: () => Promise<void>;
+  onUnauthorized: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -281,6 +384,10 @@ function SignAboard({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ legId: leg.legId, name, contact, note }),
       });
+      if (res.status === 401) {
+        onUnauthorized();
+        return;
+      }
       if (res.status === 201) {
         setName("");
         setContact("");
@@ -323,10 +430,11 @@ function SignAboard({
   };
 
   return (
-    <form onSubmit={submit} className="mt-auto flex flex-col gap-2 pt-1">
+    <form onSubmit={submit} className="mt-auto flex flex-col gap-2 pt-1" aria-label={`Sign aboard for ${leg.title}`}>
       <input
         style={inputStyle}
         placeholder="Your name"
+        aria-label="Your name"
         value={name}
         maxLength={FIELD_LIMITS.name}
         onChange={(e) => setName(e.target.value)}
@@ -336,6 +444,7 @@ function SignAboard({
       <input
         style={inputStyle}
         placeholder="Email or phone"
+        aria-label="Email or phone"
         value={contact}
         maxLength={FIELD_LIMITS.contact}
         onChange={(e) => setContact(e.target.value)}
@@ -344,6 +453,7 @@ function SignAboard({
       <textarea
         style={{ ...inputStyle, minHeight: "60px", resize: "vertical" }}
         placeholder="Note (optional) — experience, dates, dietary…"
+        aria-label="Note (optional)"
         value={note}
         maxLength={FIELD_LIMITS.note}
         onChange={(e) => setNote(e.target.value)}
