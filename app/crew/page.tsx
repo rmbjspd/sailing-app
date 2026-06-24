@@ -10,6 +10,6 @@ export const metadata = { title: "Crew Manifest | S/V Sabbatical" };
 export default async function CrewPage() {
   // Authoritative gate (proxy is only an optimistic presence check).
   if (!(await hasValidSession())) redirect("/crew/login?from=/crew");
-  const legs = getRoster();
+  const legs = await getRoster();
   return <CrewManifest initialLegs={legs} />;
 }

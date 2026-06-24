@@ -9,10 +9,10 @@ import { CREW_CAPACITY, isLegClosed, isKnownLeg } from "./legs";
 const DB_PATH =
   process.env.CREW_DB_PATH ?? path.join(process.cwd(), "data", "crew.sqlite");
 
-class SqliteCrewStore implements CrewStore {
+export class SqliteCrewStore implements CrewStore {
   private readonly db: Database.Database;
 
-  constructor(dbPath: string) {
+  constructor(dbPath: string = DB_PATH) {
     fs.mkdirSync(path.dirname(dbPath), { recursive: true }); // [1H] create data/ if absent
     this.db = new Database(dbPath);
     this.db.pragma("journal_mode = WAL");
@@ -30,7 +30,7 @@ class SqliteCrewStore implements CrewStore {
     `);
   }
 
-  listAll(): CrewSignup[] {
+  async listAll(): Promise<CrewSignup[]> {
     return this.db
       .prepare(
         `SELECT id, leg_id AS legId, name, contact, note, created_at AS createdAt
@@ -39,7 +39,7 @@ class SqliteCrewStore implements CrewStore {
       .all() as CrewSignup[];
   }
 
-  addToLeg(legId: string, input: CrewSignupInput): AddResult {
+  async addToLeg(legId: string, input: CrewSignupInput): Promise<AddResult> {
     if (!isKnownLeg(legId)) return { ok: false, reason: "invalid", message: "Unknown leg." };
     if (isLegClosed(legId))
       return { ok: false, reason: "closed", message: "This leg is not open for crew sign-up." };
@@ -91,15 +91,7 @@ class SqliteCrewStore implements CrewStore {
     }
   }
 
-  remove(id: string): boolean {
+  async remove(id: string): Promise<boolean> {
     return this.db.prepare(`DELETE FROM crew_signup WHERE id = ?`).run(id).changes > 0;
   }
-}
-
-let store: CrewStore | null = null;
-
-/** Lazily-created singleton store. Server-only — never import from client code. */
-export function getCrewStore(): CrewStore {
-  if (!store) store = new SqliteCrewStore(DB_PATH);
-  return store;
 }

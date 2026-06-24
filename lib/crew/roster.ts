@@ -1,12 +1,12 @@
-import { getCrewStore } from "./sqliteStore";
+import { getCrewStore } from "./store";
 import { crewLegs, CREW_CAPACITY } from "./legs";
 import type { CrewSignup, RosterLeg } from "./types";
 
 // Builds the per-leg roster view. Server-only (reads the store). Shared by the
 // GET /api/crew/roster handler and the /crew server component so the shape can
 // never drift between the initial render and subsequent fetches.
-export function getRoster(): RosterLeg[] {
-  const all = getCrewStore().listAll();
+export async function getRoster(): Promise<RosterLeg[]> {
+  const all = await (await getCrewStore()).listAll();
   const byLeg = new Map<string, CrewSignup[]>();
   for (const m of all) {
     const arr = byLeg.get(m.legId);

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { hasValidSession } from "@/lib/crew/auth";
-import { getCrewStore } from "@/lib/crew/sqliteStore";
+import { getCrewStore } from "@/lib/crew/store";
 import { validateSignupInput } from "@/lib/crew/validation";
 import { isKnownLeg } from "@/lib/crew/legs";
 
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: valid.message }, { status: 400 });
   }
 
-  const result = getCrewStore().addToLeg(legId, valid.value);
+  const result = await (await getCrewStore()).addToLeg(legId, valid.value);
   if (result.ok) {
     return NextResponse.json({ member: result.member }, { status: 201 });
   }
