@@ -32,3 +32,25 @@ Next.js version: 16.2.4 (non-standard with breaking changes — check node_modul
 
 ## Known WebFetch limitation:
 WebFetch tool fails for localhost URLs (invalid URL error). Use curl + Python extraction instead.
+
+## Crew Manifest feature run pattern (added 2026-06-24):
+```bash
+# Build + start with isolated DB and test password
+CREW_DB_PATH=/tmp/eval-crew.sqlite CREW_PASSWORD=test-crew-2027 npx next build
+CREW_DB_PATH=/tmp/eval-crew.sqlite CREW_PASSWORD=test-crew-2027 npx next start -p 3120 &
+# Poll until ready, then test
+# Kill when done: fuser -k 3120/tcp
+
+# Get session token
+SESSION=$(curl -si -X POST http://localhost:3120/api/crew/login -H "Content-Type: application/json" -d '{"password":"test-crew-2027"}' | grep -i set-cookie | sed 's/set-cookie: //' | cut -d';' -f1 | tr -d '\r')
+
+# sqlite3 not available in this env — verify row counts via /api/crew/roster instead
+```
+
+New routes added by crew feature:
+- /crew/login — password gate (public)
+- /crew — manifest (auth required, server component + client CrewManifest)
+- /api/crew/login, /api/crew/logout — auth endpoints (public)
+- /api/crew/roster — GET (auth required)
+- /api/crew/signup — POST (auth required)
+- /api/crew/signup/[id] — DELETE (auth required)
