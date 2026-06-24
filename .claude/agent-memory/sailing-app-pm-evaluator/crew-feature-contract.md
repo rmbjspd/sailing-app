@@ -127,3 +127,5 @@ Ship policy: stop at "feature complete on `claude/task-4t29bo`, pushed." No PR/m
 > **Eval pass 2 (`dda57c7`): LOOP EXIT.** avg **4.71/5.0** (≥4.5 bar). All 12 ACs PASS. Zero open P0/P1/P2. Reliability 3→5, Accessibility 3→5, Usability 4→5. CM-001/002/003/004/006 RESOLVED; CM-005 (calendar dates, P3) deferred — no canonical voyage start date. Privacy sign-off confirmed (Contract 4B).
 >
 > ## ✅ FEATURE COMPLETE on `claude/task-4t29bo`. Exit conditions met. Per ship policy: NO PR/merge to `main` unless the captain explicitly asks. Only open item: CM-005 (P3, needs a day-1 date from the captain).
+>
+> **Eval pass 3 (`c88fd3e`): CM-005 CONFIRMED — backlog EMPTY, perfect 5.0/5.0** (Visual Polish 4→5, Domain Fit 4→5; calendar dates derived from Day 1 = 2027-06-19). No regressions. Captain authorized **merge to `main`, no PR** — merging the branch now.

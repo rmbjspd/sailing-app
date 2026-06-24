@@ -5,17 +5,17 @@ metadata:
   type: project
 ---
 
-## Backlog — Updated 2026-06-24 (Crew Manifest Eval Pass 2 — LOOP EXIT)
+## Backlog — Updated 2026-06-24 (Crew Manifest Eval Pass 3 — BACKLOG EMPTY)
 
-### Active Items
-
-#### P3 — Nice-to-have (deferred, not exit-blocking)
-- **CM-005** — Calendar dates alongside day numbers on leg cards. No canonical voyage start date exists in app data (only "2027" / "8 weeks"). Inventing a date risks inaccuracy. Flag for captain to provide start date; then derive and display calendar dates per leg.
+### Active Items: NONE
 
 ### Crew Manifest Feature Status: COMPLETE on claude/task-4t29bo
 All 12 acceptance criteria PASS. Average dimension score 4.71/5.0. Zero P0/P1/P2 defects. Privacy sign-off confirmed. Loop exit conditions met.
 
-### Resolved Items (Crew Manifest — all fixed in dda57c7)
+### Resolved Items (Crew Manifest)
+- CM-005 (P3): Calendar dates on leg cards — FIXED in c88fd3e (Day 1 = Jun 19, 2027; all 8 legs correct)
+
+### Previously Resolved (Crew Manifest — dda57c7)
 - CM-001 (P1): Loading/error state for roster refetch — FIXED
 - CM-002 (P2): Form input aria-labels — FIXED
 - CM-003 (P2): Expand affordance on member rows — FIXED
