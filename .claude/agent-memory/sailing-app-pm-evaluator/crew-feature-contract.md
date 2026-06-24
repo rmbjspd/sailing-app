@@ -124,4 +124,6 @@ Ship policy: stop at "feature complete on `claude/task-4t29bo`, pushed." No PR/m
 > **Eval pass 1 (`f336048` memory):** avg 4.0/5.0 (below 4.5 bar). AC1–9,11,12 PASS; AC10 partial. P1 CM-001; P2 CM-002/003/004; P3 CM-005/006.
 > - B6+B7 `dda57c7` — fixed CM-001 (refetch loading/error/401), CM-002 (input aria-labels), CM-003 (expand affordance), CM-004 (page titles), CM-006 (sign-out aria-label). CM-005 (calendar dates) deferred — no canonical voyage start date in the data (P3).
 >
-> **Awaiting eval pass 2** to re-score against the 4.5 exit bar.
+> **Eval pass 2 (`dda57c7`): LOOP EXIT.** avg **4.71/5.0** (≥4.5 bar). All 12 ACs PASS. Zero open P0/P1/P2. Reliability 3→5, Accessibility 3→5, Usability 4→5. CM-001/002/003/004/006 RESOLVED; CM-005 (calendar dates, P3) deferred — no canonical voyage start date. Privacy sign-off confirmed (Contract 4B).
+>
+> ## ✅ FEATURE COMPLETE on `claude/task-4t29bo`. Exit conditions met. Per ship policy: NO PR/merge to `main` unless the captain explicitly asks. Only open item: CM-005 (P3, needs a day-1 date from the captain).
