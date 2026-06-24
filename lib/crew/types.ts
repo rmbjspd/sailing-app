@@ -24,3 +24,24 @@ export type AddResult =
 
 /** Maximum input lengths (chars). Enforced by validation and the DB schema. */
 export const FIELD_LIMITS = { name: 100, contact: 200, note: 500 } as const;
+
+// ── Roster view models (client-safe: no node imports) ───────────────────────
+export interface RosterMember {
+  id: string;
+  name: string;
+  contact: string;
+  note: string | null;
+  createdAt: string;
+}
+
+export interface RosterLeg {
+  legId: string;
+  title: string;
+  dayRange: string;
+  accent: string;
+  closed: boolean;
+  capacity: number;
+  taken: number;
+  spotsRemaining: number;
+  members: RosterMember[];
+}
