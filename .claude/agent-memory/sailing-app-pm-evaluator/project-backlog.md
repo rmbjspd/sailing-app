@@ -5,36 +5,37 @@ metadata:
   type: project
 ---
 
-## Backlog — Updated 2026-06-23 (post eval pass 11)
+## Backlog — Updated 2026-06-24 (Crew Manifest Eval Pass 3 — BACKLOG EMPTY)
 
-**All known backlog items from prior eval passes (B1-B18) have been RESOLVED.**
-The great-lakes-passage-critic critic's TRIP-PLAN.MD items (TP-1 through TP-18) have all been applied.
+### Active Items: NONE
 
-### Active items: NONE
+### Crew Manifest Feature Status: COMPLETE on claude/task-4t29bo
+All 12 acceptance criteria PASS. Average dimension score 4.71/5.0. Zero P0/P1/P2 defects. Privacy sign-off confirmed. Loop exit conditions met.
 
-### Verified closed (from the critic's backlog):
-- TP-2: Day 25 (Ilion→Waterford) split ✓
-- TP-3: Day 23 (Pittsford→Sylvan Beach) split with Oneida morning crossing ✓
-- TP-4: Cold-water mandate (PFD-harness s1, tethers s2, MOB-recovery s5, legGuide standing order) ✓
-- TP-5: Two-watch rotation + haul-out points in legGuide ✓
-- TP-6: Day 14 staged-shelter advisory ✓
-- TP-7: Ground tackle (b6 oversized anchor + chain-led rode) ✓
-- TP-8a: AIS Class B transceiver (n11) ✓
-- TP-8b: DSC/GPS VHF (n4), CHS+Richardson's (n5), radar (n21) ✓
-- TP-9: Bail-out harbors named in warnings (Days 2, 14, 18, 19) ✓
-- TP-10: Water/perishables (Day 11 warning, pr15 water jug, pr16 perishables cadence) ✓
-- TP-11: Baie Fine 2nd-night advisory in Day 11 notes ✓
-- TP-12: Already present (verified) ✓
-- TP-13: Manhattan golden-hour in Day 30 highlights ✓
-- TP-14: 9 gear items (s19, n22, b15a, b30, b31, b32, p13, p19, pr17) ✓
-- TP-15: Stale "rejoined the main route" / "original route entry" removed ✓
-- TP-16: Lyons (optional diversion) + Mystic (optional side-trip) framed correctly ✓
-- TP-17: Verified correct earlier ✓
-- TP-18: Jerry-can note re-justified ✓
+### Resolved Items (Crew Manifest)
+- CM-005 (P3): Calendar dates on leg cards — FIXED in c88fd3e (Day 1 = Jun 19, 2027; all 8 legs correct)
+
+### Previously Resolved (Crew Manifest — dda57c7)
+- CM-001 (P1): Loading/error state for roster refetch — FIXED
+- CM-002 (P2): Form input aria-labels — FIXED
+- CM-003 (P2): Expand affordance on member rows — FIXED
+- CM-004 (P2): Browser tab titles — FIXED
+- CM-006 (P3): Sign out aria-label on mobile — FIXED
+
+### Previously Resolved (pre Crew Manifest)
+All great-lakes-passage-critic items TP-1 through TP-18 were resolved as of 2026-06-23.
+All prior eval pass items B1-B18 (from original app evaluation) were resolved as of 2026-06-23.
 
 ### Known non-bugs / design decisions:
-- Map page renders "Loading map..." in static curl — JS-rendered client-side (Leaflet). Expected behavior, not a bug.
-- Waypoints skip day numbers 6/20/31 (layover days share prior overnight's waypoint). Correct by design.
+- Map page renders "Loading map..." in static curl — JS-rendered client-side (Leaflet). Expected behavior.
+- Waypoints skip day numbers 6/20/31 (layover days). Correct by design.
+- Crew withdraw is open to any authenticated user (deliberate, accepted per contract §1D).
+- Contact info visible to all authenticated users (deliberate per contract §1F).
+- README "font family for Vercel" is Next.js boilerplate — not a privacy leak (confirmed AC7 sign-off).
 
-### If new issues emerge, re-open and rank here:
-(P0 = broken/blocking core value; P1 = major friction; P2 = polish; P3 = nice-to-have)
+### Loop Exit Criteria Tracking (Crew Manifest)
+- [x] AC1-AC12 all pass on single eval pass — CONFIRMED (pass 2, 2026-06-24)
+- [x] Zero P0/P1 defects — CONFIRMED
+- [x] tsc + next build clean — CONFIRMED
+- [x] Average dimension score ≥ 4.5/5.0 — CONFIRMED (4.71/5.0)
+- [x] Privacy sign-off (AC7 + git log) — CONFIRMED

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Map, CalendarDays, BookOpen, CheckSquare, Compass } from "lucide-react";
+import { Map, CalendarDays, BookOpen, CheckSquare, Compass, Users } from "lucide-react";
 
 const links = [
   { href: "/",           label: "Chart Room",   icon: Compass     },
@@ -9,6 +9,7 @@ const links = [
   { href: "/itinerary",  label: "Ship's Log",   icon: CalendarDays},
   { href: "/checklists", label: "Provisioning", icon: CheckSquare },
   { href: "/journal",    label: "Captain's Log",icon: BookOpen    },
+  { href: "/crew",       label: "Crew",         icon: Users       },
 ];
 
 export default function Nav() {
