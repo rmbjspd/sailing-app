@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# crew sign-up database (runtime data, not source)
+/data/*.sqlite*
+
 # production
 /build
 

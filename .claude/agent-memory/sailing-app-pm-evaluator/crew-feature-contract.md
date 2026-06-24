@@ -106,4 +106,6 @@ Ship policy: stop at "feature complete on `claude/task-4t29bo`, pushed." No PR/m
 - Developer: DRAFT v1.
 - Evaluator: REDLINE — 15 blocking + 6 recommended amendments (1A–H, 2A–C, 3A–H, 4A–C).
 - Developer: DRAFT v2 — reconciled **all 21** items (15 blocking + 6 recommended). Awaiting ACCEPT ALL.
-- Evaluator: _pending re-review_.
+- Evaluator: **ACCEPT ALL** (verified all 21 items finding-by-finding). Contracts signed; developer may begin B1.
+
+> STATUS UPDATE: **SIGNED — implementation loop active.** Current slice: B1.
