@@ -152,7 +152,7 @@ function LegCard({
               {leg.title}
             </h2>
             <p className="text-xs mt-0.5" style={{ color: "hsl(var(--muted-foreground))" }}>
-              Day{leg.dayRange.includes("–") ? "s" : ""} {leg.dayRange}
+              Day{leg.dayRange.includes("–") ? "s" : ""} {leg.dayRange} · {leg.dateRange}
             </p>
           </div>
           <BerthBadge leg={leg} full={full} />

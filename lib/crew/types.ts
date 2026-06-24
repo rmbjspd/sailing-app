@@ -38,6 +38,7 @@ export interface RosterLeg {
   legId: string;
   title: string;
   dayRange: string;
+  dateRange: string;
   accent: string;
   closed: boolean;
   capacity: number;

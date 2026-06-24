@@ -27,6 +27,7 @@ export function getRoster(): RosterLeg[] {
       legId: leg.legId,
       title: leg.title,
       dayRange: leg.dayRange,
+      dateRange: leg.dateRange,
       accent: leg.accent,
       closed: leg.closed,
       capacity: CREW_CAPACITY,
