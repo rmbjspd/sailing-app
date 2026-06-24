@@ -121,4 +121,7 @@ Ship policy: stop at "feature complete on `claude/task-4t29bo`, pushed." No PR/m
 >
 > **Developer self-test (curl/HTML, `next start`, all PASS):** AC1 (wrong→401, right→200, cookie httpOnly+Secure+SameSite=lax + HMAC value not raw pw), AC2 (gate 401/307), AC4 (cap held at 3 incl. 8-way concurrency; dup 409 case-insensitive), AC5 (erie-canal 403 generic), AC6 (withdraw frees berth), AC7 (privacy clean), AC8 (empty→400), AC11 (no-JS form 303), AC12 (5 fails→429, right-pw-while-limited→429). Pages render: login 200 (form action+method+password), /crew 200 (leg cards, Erie Canal "Reserved", Sign aboard).
 >
-> **Awaiting first hands-on EVALUATOR pass** against the running product (login → roster → sign up → hit cap → Erie Canal closed → withdraw + re-verify the API ACs). Pending UI-only ACs: AC3 (multi-session), AC6 confirm dialog, AC10 design/44px, AC11 in a real no-JS browser.
+> **Eval pass 1 (`f336048` memory):** avg 4.0/5.0 (below 4.5 bar). AC1–9,11,12 PASS; AC10 partial. P1 CM-001; P2 CM-002/003/004; P3 CM-005/006.
+> - B6+B7 `dda57c7` — fixed CM-001 (refetch loading/error/401), CM-002 (input aria-labels), CM-003 (expand affordance), CM-004 (page titles), CM-006 (sign-out aria-label). CM-005 (calendar dates) deferred — no canonical voyage start date in the data (P3).
+>
+> **Awaiting eval pass 2** to re-score against the 4.5 exit bar.
