@@ -37,8 +37,13 @@ is gated by a single shared password (no usernames).
 - Set `CREW_PASSWORD` in your environment (see `.env.example`). For local work,
   `.env.local` is used. Rotating the password and restarting the server signs
   everyone out.
-- Crew sign-ups are stored server-side in SQLite at `./data/crew.sqlite`
-  (override with `CREW_DB_PATH`). This file is git-ignored.
+- Crew sign-ups are stored server-side. **Local dev:** SQLite at
+  `./data/crew.sqlite` (override with `CREW_DB_PATH`; git-ignored).
+- **Production / serverless (e.g. Vercel — read-only filesystem):** set
+  `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` to use Supabase/Postgres
+  instead. Run `supabase/schema.sql` once in the Supabase SQL Editor, then add
+  both env vars (service-role key is server-only) and redeploy. When these are
+  set, SQLite is not used.
 - Each leg accepts up to 3 crew. Some legs may be reserved and not open for
   sign-up.
 
