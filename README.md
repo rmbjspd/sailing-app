@@ -29,6 +29,19 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## Crew Manifest (`/crew`)
+
+The Crew Manifest lets shipmates sign up as crew for individual voyage legs. It
+is gated by a single shared password (no usernames).
+
+- Set `CREW_PASSWORD` in your environment (see `.env.example`). For local work,
+  `.env.local` is used. Rotating the password and restarting the server signs
+  everyone out.
+- Crew sign-ups are stored server-side in SQLite at `./data/crew.sqlite`
+  (override with `CREW_DB_PATH`). This file is git-ignored.
+- Each leg accepts up to 3 crew. Some legs may be reserved and not open for
+  sign-up.
+
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
