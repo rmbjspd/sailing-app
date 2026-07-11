@@ -9,78 +9,53 @@ export interface PriceResult {
   points: PricePoint[]; // new points to append to history
 }
 
-// ── Keepa ────────────────────────────────────────────────────────────────────
-// Keepa API returns price history as a flat array: [unix_min, price, unix_min, price, ...]
-// Prices are in cents × 10 (divide by 100 to get dollars).
-// Token cost: 1 token per ASIN per request. Free plan: 250/day.
-
-async function keepaPrice(item: WatchedItem): Promise<PriceResult | null> {
-  if (!item.asin) return null;
-  const key = process.env.KEEPA_API_KEY;
-  if (!key) return null;
-
-  const url =
-    `https://api.keepa.com/product?key=${key}&domain=1&asin=${item.asin}&history=1&days=7`;
-
-  const res = await fetch(url);
-  if (!res.ok) return null;
-  const json = await res.json();
-
-  const product = json?.products?.[0];
-  if (!product) return null;
-
-  // csv[0] = Amazon price history array. Index the last pair for current price.
-  // TODO: parse the full csv[0] array if you want Keepa's own 365-day history
-  // rather than relying on your Supabase records. For now we just take the
-  // current price from Keepa and store everything else ourselves.
-  const csv: number[] = product.csv?.[0] ?? [];
-  if (csv.length < 2) return null;
-
-  // Last valid price entry (Keepa uses -1 for "out of stock")
-  let currentPriceCents: number | null = null;
-  for (let i = csv.length - 1; i >= 1; i -= 2) {
-    if (csv[i] > 0) { currentPriceCents = csv[i]; break; }
-  }
-  if (!currentPriceCents) return null;
-
-  const price = currentPriceCents / 100;
-  const now = new Date().toISOString();
-
-  return {
-    itemId: item.id,
-    currentPrice: price,
-    retailer: "Amazon",
-    buyUrl: `https://amazon.com/dp/${item.asin}`,
-    points: [{ item_id: item.id, price, retailer: "Amazon", source: "keepa", checked_at: now }],
-  };
-}
-
-// ── SerpAPI Google Shopping ───────────────────────────────────────────────────
+// ── Serper.dev Google Shopping ────────────────────────────────────────────────
 // Returns the lowest price found across West Marine, Defender, Hamilton Marine,
 // Jamestown Distributors, and any other Google Shopping result.
+//
+// Sign up at serper.dev — 2,500 free credits, then $0.30/1,000 queries.
+// 18 items × 52 weeks ≈ 936 queries/year ≈ $0.28/yr after the free credits.
+//
+// Set SERPER_API_KEY in Vercel environment variables.
 
-async function serpapiPrice(item: WatchedItem): Promise<PriceResult | null> {
-  const key = process.env.SERPAPI_KEY;
+interface SerperShoppingResult {
+  title?: string;
+  price?: string;   // "$49.99" — string with currency symbol
+  source?: string;
+  link?: string;
+  rating?: number;
+  ratingCount?: number;
+}
+
+function parsePrice(raw: string | undefined): number | null {
+  if (!raw) return null;
+  const n = parseFloat(raw.replace(/[^0-9.]/g, ""));
+  return isFinite(n) && n > 0 ? n : null;
+}
+
+async function serperPrice(item: WatchedItem): Promise<PriceResult | null> {
+  const key = process.env.SERPER_API_KEY;
   if (!key) return null;
 
-  const q = encodeURIComponent(`${item.searchTerm}`);
-  const url = `https://serpapi.com/search?engine=google_shopping&q=${q}&gl=us&api_key=${key}`;
+  const res = await fetch("https://google.serper.dev/shopping", {
+    method: "POST",
+    headers: {
+      "X-API-KEY": key,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ q: item.searchTerm, gl: "us", num: 20 }),
+  });
 
-  const res = await fetch(url);
   if (!res.ok) return null;
   const json = await res.json();
 
-  const results: Array<{ price?: number; extracted_price?: number; source?: string; link?: string }> =
-    json?.shopping_results ?? [];
+  const results: SerperShoppingResult[] = json?.shopping ?? [];
 
-  // Find the lowest price with a numeric value
   let best: { price: number; source: string; link: string } | null = null;
   for (const r of results) {
-    const price = r.price ?? r.extracted_price;
-    if (typeof price === "number" && price > 0) {
-      if (!best || price < best.price) {
-        best = { price, source: r.source ?? "unknown", link: r.link ?? "" };
-      }
+    const price = parsePrice(r.price);
+    if (price !== null && (!best || price < best.price)) {
+      best = { price, source: r.source ?? "unknown", link: r.link ?? "" };
     }
   }
 
@@ -98,21 +73,7 @@ async function serpapiPrice(item: WatchedItem): Promise<PriceResult | null> {
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
-/** Checks current price for an item, preferring Keepa for ASINs, SerpAPI otherwise. */
+/** Checks current price for an item via Google Shopping (Serper.dev). */
 export async function checkPrice(item: WatchedItem): Promise<PriceResult | null> {
-  const [keepa, serpapi] = await Promise.allSettled([
-    keepaPrice(item),
-    serpapiPrice(item),
-  ]);
-
-  const keepaResult = keepa.status === "fulfilled" ? keepa.value : null;
-  const serpapiResult = serpapi.status === "fulfilled" ? serpapi.value : null;
-
-  // Return whichever gave the lower price; merge their history points
-  const candidates = [keepaResult, serpapiResult].filter(Boolean) as PriceResult[];
-  if (candidates.length === 0) return null;
-
-  const best = candidates.reduce((a, b) => (a.currentPrice <= b.currentPrice ? a : b));
-  best.points = candidates.flatMap((c) => c.points);
-  return best;
+  return serperPrice(item);
 }
