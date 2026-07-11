@@ -1,0 +1,810 @@
+<title>Daily Sailing Gear Deal Hunter — n8n Flow</title>
+
+<style>
+:root {
+  --bg:      #091E30;
+  --canvas:  #0C2438;
+  --surf:    #122D42;
+  --surf2:   #183650;
+  --wire:    #1E4A6A;
+  --bdr:     #1A3D58;
+
+  --text:    #D6CFBC;
+  --muted:   #6A91AC;
+  --dim:     #365672;
+
+  --brass:   #C8963C;
+  --brass-bg: rgba(200,150,60,0.10);
+
+  --ct: #C8963C;
+  --cd: #3A9AAE;
+  --ch: #2E7AB8;
+  --cc: #4E9C6A;
+  --cl: #7558B0;
+  --ca: #3A8C7A;
+  --cn: #C07838;
+  --cs: #7A3028;
+
+  --r: 6px;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'SF Mono','Fira Code','Courier New',monospace;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg:      #EBF0F6;
+    --canvas:  #DDE7F2;
+    --surf:    #FFFFFF;
+    --surf2:   #F4F8FC;
+    --wire:    #B0C8DE;
+    --bdr:     #C8DCF0;
+    --text:    #142233;
+    --muted:   #476680;
+    --dim:     #8AAFC8;
+    --brass:   #9A6E18;
+    --brass-bg: rgba(154,110,24,0.08);
+    --ct: #9A6E18; --cd: #1E7890; --ch: #1B65A0;
+    --cc: #2A7850; --cl: #5840A0; --ca: #1C6860;
+    --cn: #A05818; --cs: #8A2818;
+  }
+}
+
+:root[data-theme="light"] {
+  --bg:#EBF0F6; --canvas:#DDE7F2; --surf:#FFFFFF; --surf2:#F4F8FC;
+  --wire:#B0C8DE; --bdr:#C8DCF0; --text:#142233; --muted:#476680; --dim:#8AAFC8;
+  --brass:#9A6E18; --brass-bg:rgba(154,110,24,0.08);
+  --ct:#9A6E18; --cd:#1E7890; --ch:#1B65A0; --cc:#2A7850; --cl:#5840A0;
+  --ca:#1C6860; --cn:#A05818; --cs:#8A2818;
+}
+
+:root[data-theme="dark"] {
+  --bg:#091E30; --canvas:#0C2438; --surf:#122D42; --surf2:#183650;
+  --wire:#1E4A6A; --bdr:#1A3D58; --text:#D6CFBC; --muted:#6A91AC; --dim:#365672;
+  --brass:#C8963C; --brass-bg:rgba(200,150,60,0.10);
+  --ct:#C8963C; --cd:#3A9AAE; --ch:#2E7AB8; --cc:#4E9C6A; --cl:#7558B0;
+  --ca:#3A8C7A; --cn:#C07838; --cs:#7A3028;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.5;
+  padding: 36px 16px 80px;
+}
+
+.page { max-width: 780px; margin: 0 auto; }
+
+/* ── HEADER ── */
+.hdr {
+  margin-bottom: 28px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--bdr);
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-bottom: 11px;
+}
+h1 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-wrap: balance;
+  margin-bottom: 9px;
+}
+.sub {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.65;
+  max-width: 600px;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+.chip {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  padding: 3px 9px;
+  background: var(--surf);
+  border: 1px solid var(--bdr);
+  border-radius: 3px;
+  color: var(--muted);
+}
+
+/* ── LEGEND ── */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-bottom: 22px;
+}
+.li { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--muted); }
+.ld { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+
+/* ── CANVAS ── */
+.canvas {
+  background: var(--canvas);
+  background-image: radial-gradient(circle, color-mix(in srgb, var(--muted) 20%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+  border: 1px solid var(--bdr);
+  border-radius: 10px;
+  padding: 28px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── SECTION DIVIDER ── */
+.fsec {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--dim);
+  margin: 20px 0 12px;
+  width: 100%;
+  max-width: 580px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.fsec::after { content: ''; flex: 1; height: 1px; background: var(--bdr); }
+
+/* ── NODE ── */
+.node {
+  background: var(--surf);
+  border: 1px solid var(--bdr);
+  border-left: 4px solid var(--nc, #888);
+  border-radius: var(--r);
+  width: 100%;
+  overflow: hidden;
+}
+
+/* node type color vars */
+.nt  { --nc: var(--ct); }
+.nd  { --nc: var(--cd); }
+.nhttp { --nc: var(--ch); }
+.nco { --nc: var(--cc); }
+.nl  { --nc: var(--cl); background: color-mix(in srgb, var(--cl) 5%, var(--surf)); }
+.na  { --nc: var(--ca); }
+.nn  { --nc: var(--cn); }
+
+.ni { padding: 13px 15px 13px 14px; }
+
+.nhead {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-bottom: 7px;
+}
+.badge {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid color-mix(in srgb, var(--nc,#888) 30%, transparent);
+  background: color-mix(in srgb, var(--nc,#888) 10%, transparent);
+  color: var(--nc, var(--muted));
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.ntitle {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+.ndesc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin-bottom: 9px;
+}
+.ncfg { display: flex; flex-direction: column; gap: 3px; }
+.cr { display: flex; gap: 8px; font-size: 11px; font-family: var(--mono); line-height: 1.45; }
+.ck { color: var(--dim); flex-shrink: 0; min-width: 82px; }
+.cv { color: var(--muted); }
+
+/* ── VERTICAL CONNECTOR ── */
+.vconn {
+  width: 2px;
+  background: var(--wire);
+  flex-shrink: 0;
+  position: relative;
+}
+.vconn::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--wire);
+}
+.sm { height: 18px; }
+.md { height: 26px; }
+.lg { height: 34px; }
+
+/* ── CENTER CONTAINER ── */
+.ctr { width: 100%; max-width: 580px; }
+
+/* ── PARALLEL FORK/JOIN ── */
+.fork, .join {
+  position: relative;
+  width: 100%;
+  height: 22px;
+}
+.fork-2::before, .join-2::before {
+  content: '';
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  width: 2px;
+  background: var(--wire);
+}
+.fork-2::before { top: 0; height: 100%; }
+.join-2::before { bottom: 0; height: 100%; }
+.fork-2::after, .join-2::after {
+  content: '';
+  position: absolute;
+  left: 25%; right: 25%;
+  height: 2px;
+  background: var(--wire);
+}
+.fork-2::after { bottom: 0; }
+.join-2::after { top: 0; }
+
+.fork-3::before, .join-3::before {
+  content: '';
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  width: 2px;
+  background: var(--wire);
+}
+.fork-3::before { top: 0; height: 100%; }
+.join-3::before { bottom: 0; height: 100%; }
+.fork-3::after, .join-3::after {
+  content: '';
+  position: absolute;
+  left: 16.5%; right: 16.5%;
+  height: 2px;
+  background: var(--wire);
+}
+.fork-3::after { bottom: 0; }
+.join-3::after { top: 0; }
+
+.par-row {
+  width: 100%;
+  display: grid;
+  gap: 10px;
+}
+.par-2 { grid-template-columns: 1fr 1fr; }
+.par-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+/* ── IF GATE ── */
+.gate-fork {
+  position: relative;
+  width: 100%;
+  height: 20px;
+}
+.gate-fork::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 2px; height: 100%;
+  background: var(--wire);
+}
+.gate-fork::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 25%; right: 25%;
+  height: 2px;
+  background: var(--wire);
+}
+
+.gate-branches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
+.gbranch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.btag {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+.btag-yes {
+  background: color-mix(in srgb, var(--ca) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ca) 30%, transparent);
+  color: var(--ca);
+}
+.btag-no {
+  background: color-mix(in srgb, var(--cs) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cs) 30%, transparent);
+  color: var(--cs);
+}
+.bvline { width: 2px; height: 18px; background: var(--wire); margin: 0 auto 8px; }
+
+.skip-card {
+  background: color-mix(in srgb, var(--cs) 7%, var(--surf));
+  border: 1px dashed color-mix(in srgb, var(--cs) 35%, var(--bdr));
+  border-radius: var(--r);
+  padding: 10px 13px;
+  width: 100%;
+}
+.skip-title { font-size: 12px; font-weight: 600; color: var(--cs); margin-bottom: 3px; }
+.skip-desc { font-size: 11px; color: var(--dim); line-height: 1.5; }
+
+.cont-card {
+  background: color-mix(in srgb, var(--ca) 7%, var(--surf));
+  border: 1px solid color-mix(in srgb, var(--ca) 25%, var(--bdr));
+  border-radius: var(--r);
+  padding: 9px 13px;
+  width: 100%;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  font-family: var(--mono);
+}
+
+/* ── SETUP NOTES ── */
+.setup {
+  margin-top: 26px;
+  background: var(--surf);
+  border: 1px solid var(--bdr);
+  border-radius: 8px;
+  padding: 22px 22px;
+}
+.setup h2 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--dim);
+  margin-bottom: 20px;
+}
+.sitem { margin-bottom: 18px; }
+.sitem:last-child { margin-bottom: 0; }
+.sitem h3 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+.slist { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.slist li {
+  font-size: 12px; color: var(--muted); line-height: 1.6;
+  display: flex; gap: 10px;
+}
+.slist li::before { content: '→'; color: var(--brass); font-family: var(--mono); flex-shrink: 0; }
+code {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  background: var(--canvas);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--muted);
+}
+.callout {
+  margin-top: 10px;
+  padding: 11px 14px;
+  background: var(--brass-bg);
+  border: 1px solid color-mix(in srgb, var(--brass) 25%, transparent);
+  border-radius: 5px;
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+.callout strong { color: var(--brass); }
+
+@media (max-width: 560px) {
+  .par-3, .par-2 { grid-template-columns: 1fr; }
+  .gate-branches { grid-template-columns: 1fr; }
+  .fork, .join, .gate-fork { display: none; }
+}
+</style>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="eyebrow">n8n Automation · Sailing Gear</div>
+    <h1>Daily Deal Hunter</h1>
+    <p class="sub">Monitors all 47 checklist items across Amazon, West Marine, and Defender. Alerts only when a current price is the confirmed 12-month low <em>and</em> the brand holds a Practical Sailor or Cruising World seal of approval. No noise on bad brands or non-historic prices.</p>
+    <div class="chips">
+      <span class="chip">Trigger · Daily 07:00 ET</span>
+      <span class="chip">Runtime · ~3 min</span>
+      <span class="chip">Keepa + SerpAPI + Airtable</span>
+      <span class="chip">Gates · Price Floor + Brand Approval</span>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="li"><div class="ld" style="background:var(--ct)"></div>Trigger</div>
+    <div class="li"><div class="ld" style="background:var(--cd)"></div>Data</div>
+    <div class="li"><div class="ld" style="background:var(--ch)"></div>HTTP Request</div>
+    <div class="li"><div class="ld" style="background:var(--cc)"></div>Code</div>
+    <div class="li"><div class="ld" style="background:var(--cl)"></div>IF / Logic</div>
+    <div class="li"><div class="ld" style="background:var(--ca)"></div>Action</div>
+    <div class="li"><div class="ld" style="background:var(--cn)"></div>Notify</div>
+  </div>
+
+  <!-- FLOW CANVAS -->
+  <div class="canvas">
+
+    <!-- TRIGGER -->
+    <div class="fsec">Trigger</div>
+    <div class="ctr" style="max-width:420px;">
+      <div class="node nt">
+        <div class="ni">
+          <div class="nhead"><span class="badge">Schedule Trigger</span><span class="ntitle">Daily Gear Scan</span></div>
+          <div class="ncfg">
+            <div class="cr"><span class="ck">cron</span><span class="cv">0 7 * * *</span></div>
+            <div class="cr"><span class="ck">timezone</span><span class="cv">America/New_York</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vconn md ctr" style="max-width:580px;"></div>
+
+    <!-- DATA LOAD -->
+    <div class="fsec">Data Load · parallel</div>
+    <div class="ctr">
+      <div class="fork fork-2"></div>
+      <div class="par-row par-2">
+        <div class="node nco">
+          <div class="ni">
+            <div class="nhead"><span class="badge">Code</span><span class="ntitle">Build Item List</span></div>
+            <p class="ndesc">Parses all 47 checklist items. Annotates each with implied brands, retailer search terms, and known Amazon ASINs.</p>
+            <div class="ncfg">
+              <div class="cr"><span class="ck">items</span><span class="cv">47 (from checklist)</span></div>
+              <div class="cr"><span class="ck">priority</span><span class="cv">critical → important → nice</span></div>
+              <div class="cr"><span class="ck">output</span><span class="cv">{id, brands[], asin?, searchTerm}</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="node nd">
+          <div class="ni">
+            <div class="nhead"><span class="badge">Google Sheets</span><span class="ntitle">Approved Products</span></div>
+            <p class="ndesc">Reads your pre-populated sheet of brands vetted by Practical Sailor and Cruising World. Loaded once, passed through all batches.</p>
+            <div class="ncfg">
+              <div class="cr"><span class="ck">sheet</span><span class="cv">Sailing Gear · Approved</span></div>
+              <div class="cr"><span class="ck">columns</span><span class="cv">brand, ps_rating, cw_award, status</span></div>
+              <div class="cr"><span class="ck">filter</span><span class="cv">status = "Approved"</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="join join-2"></div>
+    </div>
+
+    <div class="vconn md ctr"></div>
+
+    <!-- BATCH SPLIT -->
+    <div class="ctr" style="max-width:420px;">
+      <div class="node nco">
+        <div class="ni">
+          <div class="nhead"><span class="badge">Split in Batches</span><span class="ntitle">Batch Items · Size 5</span></div>
+          <div class="ncfg">
+            <div class="cr"><span class="ck">batch size</span><span class="cv">5 items — respects API rate limits</span></div>
+            <div class="cr"><span class="ck">carries</span><span class="cv">approved brands list through all iterations</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vconn md ctr"></div>
+
+    <!-- PRICE SOURCES -->
+    <div class="fsec">Price Discovery · per item, each batch</div>
+    <div class="ctr">
+      <div class="fork fork-3"></div>
+      <div class="par-row par-3">
+        <div class="node nhttp">
+          <div class="ni">
+            <div class="nhead"><span class="badge">HTTP Request</span><span class="ntitle">Keepa API</span></div>
+            <p class="ndesc">365-day Amazon price history for items with known ASINs.</p>
+            <div class="ncfg">
+              <div class="cr"><span class="ck">endpoint</span><span class="cv">api.keepa.com/product</span></div>
+              <div class="cr"><span class="ck">params</span><span class="cv">asin, days=365, domain=1</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="node nhttp">
+          <div class="ni">
+            <div class="nhead"><span class="badge">HTTP Request</span><span class="ntitle">SerpAPI Shopping</span></div>
+            <p class="ndesc">Current prices at West Marine, Defender, Hamilton Marine, Jamestown Distributors.</p>
+            <div class="ncfg">
+              <div class="cr"><span class="ck">engine</span><span class="cv">google_shopping</span></div>
+              <div class="cr"><span class="ck">query</span><span class="cv">{{searchTerm}} marine</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="node nhttp">
+          <div class="ni">
+            <div class="nhead"><span class="badge">HTTP Request</span><span class="ntitle">Airtable History</span></div>
+            <p class="ndesc">Retrieves your stored price log to compute the rolling 12-month minimum for non-Amazon items.</p>
+            <div class="ncfg">
+              <div class="cr"><span class="ck">table</span><span class="cv">Price History</span></div>
+              <div class="cr"><span class="ck">filter</span><span class="cv">item_id = X, date ≥ −365d</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="join join-3"></div>
+    </div>
+
+    <div class="vconn md ctr"></div>
+
+    <!-- COMPUTE -->
+    <div class="ctr">
+      <div class="node nco">
+        <div class="ni">
+          <div class="nhead"><span class="badge">Code</span><span class="ntitle">Compute 12-Month Low</span></div>
+          <p class="ndesc">Merges prices from all three sources. Computes the trailing 365-day minimum and compares it to today's best available price across all retailers.</p>
+          <div class="ncfg">
+            <div class="cr"><span class="ck">output</span><span class="cv">current_price, twelve_mo_min, best_retailer, pct_above_min</span></div>
+            <div class="cr"><span class="ck">is_deal</span><span class="cv">current_price ≤ twelve_mo_min × 1.02</span></div>
+            <div class="cr"><span class="ck">tolerance</span><span class="cv">2% — absorbs penny rounding across retailers</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vconn md ctr"></div>
+
+    <!-- GATE 1 -->
+    <div class="fsec">Gate 1 · Price Floor</div>
+    <div class="ctr">
+      <div class="node nl">
+        <div class="ni">
+          <div class="nhead"><span class="badge">IF</span><span class="ntitle">Current price ≤ 12-month low?</span></div>
+          <div class="ncfg">
+            <div class="cr"><span class="ck">condition</span><span class="cv">{{is_deal}} === true</span></div>
+            <div class="cr"><span class="ck">true →</span><span class="cv">advance to Brand Gate</span></div>
+            <div class="cr"><span class="ck">false →</span><span class="cv">log price to history, discard item</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="gate-fork"></div>
+      <div class="gate-branches">
+        <div class="gbranch">
+          <div class="btag btag-yes">YES — deal candidate</div>
+          <div class="bvline"></div>
+          <div class="cont-card">Advance to Brand Gate →</div>
+        </div>
+        <div class="gbranch">
+          <div class="btag btag-no">NO — above 12-mo low</div>
+          <div class="bvline"></div>
+          <div class="skip-card">
+            <div class="skip-title">Discard Item</div>
+            <div class="skip-desc">Price logged to Airtable history. No notification sent.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vconn lg ctr" style="margin-top:10px;"></div>
+
+    <!-- GATE 2 -->
+    <div class="fsec">Gate 2 · Brand Approval</div>
+    <div class="ctr">
+      <div class="node nl">
+        <div class="ni">
+          <div class="nhead"><span class="badge">IF</span><span class="ntitle">Brand approved by Practical Sailor or Cruising World?</span></div>
+          <p class="ndesc">Cross-references the item's brand against the Approved Products sheet loaded at startup. Requires at least one designation:</p>
+          <div class="ncfg">
+            <div class="cr"><span class="ck">PS rating</span><span class="cv">Best Choice  or  Recommended</span></div>
+            <div class="cr"><span class="ck">CW award</span><span class="cv">Gear of the Year  or  Editor's Pick</span></div>
+            <div class="cr"><span class="ck">BoatUS</span><span class="cv">Safety Approved (critical safety items only)</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="gate-fork"></div>
+      <div class="gate-branches">
+        <div class="gbranch">
+          <div class="btag btag-yes">YES — approved brand</div>
+          <div class="bvline"></div>
+          <div class="cont-card">Confirmed deal — log and notify →</div>
+        </div>
+        <div class="gbranch">
+          <div class="btag btag-no">NO — unvetted brand</div>
+          <div class="bvline"></div>
+          <div class="skip-card">
+            <div class="skip-title">Discard Item</div>
+            <div class="skip-desc">Historic low price, but brand lacks a reputable seal. Silently discarded.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vconn lg ctr" style="margin-top:10px;"></div>
+
+    <!-- LOG + HISTORY -->
+    <div class="fsec">Log & Archive · parallel</div>
+    <div class="ctr">
+      <div class="fork fork-2"></div>
+      <div class="par-row par-2">
+        <div class="node na">
+          <div class="ni">
+            <div class="nhead"><span class="badge">Airtable</span><span class="ntitle">Log Confirmed Deal</span></div>
+            <div class="ncfg">
+              <div class="cr"><span class="ck">table</span><span class="cv">Confirmed Deals</span></div>
+              <div class="cr"><span class="ck">fields</span><span class="cv">item, brand, price, retailer_url, 12mo_low, pct_saving, approval_source, logged_at</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="node na">
+          <div class="ni">
+            <div class="nhead"><span class="badge">Airtable</span><span class="ntitle">Update Price History</span></div>
+            <p class="ndesc">Stores today's price for every checked item — not just deals — to grow the 12-month baseline over time.</p>
+            <div class="ncfg">
+              <div class="cr"><span class="ck">table</span><span class="cv">Price History</span></div>
+              <div class="cr"><span class="ck">fields</span><span class="cv">item_id, date, price, retailer, source</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="join join-2"></div>
+    </div>
+
+    <div class="vconn md ctr"></div>
+
+    <!-- MERGE -->
+    <div class="ctr" style="max-width:420px;">
+      <div class="node nco">
+        <div class="ni">
+          <div class="nhead"><span class="badge">Merge</span><span class="ntitle">Await All Batches</span></div>
+          <div class="ncfg">
+            <div class="cr"><span class="ck">mode</span><span class="cv">Combine All</span></div>
+            <div class="cr"><span class="ck">output</span><span class="cv">Array of all confirmed deals across batches</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vconn md ctr"></div>
+
+    <!-- GATE 3 -->
+    <div class="fsec">Gate 3 · Notify</div>
+    <div class="ctr">
+      <div class="node nl" style="max-width:420px; margin: 0 auto;">
+        <div class="ni">
+          <div class="nhead"><span class="badge">IF</span><span class="ntitle">Any confirmed deals today?</span></div>
+          <div class="ncfg">
+            <div class="cr"><span class="ck">condition</span><span class="cv">deals.length > 0</span></div>
+            <div class="cr"><span class="ck">false →</span><span class="cv">end workflow silently — no alert sent</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="gate-fork" style="max-width:420px; margin: 0 auto;"></div>
+      <div class="gate-branches" style="max-width:420px; margin: 0 auto;">
+        <div class="gbranch">
+          <div class="btag btag-yes">YES — send alert</div>
+          <div class="bvline"></div>
+          <div class="cont-card">Format and dispatch →</div>
+        </div>
+        <div class="gbranch">
+          <div class="btag btag-no">NO — quiet day</div>
+          <div class="bvline"></div>
+          <div class="skip-card">
+            <div class="skip-title">End Workflow</div>
+            <div class="skip-desc">Nothing cleared both gates. No message sent. Run again tomorrow.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vconn lg ctr" style="margin-top:10px;"></div>
+
+    <!-- FORMAT -->
+    <div class="ctr">
+      <div class="node nco">
+        <div class="ni">
+          <div class="nhead"><span class="badge">Code</span><span class="ntitle">Format Alert</span></div>
+          <p class="ndesc">Sorts confirmed deals by checklist priority (Critical first). Computes savings vs. 12-month high. Builds HTML for email and Block Kit payload for Slack.</p>
+          <div class="ncfg">
+            <div class="cr"><span class="ck">per deal</span><span class="cv">item · brand · price · 12mo-low · pct-saving · approval source · buy link</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vconn sm ctr"></div>
+
+    <!-- NOTIFY -->
+    <div class="fsec">Notification · parallel</div>
+    <div class="ctr">
+      <div class="fork fork-2"></div>
+      <div class="par-row par-2">
+        <div class="node nn">
+          <div class="ni">
+            <div class="nhead"><span class="badge">Gmail / SMTP</span><span class="ntitle">Email Alert</span></div>
+            <div class="ncfg">
+              <div class="cr"><span class="ck">subject</span><span class="cv">⚓ N Deal(s) · {date}</span></div>
+              <div class="cr"><span class="ck">body</span><span class="cv">HTML deal cards, critical items first</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="node nn">
+          <div class="ni">
+            <div class="nhead"><span class="badge">Slack</span><span class="ntitle">Slack Alert</span></div>
+            <div class="ncfg">
+              <div class="cr"><span class="ck">channel</span><span class="cv">#gear-deals</span></div>
+              <div class="cr"><span class="ck">format</span><span class="cv">Block Kit with deal cards</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /canvas -->
+
+  <!-- SETUP NOTES -->
+  <div class="setup">
+    <h2>Setup Checklist</h2>
+
+    <div class="sitem">
+      <h3>1. API Credentials (n8n)</h3>
+      <ul class="slist">
+        <li><strong>Keepa</strong> — Free tier: 250 tokens/day (~25 items). Paid plan needed to cover all 47 daily.</li>
+        <li><strong>SerpAPI</strong> — 100 free searches/month. ~$50/mo for daily use at this volume.</li>
+        <li><strong>Airtable</strong> — Personal access token. Create two tables: <code>Price History</code> and <code>Confirmed Deals</code>.</li>
+        <li><strong>Google Sheets</strong> — OAuth2 credential in n8n, pointing to your Approved Products sheet.</li>
+      </ul>
+    </div>
+
+    <div class="sitem">
+      <h3>2. Approved Products Sheet (populate once, maintain periodically)</h3>
+      <div class="callout">
+        Seed from confirmed <strong>Practical Sailor Best Choice</strong> designations by category —
+        PFDs: <strong>Mustang, Spinlock</strong> ·
+        Anchors: <strong>Rocna, Mantus</strong> ·
+        Tethers: <strong>Spinlock</strong> ·
+        EPIRBs: <strong>ACR, Ocean Signal</strong> ·
+        VHF: <strong>Standard Horizon, Icom</strong> ·
+        Foul weather: <strong>Gill, Musto, Henri Lloyd</strong> ·
+        Fenders: <strong>Polyform</strong> ·
+        Rope: <strong>New England Ropes, Samson</strong>.
+        Expand from the Practical Sailor gear lab archive at <em>practical-sailor.com</em>.
+      </div>
+    </div>
+
+    <div class="sitem">
+      <h3>3. Airtable Schema</h3>
+      <ul class="slist">
+        <li><code>Price History</code> — item_id (text), date (date), price (currency), retailer (text), source (text)</li>
+        <li><code>Confirmed Deals</code> — item_id, item_name, brand, current_price, twelve_mo_low, pct_saving, retailer_url, approval_source, logged_at</li>
+      </ul>
+    </div>
+
+    <div class="sitem">
+      <h3>4. Cold-Start Note</h3>
+      <ul class="slist">
+        <li>The 12-month gate becomes reliable after ~30 days of daily runs. Keepa covers Amazon from day one. For West Marine and Defender prices, manually seed 3–4 months of data for critical safety items using order history or Wayback Machine archived pages. Until then, the gate fires conservatively on Amazon data only.</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
