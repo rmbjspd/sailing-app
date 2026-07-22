@@ -45,12 +45,7 @@ export const WATCHED_ITEMS: WatchedItem[] = [
   },
 
   // ── Navigation ──────────────────────────────────────────────────────
-  {
-    id: "n2", label: "Garmin InReach Mini", category: "navigation", priority: "critical",
-    brands: ["Garmin"],
-    searchTerm: "Garmin InReach Mini 2 satellite communicator",
-    asin: "B09H1C39CJ",
-  },
+  // n2 (Garmin InReach Mini) intentionally omitted — already owned.
   {
     id: "n4", label: "Handheld VHF radio DSC GPS", category: "navigation", priority: "critical",
     brands: ["Standard Horizon", "Icom"],
