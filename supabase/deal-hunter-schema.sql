@@ -6,7 +6,7 @@ create table if not exists deal_price_history (
   item_id     text        not null,
   price       numeric     not null,
   retailer    text        not null,
-  source      text        not null check (source in ('keepa', 'serpapi')),
+  source      text        not null check (source in ('serpapi')),
   checked_at  timestamptz not null default now()
 );
 

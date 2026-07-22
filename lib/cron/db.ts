@@ -11,7 +11,7 @@ export interface PricePoint {
   item_id: string;
   price: number;
   retailer: string;
-  source: "keepa" | "serpapi";
+  source: "serpapi";
   checked_at: string; // ISO timestamp
 }
 

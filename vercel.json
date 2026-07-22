@@ -1,8 +1,0 @@
-{
-  "crons": [
-    {
-      "path": "/api/cron/deal-hunter",
-      "schedule": "0 12 * * 1"
-    }
-  ]
-}
