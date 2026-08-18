@@ -57,6 +57,14 @@ export const WATCHED_ITEMS: WatchedItem[] = [
     searchTerm: "B&G HALO24 radar dome Doppler",
   },
   {
+    // In-hull (shoot-through) depth transducer — no hull penetration.
+    // REQUIRES a solid fiberglass laminate below the waterline; will not
+    // shoot through a cored, metal, or wood hull. Verify before buying.
+    id: "n10", label: "In-hull depth transducer (Airmar P79)", category: "navigation", priority: "important",
+    brands: ["Airmar"],
+    searchTerm: "Airmar P79 in-hull depth transducer",
+  },
+  {
     id: "n9", label: "Autopilot wheel pilot", category: "navigation", priority: "critical",
     brands: ["Garmin"],
     searchTerm: "Garmin GHP Compact Reactor wheel pilot autopilot marine",
