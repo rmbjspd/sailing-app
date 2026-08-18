@@ -57,12 +57,16 @@ export const WATCHED_ITEMS: WatchedItem[] = [
     searchTerm: "B&G HALO24 radar dome Doppler",
   },
   {
-    // In-hull (shoot-through) depth transducer — no hull penetration.
-    // REQUIRES a solid fiberglass laminate below the waterline; will not
-    // shoot through a cored, metal, or wood hull. Verify before buying.
-    id: "n10", label: "In-hull depth transducer (Airmar P79)", category: "navigation", priority: "important",
+    // In-hull (shoot-through) CHIRP fishfinder transducer — 1kW, 150-250kHz,
+    // ~500ft. Real 2D sonar imagery, not just a depth readout.
+    // Two hard constraints:
+    //   1. REQUIRES solid fiberglass laminate below the waterline. Will not
+    //      shoot through a cored, metal, or wood hull.
+    //   2. Down/side IMAGING cannot work in-hull at any price — those beams
+    //      need wet contact. In-hull tops out at 2D/CHIRP sonar.
+    id: "n10b", label: "In-hull CHIRP fishfinder transducer (Airmar M285HW)", category: "navigation", priority: "nice",
     brands: ["Airmar"],
-    searchTerm: "Airmar P79 in-hull depth transducer",
+    searchTerm: "Airmar M285HW in-hull CHIRP transducer",
   },
   {
     id: "n9", label: "Autopilot wheel pilot", category: "navigation", priority: "critical",
