@@ -17,12 +17,25 @@ jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger deal scan
+      - name: Check configuration
         run: |
+          missing=0
           if [ -z "${{ vars.DEAL_HUNTER_URL }}" ]; then
-            echo "::error::DEAL_HUNTER_URL repo variable is not set."
+            echo "::error::Repo VARIABLE 'DEAL_HUNTER_URL' is not set. Add it under Settings → Secrets and variables → Actions → Variables tab. Value: https://<your-app>.vercel.app/api/cron/deal-hunter"
+            missing=1
+          fi
+          if [ -z "${{ secrets.CRON_SECRET }}" ]; then
+            echo "::error::Repo SECRET 'CRON_SECRET' is not set. Add it under Settings → Secrets and variables → Actions → Secrets tab. It must match the CRON_SECRET env var in Vercel exactly."
+            missing=1
+          fi
+          if [ "$missing" = "1" ]; then
+            echo "The scan cannot run until both values are configured."
             exit 1
           fi
+          echo "Configuration OK."
+
+      - name: Trigger deal scan
+        run: |
           code=$(curl -sS -X GET \
             -o response.json -w "%{http_code}" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
@@ -31,7 +44,11 @@ jobs:
           echo "Response:"
           cat response.json || true
           echo ""
+          if [ "$code" = "401" ]; then
+            echo "::error::HTTP 401 — the CRON_SECRET here does not match the one set in Vercel."
+            exit 1
+          fi
           if [ "$code" != "200" ]; then
-            echo "::error::Deal scan returned HTTP $code"
+            echo "::error::Deal scan returned HTTP $code (see response body above)."
             exit 1
           fi

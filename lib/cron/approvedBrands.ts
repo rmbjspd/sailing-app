@@ -23,6 +23,9 @@ const APPROVED_BRANDS: ApprovedBrand[] = [
   { brand: "Garmin",           categories: ["navigation"]                , sources: ["Practical Sailor Best Choice"] },
   { brand: "Standard Horizon", categories: ["navigation"], sources: ["Practical Sailor Best Choice"] },
   { brand: "Icom",             categories: ["navigation"], sources: ["Practical Sailor Best Choice"] },
+  // VERIFY: B&G (Navico) is well regarded for sailing electronics, but confirm the
+  // exact Practical Sailor designation before trusting an alert on this brand.
+  { brand: "B&G",              categories: ["navigation"], sources: ["Practical Sailor Recommended"] },
   { brand: "Rocna",            categories: ["boat-gear"], sources: ["Practical Sailor Best Choice"] },
   { brand: "Mantus",           categories: ["boat-gear"], sources: ["Practical Sailor Recommended"] },
   { brand: "Fortress",         categories: ["boat-gear"], sources: ["Practical Sailor Best Choice"] },
