@@ -26,6 +26,9 @@ const APPROVED_BRANDS: ApprovedBrand[] = [
   // VERIFY: B&G (Navico) is well regarded for sailing electronics, but confirm the
   // exact Practical Sailor designation before trusting an alert on this brand.
   { brand: "B&G",              categories: ["navigation"], sources: ["Practical Sailor Recommended"] },
+  // VERIFY: Airmar is the OEM behind most marine transducers (incl. Navico/B&G
+  // branded ones). Confirm the exact Practical Sailor designation.
+  { brand: "Airmar",           categories: ["navigation"], sources: ["Practical Sailor Recommended"] },
   { brand: "Rocna",            categories: ["boat-gear"], sources: ["Practical Sailor Best Choice"] },
   { brand: "Mantus",           categories: ["boat-gear"], sources: ["Practical Sailor Recommended"] },
   { brand: "Fortress",         categories: ["boat-gear"], sources: ["Practical Sailor Best Choice"] },
