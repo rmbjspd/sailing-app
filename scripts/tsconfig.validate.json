@@ -1,0 +1,15 @@
+{
+  "//": "Standalone config for the watch-list validator. Kept separate from the root tsconfig (which targets Next.js/JSX) so the script compiles to plain CommonJS that plain `node` can run. Using -p with this file avoids passing compiler flags on the CLI, which are not stable across TypeScript versions.",
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "types": [],
+    "rootDir": "..",
+    "outDir": "../.validate-tmp"
+  },
+  "include": ["validate-watchlist.ts"]
+}

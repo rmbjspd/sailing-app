@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "validate:watchlist": "rm -rf .validate-tmp && tsc -p scripts/tsconfig.validate.json && node .validate-tmp/scripts/validate-watchlist.js"
   },
   "dependencies": {
     "@radix-ui/react-scroll-area": "^1.2.10",
