@@ -122,27 +122,25 @@ export const WATCHED_ITEMS: WatchedItem[] = [
   // ── Electrical / Power ───────────────────────────────────────────────
   // Category absent from checklists.ts entirely. Added after the scan missed
   // a 28%-off Battle Born sale it had no way to see.
+  //
+  // OWNED — no longer watched:
+  //   e1  2x Battle Born 100Ah LiFePO4 (Group 27/31 form factor)
+  //   e2  Victron SmartSolar MPPT 100/30
+  //   e3  Victron Orion-Tr Smart DC-DC 12/12
   {
-    id: "e1", label: "LiFePO4 house battery 100Ah", category: "electrical", priority: "critical",
-    brands: ["Battle Born", "Dakota Lithium", "Epoch"],
-    searchTerm: "100Ah 12V LiFePO4 lithium deep cycle battery marine",
-  },
-  {
-    id: "e2", label: "MPPT solar charge controller (100/30)", category: "electrical", priority: "important",
-    brands: ["Victron"],
-    searchTerm: "Victron SmartSolar MPPT 100/30 charge controller",
-  },
-  {
-    // Non-optional with lithium: protects the alternator from being pulled to
-    // 100% output continuously by a bank that never tapers.
-    id: "e3", label: "DC-DC charger (alternator protection)", category: "electrical", priority: "critical",
-    brands: ["Victron"],
-    searchTerm: "Victron Orion-TR Smart DC-DC charger 12/12",
-  },
-  {
-    id: "e4", label: "Solar panels 100W rigid", category: "electrical", priority: "important",
+    // Still outstanding. Sized to 200W (2x100W parallel) for the 200Ah bank
+    // plus a 24/7 fridge load; the 100/30 controller already covers ~440W.
+    id: "e4", label: "Solar panels 100W rigid (x2)", category: "electrical", priority: "important",
     brands: ["Renogy", "Rich Solar"],
     searchTerm: "100W 12V monocrystalline rigid solar panel",
+  },
+  {
+    // With LiFePO4 the voltage curve is flat, so voltage tells you almost
+    // nothing about state of charge. A shunt-based monitor is the only
+    // reliable way to know what's left in a 200Ah bank.
+    id: "e5", label: "Battery monitor with shunt", category: "electrical", priority: "important",
+    brands: ["Victron"],
+    searchTerm: "Victron SmartShunt 500A battery monitor",
   },
   {
     // Moved from `navigation`, where it was passing the brand gate on Garmin's
@@ -199,13 +197,12 @@ export const WATCHED_ITEMS: WatchedItem[] = [
   },
 
   // ── Personal Gear ────────────────────────────────────────────────────
+  // OWNED — no longer watched:
+  //   p1  Gill OS2 jacket + trousers
   {
-    id: "p1", label: "Foul weather jacket + pants", category: "personal", priority: "critical",
-    brands: ["Gill", "Musto", "Henri Lloyd", "Zhik"],
-    searchTerm: "offshore foul weather sailing jacket bib pants",
-  },
-  {
-    id: "p19", label: "Offshore bibs + sea boots (helm crew)", category: "personal", priority: "important",
+    // Narrowed to boots: the OS2 purchase is assumed to cover the bib half of
+    // this item. Widen the search again if that turns out to be jacket-only.
+    id: "p19", label: "Offshore sea boots (helm crew)", category: "personal", priority: "important",
     brands: ["Dubarry", "Xtratuf", "Gill"],
     searchTerm: "offshore sailing sea boots waterproof",
   },
