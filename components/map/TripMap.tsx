@@ -9,7 +9,7 @@ import type { Waypoint } from "@/lib/types";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
-// Single canonical voyage: Chicago → Old Saybrook, in day order.
+// Single canonical voyage: Winthrop Harbor → Old Saybrook, in day order.
 const orderedWaypoints = [...waypoints].sort((a, b) => a.day - b.day);
 
 // Build two GeoJSON line features: open-water legs and inland (canal/river) legs.
@@ -105,7 +105,7 @@ export default function TripMap() {
         style={{ background: "hsl(40, 60%, 96%)", border: "1px solid hsl(213, 74%, 28%, 0.25)" }}
       >
         <span className="text-sm font-medium" style={{ color: "hsl(213, 74%, 28%)" }}>
-          ⛵ Chicago → Old Saybrook
+          ⛵ Winthrop Harbor → Old Saybrook
         </span>
       </div>
 

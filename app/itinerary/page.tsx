@@ -23,7 +23,7 @@ export default function ItineraryPage() {
 
   const groups = legGroups();
   const totalDays = tripTotals().dayEnd;
-  // 8 of the days cover no distance on purpose: the named weather-reserve and
+  // Some days cover no distance on purpose: the named weather-reserve and
   // layover days, plus mast-unstep at Tonawanda and the rigging day at Catskill.
   const travelDays = itinerary.filter(d => d.distanceNm > 0 || (d.distanceMi ?? 0) > 0).length;
 
@@ -46,7 +46,7 @@ export default function ItineraryPage() {
               Ship&rsquo;s Log
             </h1>
             <p className="text-[hsl(var(--muted-foreground))] text-sm mt-1 italic">
-              {totalDays} days &middot; {travelDays} under way, {totalDays - travelDays} at rest &middot; Chicago → Old Saybrook &middot; Departs late June 2027
+              {totalDays} days &middot; {travelDays} under way, {totalDays - travelDays} at rest &middot; Winthrop Harbor → Old Saybrook &middot; Departs late June 2027
             </p>
           </div>
         </div>
@@ -190,7 +190,8 @@ export default function ItineraryPage() {
 function DayCard({ day, accentColor }: { day: (typeof itinerary)[0]; accentColor: string }) {
   const [open, setOpen] = useState(false);
   const isLayover = day.distanceNm === 0 && day.from === day.to;
-  const isArrival = day.notes.toLowerCase().includes("arrival");
+  // Keyed on position, not prose: several days mention an "arrival" in their notes.
+  const isArrival = day.day === itinerary[itinerary.length - 1].day;
 
   const badgeBg = isArrival
     ? "hsl(var(--coral))"

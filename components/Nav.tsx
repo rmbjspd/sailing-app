@@ -56,7 +56,7 @@ export default function Nav() {
               className="text-[0.6rem] tracking-[0.18em] uppercase"
               style={{ color: "hsl(42 30% 45%)", fontFamily: "var(--font-typewriter)" }}
             >
-              Chicago → Old Saybrook · 2027
+              Winthrop Harbor → Old Saybrook
             </div>
           </div>
         </Link>

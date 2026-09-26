@@ -24,7 +24,7 @@ export const checklists: ChecklistGroup[] = [
       { id: "s16", label: "Radar reflector (for coastal/offshore legs)", category: "safety", priority: "important" },
       { id: "s17", label: "SOS strobe light", category: "safety", priority: "important" },
       { id: "s18", label: "Bosun's chair + halyard setup for going aloft", category: "safety", priority: "important", notes: "Needed for mast unstep/restep" },
-      { id: "s19", label: "Lee cloths for both sea berths", category: "safety", priority: "important", notes: "Days 19, 21 and 24 all put the off-watch crew in a seaway. An off-watch that cannot sleep is a safety problem by the second long day." },
+      { id: "s19", label: "Lee cloths for both sea berths", category: "safety", priority: "important", notes: "Days 1, 2, 3, 16, 18, 21, 25 and 39 are all 58–76 nm and put the off-watch crew in a seaway — three of them back to back at the start. An off-watch that cannot sleep is a safety problem by the second long day." },
     ]
   },
   {
@@ -52,7 +52,7 @@ export const checklists: ChecklistGroup[] = [
       { id: "n18", label: "Magnetic compass — calibrated", category: "navigation", priority: "important" },
       { id: "n19", label: "Logbook + pencils + parallel rulers + dividers", category: "navigation", priority: "nice" },
       { id: "n20", label: "Binoculars", category: "navigation", priority: "nice", notes: "Covered — Athlon Midas 8x42 (ED glass, waterproof) already owned; no purchase needed" },
-      { id: "n21", label: "Laminated tide/current cheat card: Troy-vs-Battery lag, Hell Gate slack, Plum Gut, The Race", category: "navigation", priority: "important", notes: "All four are single-day problems — Days 41, 47 and 50 — and all four are the kind of thing you want on a card in the cockpit, not in an app below." },
+      { id: "n21", label: "Laminated tide/current cheat card: Troy-vs-Battery lag, Hell Gate slack, Plum Gut", category: "navigation", priority: "important", notes: "Each is a single-day problem — Days 36, 41 and 44 — and each belongs on a card in the cockpit, not in an app below." },
     ]
   },
   {
@@ -65,9 +65,9 @@ export const checklists: ChecklistGroup[] = [
       { id: "b3", label: "Fenders: 8+ assorted (4 large cylindrical + 2 ball fenders minimum)", category: "boat-gear", priority: "critical" },
       { id: "b4", label: "Fender board (6ft plank rigged horizontally with 2 fenders)", category: "boat-gear", priority: "important", notes: "Protects hull on rough lock walls" },
       { id: "b5", label: "Boat hooks (2 recommended for locks)", category: "boat-gear", priority: "critical" },
-      { id: "b6", label: "Primary anchor: oversized modern scoop (Rocna/Mantus, one size up) + 200–250ft chain-led rode", category: "boat-gear", priority: "critical", notes: "150ft does not cover it. The Pool at Baie Fine (Days 14–15, two nights) means anchoring in 40–50ft — 225ft of rode at 5:1 — and the Benjamins (Day 12) is rock and weed over granite." },
+      { id: "b6", label: "Primary anchor: oversized modern scoop (Rocna/Mantus, one size up) + 200–250ft chain-led rode", category: "boat-gear", priority: "critical", notes: "150ft does not cover it. The Pool at Baie Fine (Days 11–12, two nights) means anchoring in 40–50ft — 225ft of rode at 5:1 — and the Benjamins (Day 9) is rock and weed over granite." },
       { id: "b7", label: "Secondary (Danforth/Fortress) anchor", category: "boat-gear", priority: "important" },
-      { id: "b8", label: "Jerry cans: 2× 5-gallon diesel", category: "boat-gear", priority: "critical", notes: "Not for Lake Michigan — the 130L tank covers those day-hops easily. These are for the North Channel (Days 12–18: no fuel between Little Current and Killarney) and Beaver Island (Day 6, where the fuel dock may not be open before 29 June)." },
+      { id: "b8", label: "Jerry cans: 2× 5-gallon diesel", category: "boat-gear", priority: "critical", notes: "Not for Lake Michigan — the 130L tank covers even the 74–76nm days. These are for the North Channel (Days 7–15: no fuel between Little Current and Killarney) and Beaver Island (Day 4, where the fuel dock may not be open before 29 June)." },
       { id: "b9", label: "Engine oil (full change qty + top-ups)", category: "boat-gear", priority: "critical" },
       { id: "b10", label: "Fuel filters: primary + secondary (2 sets)", category: "boat-gear", priority: "critical" },
       { id: "b11", label: "Raw water pump impeller (2 spares + gasket)", category: "boat-gear", priority: "critical" },
@@ -88,10 +88,9 @@ export const checklists: ChecklistGroup[] = [
       { id: "b26", label: "Insect screens for hatches + companionway", category: "boat-gear", priority: "important", notes: "Canal nights can have mosquitoes" },
       { id: "b27", label: "Head repair kit (spare joker valve, pump seal)", category: "boat-gear", priority: "important" },
       { id: "b28", label: "Hacksaw + blades", category: "boat-gear", priority: "nice" },
-      { id: "b29", label: "Mast cradle wood / crutch materials for unstep", category: "boat-gear", priority: "critical", notes: "Wardell's/Smith Boys usually supply; confirm in advance. Unstep is Day 30 at Tonawanda — make the crane booking from Dunkirk on Day 28." },
-      { id: "b30", label: "Anchor snubber + 30ft bridle, and a kellet", category: "boat-gear", priority: "critical", notes: "Two consecutive nights at anchor in a deep granite bowl (The Pool, Days 14–15) with no shore power." },
-      { id: "b31", label: "Block ice / perishables plan keyed to the resupply towns", category: "boat-gear", priority: "important", notes: "Mackinac (D8), Gore Bay (D11), Little Current (D13), Kincardine (D19), Cleveland (D25), Ilion (D37), NYC (D46). Provision to the gap plus three days, not to the next night." },
-      { id: "b32", label: "Mystic River Bascule Bridge schedule confirmed with CTDOT before departing Greenport", category: "boat-gear", priority: "critical", notes: "Day 50's berth at the Seaport is north of the bridge. Normal schedule is hourly at :40; CTDOT ran four openings a day in 2026 pending repairs." },
+      { id: "b29", label: "Mast cradle wood / crutch materials for unstep", category: "boat-gear", priority: "critical", notes: "Wardell's/Smith Boys usually supply; confirm in advance. Unstep is Day 26 at Tonawanda — make the crane booking from Erie on Day 24." },
+      { id: "b30", label: "Anchor snubber + 30ft bridle, and a kellet", category: "boat-gear", priority: "critical", notes: "Two consecutive nights at anchor in a deep granite bowl (The Pool, Days 11–12) with no shore power." },
+      { id: "b31", label: "Block ice / perishables plan keyed to the resupply towns", category: "boat-gear", priority: "important", notes: "Mackinac (D6), Little Current (D10), Kincardine (D16), Cleveland (D22), Ilion (D32), NYC (D40). Provision to the gap plus three days, not to the next night." },
     ]
   },
   {
@@ -131,6 +130,7 @@ export const checklists: ChecklistGroup[] = [
       { id: "p16", label: "Personal medications (6+ week supply)", category: "personal", priority: "critical" },
       { id: "p17", label: "Cash (small bills for canal walls, tips, farmers markets)", category: "personal", priority: "important" },
       { id: "p18", label: "Earplugs (marina noise, engine noise)", category: "personal", priority: "nice" },
+      { id: "p19", label: "Shakedown sail out of North Point Marina the afternoon before Day 1", category: "personal", priority: "critical", notes: "Day 1 is a 74nm open crossing on a boat that has not been proven yet. Find the problems 3nm from the dock, not 35nm out. This is the cheapest risk reduction anywhere in the plan." },
     ]
   },
   {
@@ -168,7 +168,7 @@ export const checklists: ChecklistGroup[] = [
       { id: "pr12", label: "Zip-lock bags + Tupperware for leftovers", category: "provisioning", priority: "nice" },
       { id: "pr13", label: "12V oscillating fan for cabin (hot marina nights)", category: "provisioning", priority: "important" },
       { id: "pr14", label: "Portable water jugs (2× 5-gallon) for extending tank", category: "provisioning", priority: "important" },
-      { id: "pr15", label: "Third 5-gallon water jug", category: "provisioning", priority: "important", notes: "Days 12, 14 and 15 are three of four consecutive nights with no dock water. The 42-gal tank is roughly 1.3 days for four crew." },
+      { id: "pr15", label: "Third 5-gallon water jug", category: "provisioning", priority: "important", notes: "With Gore Bay cut, Mackinac (D6) to Little Current (D10) has dock water only at Drummond and Meldrum Bay, and Days 9, 11 and 12 are nights at anchor. The 42-gal tank is roughly 1.3 days for four crew." },
     ]
   },
   {

@@ -1,6 +1,6 @@
 /**
  * Hand-digitized water-following polyline for the S/V Sabbatical voyage:
- * Chicago → Old Saybrook via Great Lakes, Erie Canal, Hudson River, Long Island Sound.
+ * Winthrop Harbor → Old Saybrook via Great Lakes, Erie Canal, Hudson River, Long Island Sound.
  *
  * Each coordinate is [longitude, latitude] in WGS-84.
  * Organized by leg so inland legs (canal/river) can be styled distinctly.
@@ -11,11 +11,8 @@
  * St. Clair River, Erie Canal locks, East River/Hell Gate) have additional shaping
  * points to stay in-water.
  *
- * Two places need care and are called out in the segments below: Baie Fine is a
- * dead-end fjord, so the north-channel track must double back down it rather than
- * cut across the La Cloche ridge; and the Sound leg now runs past Old Saybrook to
- * Mystic and back, so the outbound and return tracks are deliberately distinct
- * (outbound south of Fishers Island, return along the Connecticut shore).
+ * Baie Fine is a dead-end fjord, so the north-channel track doubles back down it
+ * rather than cutting across the La Cloche ridge to Killarney.
  */
 
 export type RouteLeg =
@@ -37,27 +34,25 @@ export interface RouteSegment {
 }
 
 export const routeSegments: RouteSegment[] = [
-  // ── Lake Michigan (Days 1–8) ─────────────────────────────────────────────
-  // Chicago → St. Joseph → Grand Haven → Pentwater → Frankfort →
-  // South Manitou → Leland → Beaver Island → Mackinac Island
-  // Hugs the eastern shoreline north, then crosses to Beaver Island and the Straits.
+  // ── Lake Michigan (Days 1–6) ─────────────────────────────────────────────
+  // Winthrop Harbor → Holland → Ludington → Leland → Beaver Island → Mackinac
+  // A near-straight 74nm crossing to Holland, then north up the eastern shore,
+  // through the Manitou Passage, and across to Beaver Island and the Straits.
   {
     leg: "lake-michigan",
     inland: false,
     coords: [
-      [-87.6233, 41.8827], // Chicago (DuSable Harbor)
-      [-87.15,   42.05],   // offshore, clear of Chicago shoals
-      [-86.85,   42.05],   // heading toward St. Joseph
-      [-86.4834, 42.1098], // St. Joseph
-      [-86.30,   42.50],   // mid-lake passage north
-      [-86.2285, 43.0631], // Grand Haven
-      [-86.37,   43.50],   // following shoreline north
-      [-86.4339, 43.7769], // Pentwater
-      [-86.4545, 43.9551], // Ludington (morning fuel and water stop, Day 4)
-      [-86.35,   44.30],   // north past Manistee, standing off Big Sable
-      [-86.2300, 44.6329], // Frankfort (Betsie Lake)
-      [-86.10,   44.80],   // offshore Point Betsie / Empire, Sleeping Bear bluffs
-      [-86.0925, 45.0119], // South Manitou Island (anchor, dinghy ashore)
+      [-87.8039, 42.4889], // Winthrop Harbor (North Point Marina) — trip start
+      [-86.2130, 42.7730], // Holland channel, after the open crossing
+      [-86.1861, 42.7906], // Holland (Lake Macatawa)
+      [-86.2500, 43.0600], // past Grand Haven (bail-out)
+      [-86.3500, 43.5000], // past Muskegon / White Lake / Pentwater
+      [-86.4545, 43.9551], // Ludington
+      [-86.5300, 44.0600], // Big Sable Point, rounded in the morning
+      [-86.3500, 44.3000], // past Manistee
+      [-86.2700, 44.6900], // Point Betsie
+      [-86.1000, 44.8500], // offshore Sleeping Bear bluffs
+      [-86.0925, 45.0119], // South Manitou Island (optional anchor stop)
       [-85.7632, 45.0231], // Leland (Fishtown) — via the Manitou Passage
       [-85.5930, 45.1850], // Cathead Point, standing a mile off the shoal
       [-85.5189, 45.7467], // Beaver Island (St. James / Paradise Bay)
@@ -67,10 +62,9 @@ export const routeSegments: RouteSegment[] = [
     ],
   },
 
-  // ── North Channel / Georgian Bay (Days 9–18) ─────────────────────────────
-  // Mackinac Island → Drummond Island → Meldrum Bay → Gore Bay →
-  // Benjamin Islands → Kagawong → Little Current → Baie Fine/The Pool →
-  // Killarney → Tobermory
+  // ── North Channel / Georgian Bay (Days 7–15) ─────────────────────────────
+  // Mackinac Island → Drummond Island → Meldrum Bay → Benjamin Islands →
+  // Kagawong → Little Current → Baie Fine/The Pool → Killarney → Tobermory
   {
     leg: "north-channel",
     inland: false,
@@ -82,15 +76,14 @@ export const routeSegments: RouteSegment[] = [
       [-83.50,   46.00],   // Potagannissing Bay east
       [-83.30,   45.98],   // crossing into North Channel
       [-83.1168, 45.9168], // Meldrum Bay (Manitoulin north shore)
-      [-82.80,   45.92],   // along Manitoulin north shore
-      [-82.4668, 45.9168], // Gore Bay
-      [-82.35,   46.02],   // north into the Benjamins approach
+      [-82.80,   45.93],   // along Manitoulin north shore
+      [-82.60,   45.95],   // north of Clapperton Island, past Gore Bay
       [-82.2529, 46.0885], // Benjamin Islands (anchor)
       [-82.2530, 45.8980], // Kagawong (Bridal Veil Falls, lunch stop)
       [-81.9250, 45.9783], // Little Current (swing bridge, on the hour)
       [-81.7200, 46.0100], // Landsdowne Channel into Frazer Bay
-      [-81.6800, 46.0300], // Baie Fine entrance bar — favor the north side
-      [-81.5500, 46.0500], // The Pool (anchor, Days 14–15)
+      [-81.6800, 46.0300], // Baie Fine entrance bar — favour the north side
+      [-81.5500, 46.0500], // The Pool (anchor, Days 11–12)
       [-81.6800, 46.0300], // back out of the fjord — The Pool is a dead end
       [-81.62,   45.99],   // Frazer Bay, turning south around Badgeley Point
       [-81.5111, 45.9712], // Killarney
@@ -102,7 +95,7 @@ export const routeSegments: RouteSegment[] = [
     ],
   },
 
-  // ── Lake Huron (Days 19–21) ──────────────────────────────────────────────
+  // ── Lake Huron (Days 16–18) ──────────────────────────────────────────────
   // Tobermory → Kincardine → Goderich → Port Huron
   // Follows Ontario's eastern Lake Huron shoreline south.
   {
@@ -123,7 +116,7 @@ export const routeSegments: RouteSegment[] = [
     ],
   },
 
-  // ── St. Clair River / Lake St. Clair (Day 22) ────────────────────────────
+  // ── St. Clair River / Lake St. Clair (Day 19) ────────────────────────────
   // Follows the navigable channel south through St. Clair River, Lake St. Clair,
   // and the Detroit River.
   {
@@ -143,9 +136,8 @@ export const routeSegments: RouteSegment[] = [
     ],
   },
 
-  // ── Lake Erie (Days 23–29) ───────────────────────────────────────────────
-  // Detroit → Put-in-Bay → Cleveland → Ashtabula → Erie → Dunkirk →
-  // Buffalo/Tonawanda
+  // ── Lake Erie (Days 20–25) ───────────────────────────────────────────────
+  // Detroit → Put-in-Bay → Cleveland → Ashtabula → Erie → Buffalo/Tonawanda
   {
     leg: "lake-erie",
     inland: false,
@@ -160,16 +152,16 @@ export const routeSegments: RouteSegment[] = [
       [-80.7967, 41.8992], // Ashtabula
       [-80.40,   42.00],   // past Conneaut
       [-80.0851, 42.1292], // Erie PA (Presque Isle Bay)
-      [-79.70,   42.35],   // past Barcelona Harbor
-      [-79.3372, 42.4933], // Dunkirk (Chadwick Bay)
+      [-79.70,   42.35],   // past Barcelona Harbor (bail-out)
+      [-79.35,   42.52],   // off Dunkirk / Chadwick Bay (bail-out)
       [-79.00,   42.75],   // approaching Niagara / Buffalo breakwall
       [-78.8798, 43.0226], // Buffalo / Tonawanda — Black Rock Canal
     ],
   },
 
-  // ── Erie Canal (Days 30–40) ──────────────────────────────────────────────
-  // Buffalo/Tonawanda → Medina → Pittsford → Lyons → Baldwinsville →
-  // Brewerton → Rome → Little Falls → Canajoharie → Schenectady → Waterford
+  // ── Erie Canal (Days 26–35) ──────────────────────────────────────────────
+  // Buffalo/Tonawanda → Albion → Fairport → Clyde → Brewerton → Rome →
+  // Little Falls → Canajoharie → Schenectady → Waterford
   // Follows the Barge Canal alignment through the Mohawk Valley.
   {
     leg: "erie-canal",
@@ -178,15 +170,17 @@ export const routeSegments: RouteSegment[] = [
       [-78.8798, 43.0226], // Buffalo / Tonawanda (Black Rock Canal)
       [-78.70,   43.08],   // canal east of Tonawanda
       [-78.69,   43.17],   // Lockport — Locks E-35 / E-34
-      [-78.3872, 43.2192], // Medina
-      [-77.94,   43.21],   // Brockport (lunch tie-up)
+      [-78.3872, 43.2192], // Medina (lunch stop)
+      [-78.1933, 43.2456], // Albion
+      [-77.94,   43.21],   // Brockport
       [-77.70,   43.18],   // Spencerport, west of Rochester
-      [-77.5197, 43.0892], // Pittsford (Schoen Place)
-      [-77.44,   43.10],   // Fairport — red lift bridge
-      [-76.9885, 43.0639], // Lyons
-      [-76.72,   43.03],   // Clyde
+      [-77.5197, 43.0892], // Pittsford (Schoen Place, fallback)
+      [-77.4425, 43.0987], // Fairport — red lift bridge
+      [-77.23,   43.06],   // Palmyra
+      [-76.9885, 43.0639], // Lyons (lunch stop)
+      [-76.8694, 43.0839], // Clyde
       [-76.55,   43.05],   // May's Point / Cayuga-Seneca junction, Montezuma
-      [-76.3325, 43.1583], // Baldwinsville (Lock E-24)
+      [-76.3325, 43.1583], // Baldwinsville (Lock E-24, fallback)
       [-76.2700, 43.1700], // Three Rivers Junction
       [-76.1268, 43.2396], // Brewerton (Ess-Kay Yards) — stage for Oneida
       [-75.90,   43.20],   // Oneida Lake, west end
@@ -202,8 +196,8 @@ export const routeSegments: RouteSegment[] = [
     ],
   },
 
-  // ── Hudson River (Days 41–46) ────────────────────────────────────────────
-  // Waterford → Catskill → Poughkeepsie → Haverstraw → NYC (Liberty Landing)
+  // ── Hudson River (Days 36–40) ────────────────────────────────────────────
+  // Waterford → Catskill → Poughkeepsie → NYC (Liberty Landing)
   // Follows the Hudson River channel south.
   {
     leg: "hudson",
@@ -222,7 +216,7 @@ export const routeSegments: RouteSegment[] = [
       [-73.92,   41.55],   // Beacon / Pollepel Island (Bannerman's Castle)
       [-73.97,   41.45],   // Cold Spring / Storm King
       [-74.00,   41.35],   // West Point / Bear Mountain
-      [-73.9483, 41.1957], // Haverstraw (Haverstraw Bay)
+      [-73.9483, 41.1957], // Haverstraw Bay (fallback stop if the light is wrong)
       [-74.02,   41.05],   // Tappan Zee / Nyack
       [-73.98,   40.92],   // Yonkers
       [-74.00,   40.80],   // Spuyten Duyvil (Harlem River junction)
@@ -231,13 +225,10 @@ export const routeSegments: RouteSegment[] = [
     ],
   },
 
-  // ── Long Island Sound → Mystic → Old Saybrook (Days 47–52) ───────────────
+  // ── Long Island Sound → Old Saybrook (Days 41–44) ────────────────────────
   // NYC → East River/Hell Gate → Oyster Bay → Port Jefferson → Greenport →
-  // Plum Gut → The Race → Mystic → Old Saybrook
+  // Plum Gut → Old Saybrook
   // Critical: the East River / Hell Gate narrows must follow the channel precisely.
-  // The track runs PAST Old Saybrook to Mystic and doubles back, so the outbound
-  // leg is taken south of Fishers Island and the return along the Connecticut
-  // shore — they must not overlay each other.
   {
     leg: "sound-saybrook",
     inland: false,
@@ -261,16 +252,10 @@ export const routeSegments: RouteSegment[] = [
       [-72.85,   41.00],   // east
       [-72.65,   41.04],   // continuing
       [-72.3620, 41.1009], // Greenport (North Fork)
-      [-72.2100, 41.1900], // Plum Gut, north of Orient Point — take it on the early ebb
-      [-72.0900, 41.2300], // The Race
-      [-71.9800, 41.2700], // south of Fishers Island, into Fishers Island Sound
-      [-71.9700, 41.3200], // Mystic River mouth, past Noank
-      [-71.9663, 41.3639], // Mystic (Seaport Museum Marina, north of the bascule)
-      [-71.9700, 41.3150], // back down the Mystic River
-      [-72.0200, 41.3050], // Groton Long Point
-      [-72.0900, 41.3050], // mouth of the Thames, New London
-      [-72.1900, 41.3000], // Niantic Bay
-      [-72.3400, 41.2700], // Cornfield Point
+      [-72.2700, 41.1300], // Gardiners Bay, east toward Orient Point
+      [-72.2150, 41.1700], // Plum Gut — take it on the early ebb
+      [-72.2600, 41.2300], // eastern Long Island Sound, heading NW
+      [-72.3400, 41.2700], // off Cornfield Point
       [-72.3765, 41.2948], // Old Saybrook (Saybrook Point Marina)
     ],
   },

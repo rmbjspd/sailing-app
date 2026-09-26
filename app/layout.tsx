@@ -17,8 +17,8 @@ const specialElite = Special_Elite({
 const pirataOne = Pirata_One({ variable: "--font-pirata", weight: "400", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "S/V Sabbatical — Chicago to Old Saybrook 2027",
-  description: "Sailing voyage planning: Chicago → Old Saybrook, CT via the Great Lakes, North Channel, Erie Canal, Hudson River, and Long Island Sound. Summer 2027.",
+  title: "S/V Sabbatical — Winthrop Harbor to Old Saybrook 2027",
+  description: "Sailing voyage planning: Winthrop Harbor → Old Saybrook, CT via the Great Lakes, North Channel, Erie Canal, Hudson River, and Long Island Sound. Summer 2027.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -120,7 +120,7 @@ export default function HomePage() {
                 "0 0 48px hsl(42 80% 44% / 0.28), 0 4px 10px rgba(0,0,0,0.55)",
             }}
           >
-            Chicago<br />
+            Winthrop Harbor<br />
             <span style={{ color: "hsl(42 65% 75%)", fontSize: "0.75em" }}>→</span>{" "}
             Old Saybrook
           </h1>
