@@ -1,35 +1,43 @@
-import type { Metadata } from "next";
-import { IM_Fell_English, Special_Elite, Pirata_One } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Nav from "@/components/Nav";
+import Nav from "@/components/chrome/Nav";
+import SmoothScroll from "@/components/chrome/SmoothScroll";
 
-const imFellEnglish = IM_Fell_English({
-  variable: "--font-fell",
-  weight: "400",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
   style: ["normal", "italic"],
-  subsets: ["latin"],
+  axes: ["SOFT", "WONK", "opsz"],
+  display: "swap",
 });
-const specialElite = Special_Elite({
-  variable: "--font-typewriter",
-  weight: "400",
-  subsets: ["latin"],
-});
-const pirataOne = Pirata_One({ variable: "--font-pirata", weight: "400", subsets: ["latin"] });
+const geist = Geist({ variable: "--font-geist", subsets: ["latin"], display: "swap" });
+const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "S/V Sabbatical — Chicago to Old Saybrook 2027",
-  description: "Sailing voyage planning: Chicago → Old Saybrook, CT via the Great Lakes, North Channel, Erie Canal, Hudson River, and Long Island Sound. Summer 2027.",
+  title: "S/V Sabbatical — Chicago to Old Saybrook, Summer 2027",
+  description:
+    "A 35-day, 1,700-nautical-mile passage from Chicago to Old Saybrook, CT, through the Great Lakes, the North Channel, the Erie Canal, the Hudson River and Long Island Sound.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#03060c",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${imFellEnglish.variable} ${specialElite.variable} ${pirataOne.variable} h-full`}
-    >
-      <body className="min-h-full flex flex-col antialiased">
+    <html lang="en" className={`${fraunces.variable} ${geist.variable} ${geistMono.variable}`}>
+      <body className="grain min-h-dvh antialiased">
+        <SmoothScroll />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-abyss"
+        >
+          Skip to content
+        </a>
         <Nav />
-        <main className="flex-1">{children}</main>
+        <main id="main" className="relative">{children}</main>
       </body>
     </html>
   );
