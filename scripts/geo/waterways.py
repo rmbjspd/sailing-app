@@ -5,10 +5,15 @@ passages on the route. Shared by bake-terrain.py (burned into the water mask so
 they render as water) and bake-route.py (so the route can be pathfound through
 them).
 
-Sources: Natural Earth 10m rivers + North America supplement (public domain),
-plus a few short connectors traced by hand where Natural Earth has no line
-(Detroit River, Black Rock Channel / upper Niagara, Little Current channel,
-Seneca River between the canal's NE segments, lower Hudson, East River).
+Primary source: OpenStreetMap (ODbL, (c) OpenStreetMap contributors), fetched
+from the OSM API as whole waterway relations/ways — the New York State Canal
+System's Erie Canal relation (including the Seneca, Oneida and Mohawk river
+sections it follows), the St. Clair, Detroit, upper Niagara and Hudson rivers,
+the Black Rock Channel and the East River. The only hand-traced piece is the
+~3 km Little Current channel, which OSM maps as a strait point.
+
+Fallback (if the OSM API is unreachable and nothing is cached): Natural Earth
+10m rivers + a few hand-traced connectors.
 """
 import json, os, urllib.request
 
@@ -64,8 +69,48 @@ def _fetch(name):
     return p
 
 
+# (label, OSM element type, id, optional lng/lat clip box)
+OSM = [
+    ("Erie Canal (NYS Canal System)", "relation", 1823647, None),
+    ("St. Clair River", "relation", 4229869, None),
+    ("Detroit River", "relation", 7730524, None),
+    ("Upper Niagara River", "relation", 2245991, (-79.2, -78.8, 42.8, 43.04)),
+    ("Black Rock Channel", "way", 164030656, None),
+    ("Black Rock Channel", "way", 164030655, None),
+    ("Hudson River", "relation", 2148192, (-74.3, -73.5, 40.66, 42.82)),
+    ("East River", "relation", 5912630, None),
+]
+OSM_API = "https://api.openstreetmap.org/api/0.6/"
+HAND_ALWAYS = ["Little Current channel"]
+
+
+def _osm_lines():
+    out = []
+    for label, kind, oid, clip in OSM:
+        p = os.path.join(CACHE, f"osm-{kind}-{oid}.json")
+        if not os.path.exists(p):
+            req = urllib.request.Request(f"{OSM_API}{kind}/{oid}/full.json",
+                                         headers={"User-Agent": "sailing-app-bake/1.0"})
+            with urllib.request.urlopen(req, timeout=300) as r, open(p, "wb") as f:
+                f.write(r.read())
+        els = json.load(open(p))["elements"]
+        nodes = {e["id"]: (e["lon"], e["lat"]) for e in els if e["type"] == "node"}
+        for w in (e for e in els if e["type"] == "way"):
+            pts = [nodes[n] for n in w["nodes"] if n in nodes]
+            if clip:
+                pts = [q for q in pts if clip[0] <= q[0] <= clip[1] and clip[2] <= q[1] <= clip[3]]
+            if len(pts) >= 2:
+                out.append((label, pts))
+    return out
+
+
 def channel_lines():
     """List of (name, [(lng, lat), ...]) polylines."""
+    try:
+        lines = _osm_lines()
+        return lines + [(n, list(HAND[n])) for n in HAND_ALWAYS]
+    except Exception as e:  # offline: fall back to Natural Earth + hand connectors
+        print(f"waterways: OSM unavailable ({e}); using Natural Earth fallback")
     out = []
     for fname, feat, clip in NE_LINES:
         gj = json.load(open(_fetch(fname)))

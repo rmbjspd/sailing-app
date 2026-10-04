@@ -5,6 +5,10 @@ Bake the 3D voyage terrain texture: public/geo/terrain.png
 Sources (public domain / open):
   - Elevation + bathymetry: AWS Terrain Tiles (Terrarium encoding), zoom 8.
     https://registry.opendata.aws/terrain-tiles/
+  - Lake and sea floors: NOAA NCEI ETOPO 2022 (15 arc-second, sampled at 30"),
+    via the CoastWatch ERDDAP. The terrain tiles carry no Great Lakes
+    bathymetry (each lake is flat at its surface), so every water pixel takes
+    its floor from ETOPO.
   - Coastlines + lakes: Natural Earth 10m land / lakes (public domain).
 
 Output: an equirectangular grid covering BBOX (lng/lat linear), RGBA:
@@ -105,16 +109,32 @@ from PIL import ImageFilter, ImageChops
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from waterways import rasterize
 mask = mask.filter(ImageFilter.GaussianBlur(1.1))
+open_water = np.asarray(mask, dtype=np.float32) >= 128   # lakes + sea, before channels
 mask = ImageChops.lighter(mask, rasterize(OUT_W, OUT_H, 1.8, ss=SS).resize((OUT_W, OUT_H), Image.LANCZOS))
 water = np.asarray(mask, dtype=np.float32)
 
 # Land pixels below 0 m (DEM noise along coasts) clamp to 1 m; keep bathymetry under water.
 elev = np.where(water < 128, np.maximum(elev, 1.0), elev)
-# Smooth the sea floor a little: the shelf is so flat that raw depth quantisation
-# otherwise breaks isobaths into dotted noise.
+# Lake and sea floors from ETOPO 2022 (30" sampling of the 15" grid).
 from scipy import ndimage
-smooth_floor = ndimage.gaussian_filter(elev, 2.2)
-elev = np.where(water >= 128, np.minimum(smooth_floor, elev.max()), elev)
+from scipy.io import netcdf_file
+ETOPO = ("https://coastwatch.pfeg.noaa.gov/erddap/griddap/ETOPO_2022_v1_15s.nc?"
+         f"z%5B({LAT_MIN}):2:({LAT_MAX})%5D%5B({LNG_MIN}):2:({LNG_MAX})%5D")
+nc = netcdf_file(fetch(ETOPO, "etopo22.nc"), "r", mmap=False)
+ez = nc.variables["z"][:].astype(np.float32)
+elat = nc.variables["latitude"][:].astype(np.float64)
+elon = nc.variables["longitude"][:].astype(np.float64)
+# our pixel centres → fractional ETOPO indices (lat ascending in the file)
+LNG_C = LNG_MIN + (np.arange(OUT_W) + 0.5) / OUT_W * (LNG_MAX - LNG_MIN)
+LAT_C = LAT_MAX - (np.arange(OUT_H) + 0.5) / OUT_H * (LAT_MAX - LAT_MIN)
+ri = (LAT_C - elat[0]) / (elat[1] - elat[0])
+ci = (LNG_C - elon[0]) / (elon[1] - elon[0])
+RI, CI = np.meshgrid(ri, ci, indexing="ij")
+floor = ndimage.map_coordinates(ez, [RI, CI], order=1, mode="nearest")
+# Light smoothing: the continental shelf is flat enough that quantisation
+# otherwise breaks the isobaths into dotted noise.
+floor = ndimage.gaussian_filter(floor, 1.2)
+elev = np.where(open_water, floor, elev)
 
 v = np.clip(np.round((elev + 1000) * 4), 0, 65535).astype(np.uint32)
 out = np.zeros((OUT_H, OUT_W, 4), dtype=np.uint8)

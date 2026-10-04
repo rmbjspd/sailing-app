@@ -49,8 +49,10 @@ point in `bake-route.py`, or adjust a channel in `waterways.py`, then re-run the
 bakes in order.
 
 Projection and bounds live in `lib/geo/projection.ts` and must match the bake scripts.
-The source DEM has no Great Lakes bathymetry (lakes are flat at their surface), so
-depth contours are only drawn where real depths exist (Long Island Sound / Atlantic).
+Land relief comes from AWS Terrain Tiles; every lake and sea floor comes from NOAA's
+ETOPO 2022 (15″ grid via the CoastWatch ERDDAP), since the terrain tiles store the
+Great Lakes flat at their surface. Canal and river channels are OpenStreetMap
+waterway relations fetched from the OSM API (Natural Earth fallback when offline).
 Without WebGL2 the world falls back to a static chart.
 
 ## Crew Manifest (`/crew`)

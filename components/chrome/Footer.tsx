@@ -16,8 +16,9 @@ export default function Footer() {
           </div>
         </div>
         <p className="max-w-md text-xs leading-relaxed text-ink-3">
-          Terrain: AWS Terrain Tiles (SRTM, GMTED, NOAA coastal bathymetry). Coastlines &amp; lakes: Natural Earth.
-          Lock data: NYS Canal Corporation &amp; USACE. Planning aid only — not for navigation.
+          Terrain: AWS Terrain Tiles. Lake &amp; sea floors: NOAA NCEI ETOPO 2022. Coastlines: Natural Earth.
+          Canal &amp; rivers: &copy; OpenStreetMap contributors (ODbL). Lock data: NYS Canal Corporation &amp; USACE.
+          Planning aid only — not for navigation.
         </p>
       </div>
     </footer>

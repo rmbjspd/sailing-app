@@ -126,7 +126,7 @@ def seg_ok(p, q):
     n = int(max(abs(q[0] - p[0]), abs(q[1] - p[1])) * 2) + 2
     for t in np.linspace(0, 1, n):
         r, c = p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t
-        if vis_at(r, c) < 0.4:
+        if vis_at(r, c) < 0.5:
             return False
     return True
 
@@ -160,7 +160,7 @@ for prev, w in zip(wps, wps[1:]):
         pix.extend(seg if not pix else seg[1:])
     sm = smooth(centre_on_water(pix), 3)
     sm = smooth(sm, 2)
-    simp = simplify_safe(sm, 0.45)
+    simp = simplify_safe(sm, 0.3)
     ll = [to_ll(r, c) for r, c in simp]
     nm = sum(math.hypot((b[0] - a_[0]) * math.cos(math.radians(43.75)), b[1] - a_[1]) * 60 for a_, b in zip(ll, ll[1:]))
     print(f"day {w['day']:2d} {prev['name'][:22]:22s} → {w['name'][:24]:24s} {nm:6.1f} nm  {len(ll):4d} pts", file=sys.stderr)
