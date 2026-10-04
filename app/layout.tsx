@@ -3,6 +3,7 @@ import { Fraunces, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/chrome/Nav";
 import SmoothScroll from "@/components/chrome/SmoothScroll";
+import Footer from "@/components/chrome/Footer";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -29,6 +30,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${fraunces.variable} ${geist.variable} ${geistMono.variable}`}>
       <body className="grain min-h-dvh antialiased">
+        {/* Without JS, scroll-reveal content must not stay at its initial hidden state. */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important;filter:none!important}`}</style>
+        </noscript>
         <SmoothScroll />
         <a
           href="#main"
@@ -38,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </a>
         <Nav />
         <main id="main" className="relative">{children}</main>
+        <Footer />
       </body>
     </html>
   );

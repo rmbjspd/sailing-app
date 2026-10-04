@@ -97,6 +97,10 @@ d = ImageDraw.Draw(mask)
 draw_geojson(d, land, 0)     # land
 draw_geojson(d, lakes, 255)  # lakes back to water
 mask = mask.resize((OUT_W, OUT_H), Image.LANCZOS)
+# Soften the edge over ~2 px so the 0.5 iso-contour of the bilinearly-sampled
+# mask (the rendered shoreline) is smooth instead of stair-stepped.
+from PIL import ImageFilter
+mask = mask.filter(ImageFilter.GaussianBlur(1.1))
 water = np.asarray(mask, dtype=np.float32)
 
 # Land pixels below 0 m (DEM noise along coasts) clamp to 1 m; keep bathymetry under water.

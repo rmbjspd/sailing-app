@@ -15,6 +15,7 @@ export function Reveal({
   if (reduce) return <M className={className}>{children}</M>;
   return (
     <M
+      data-reveal=""
       className={className}
       initial={{ opacity: 0, y, filter: "blur(6px)" }}
       whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
