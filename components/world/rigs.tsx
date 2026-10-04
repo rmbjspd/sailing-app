@@ -15,6 +15,8 @@ export interface StoryState {
   pan?: number;
   /** distance multiplier for the overview framing (>1 pulls back) */
   zoom?: number;
+  /** 0..1 weight of the hero "preview" in which the whole route draws itself */
+  preview?: number;
 }
 
 export const PORTRAIT_OVERVIEW = {
@@ -35,14 +37,17 @@ export const OVERVIEW = {
 // jitter never reaches the lens. Also publishes route progress for the line,
 // boat and beacons through shared refs.
 export function StoryRig({
-  route, story, progress, activeIndex, mastDown,
+  route, story, progress, lineProgress, activeIndex, mastDown,
 }: {
   route: RouteModel;
   story: React.RefObject<StoryState>;
   progress: React.RefObject<number>;
+  /** how far the route line is lit (boat progress, or the hero preview draw) */
+  lineProgress: React.RefObject<number>;
   activeIndex: React.RefObject<number>;
   mastDown: React.RefObject<number>;
 }) {
+  const introStart = useRef<number | null>(null);
   const { camera, pointer, size } = useThree();
   const look = useRef(OVERVIEW.target.clone());
   const tmp = useMemo(() => ({
@@ -61,6 +66,12 @@ export function StoryRig({
     smoothF.current = first.current ? fTarget : damp(smoothF.current, fTarget, 3.2, dt);
     const f = THREE.MathUtils.clamp(smoothF.current, 0, 1);
     progress.current = f;
+    // Hero preview: after the terrain sweep, the whole route draws itself in
+    // ~4.5 s; scrolling into the story hands the line back to the boat.
+    if (introStart.current == null) introStart.current = clock.elapsedTime;
+    const draw = THREE.MathUtils.smootherstep(clock.elapsedTime - introStart.current, 2.2, 6.7);
+    const pv = s.preview ?? 0;
+    lineProgress.current = THREE.MathUtils.lerp(f, Math.max(f, draw), pv);
 
     // active stop = last stop reached
     let ai = 0;

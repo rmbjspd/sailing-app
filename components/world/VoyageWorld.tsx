@@ -60,6 +60,7 @@ function ExploreProgress({ route, day, progress, activeIndex }: { route: RouteMo
 
 function Scene({ terrain, route, props, lowPower }: { terrain: TerrainData; route: RouteModel; props: VoyageWorldProps; lowPower: boolean }) {
   const progress = useRef(0);
+  const lineProgress = useRef(0);
   const activeIndex = useRef(0);
   const mastDown = useRef(0);
   const reveal = useRef(props.mode === "story" ? 0 : 1);
@@ -72,13 +73,13 @@ function Scene({ terrain, route, props, lowPower }: { terrain: TerrainData; rout
       <directionalLight position={[-3, 5, -2]} intensity={1.6} color="#dfe9ff" />
       <TerrainMesh terrain={terrain} segments={segments} reveal={props.mode === "story" ? reveal : undefined} />
       <Labels terrain={terrain} />
-      <RouteLine route={route} progress={progress} />
+      <RouteLine route={route} progress={props.mode === "story" ? lineProgress : progress} />
       <Beacons route={route} activeIndex={activeIndex} onSelect={props.mode === "explore" ? props.onStopSelect : undefined} />
       <Boat route={route} progress={progress} mastDown={mastDown} />
       {props.mode === "story" && props.story ? (
         <>
           <Reveal value={reveal} />
-          <StoryRig route={route} story={props.story} progress={progress} activeIndex={activeIndex} mastDown={mastDown} />
+          <StoryRig route={route} story={props.story} progress={progress} lineProgress={lineProgress} activeIndex={activeIndex} mastDown={mastDown} />
         </>
       ) : (
         <>

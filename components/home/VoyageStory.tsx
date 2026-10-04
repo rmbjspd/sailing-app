@@ -31,7 +31,7 @@ function lerpArr(arr: number[], d: number) {
 /** Map overall scroll progress → story state + which chapter is on stage. */
 function choreograph(p: number, chapters: Chapter[], lastDay: number) {
   if (p < DIVE_END) {
-    return { day: 0, overview: 1 - sstep(HERO_END * 0.6, DIVE_END, p), pan: -2.9 * (1 - sstep(0, HERO_END, p)), zoom: 1 + 0.32 * (1 - sstep(0, HERO_END, p)), chapter: p < HERO_END ? -1 : 0, phase: "hero" as const };
+    return { day: 0, overview: 1 - sstep(HERO_END * 0.6, DIVE_END, p), pan: -2.9 * (1 - sstep(0, HERO_END, p)), zoom: 1 + 0.32 * (1 - sstep(0, HERO_END, p)), preview: 1 - sstep(HERO_END * 0.4, DIVE_END, p), chapter: p < HERO_END ? -1 : 0, phase: "hero" as const };
   }
   if (p < SAIL_END) {
     const t = (p - DIVE_END) / (SAIL_END - DIVE_END);
@@ -44,9 +44,9 @@ function choreograph(p: number, chapters: Chapter[], lastDay: number) {
     const day = c.dayFrom + (c.dayTo - c.dayFrom) * travel;
     // the camera takes a breath upward as each new water opens up
     const lift = 0.2 * (1 - sstep(0, 0.22, local)) * (ci === 0 ? 0 : 1);
-    return { day, overview: 0.04 + lift, pan: 0, zoom: 1, chapter: ci, phase: "sail" as const };
+    return { day, overview: 0.04 + lift, pan: 0, zoom: 1, preview: 0, chapter: ci, phase: "sail" as const };
   }
-  return { day: lastDay, overview: sstep(SAIL_END, FINALE_IN, p), pan: -2.9 * sstep(SAIL_END, FINALE_IN, p), zoom: 1 + 0.32 * sstep(SAIL_END, FINALE_IN, p), chapter: chapters.length - 1, phase: "finale" as const };
+  return { day: lastDay, overview: sstep(SAIL_END, FINALE_IN, p), pan: -2.9 * sstep(SAIL_END, FINALE_IN, p), zoom: 1 + 0.32 * sstep(SAIL_END, FINALE_IN, p), preview: 0, chapter: chapters.length - 1, phase: "finale" as const };
 }
 
 const noop = () => () => {};
@@ -60,7 +60,7 @@ function useDaysToDeparture() {
 
 export default function VoyageStory({ data }: { data: StoryData }) {
   const section = useRef<HTMLElement>(null);
-  const story = useRef<StoryState>({ day: 0, overview: 1, pan: -2.9, zoom: 1.32 });
+  const story = useRef<StoryState>({ day: 0, overview: 1, pan: -2.9, zoom: 1.32, preview: 1 });
   const { scrollYProgress } = useScroll({ target: section, offset: ["start start", "end end"] });
   const dayMV = useMotionValue(0);
   const [chapter, setChapter] = useState(-1);
@@ -73,6 +73,7 @@ export default function VoyageStory({ data }: { data: StoryData }) {
     story.current.overview = s.overview;
     story.current.pan = s.pan;
     story.current.zoom = s.zoom;
+    story.current.preview = s.preview;
     dayMV.set(s.day);
     setChapter((c) => (c === s.chapter ? c : s.chapter));
     setPhase((ph) => (ph === s.phase ? ph : s.phase));
