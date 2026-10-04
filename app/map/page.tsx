@@ -1,19 +1,7 @@
-"use client";
-import dynamic from "next/dynamic";
+import ChartExplorer from "@/components/chart/ChartExplorer";
 
-const TripMap = dynamic(() => import("@/components/map/TripMap"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex items-center justify-center parchment-page">
-      <p className="text-[hsl(var(--navy))] text-sm">Loading map…</p>
-    </div>
-  ),
-});
+export const metadata = { title: "The Chart | S/V Sabbatical" };
 
 export default function MapPage() {
-  return (
-    <div className="h-[calc(100vh-3.5rem)] w-full">
-      <TripMap />
-    </div>
-  );
+  return <ChartExplorer />;
 }

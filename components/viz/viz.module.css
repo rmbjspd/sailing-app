@@ -1,0 +1,140 @@
+/* Shared motion + chrome for the "Voyage in Numbers" figures.
+   Figures render complete on the server; the client arms them (data-phase =
+   "hidden") only when they start below the fold, then releases them on scroll. */
+
+.fig {
+  position: relative;
+}
+
+/* Left-to-right wipe (applied to a clipPath rect, or any SVG element) */
+.wipe {
+  transform-box: fill-box;
+  transform-origin: left center;
+  transition: transform 2.8s cubic-bezier(0.65, 0, 0.35, 1) var(--d, 0s);
+}
+.fig[data-phase="hidden"] .wipe {
+  transform: scaleX(0);
+  transition: none;
+}
+
+/* Stroke draw — element needs pathLength="1" */
+.draw {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 2.4s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
+}
+.fig[data-phase="hidden"] .draw {
+  stroke-dashoffset: 1;
+  transition: none;
+}
+
+.fade {
+  transition: opacity 0.9s ease var(--d, 0s), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
+}
+.fig[data-phase="hidden"] .fade {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: none;
+}
+
+/* Grow from an origin (bars, radial spokes). Set --ox/--oy for the origin. */
+.grow {
+  transform-box: view-box;
+  transform-origin: var(--ox, 50%) var(--oy, 50%);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s), opacity 0.6s ease var(--d, 0s);
+}
+.fig[data-phase="hidden"] .grow {
+  transform: scale(var(--sx, 0), var(--sy, 0));
+  opacity: 0;
+  transition: none;
+}
+
+/* Bar grows along x from its own left edge */
+.growX {
+  transform-box: fill-box;
+  transform-origin: left center;
+  transition: transform 1.3s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
+}
+.fig[data-phase="hidden"] .growX {
+  transform: scaleX(0);
+  transition: none;
+}
+.growY {
+  transform-box: fill-box;
+  transform-origin: center top;
+  transition: transform 1.3s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
+}
+.fig[data-phase="hidden"] .growY {
+  transform: scaleY(0);
+  transition: none;
+}
+
+/* Interactive marks */
+.hit {
+  cursor: pointer;
+  outline: none;
+}
+.hit:focus-visible .focusRing {
+  stroke: var(--glow);
+  stroke-width: 1.5;
+  opacity: 1;
+}
+.focusRing {
+  fill: none;
+  opacity: 0;
+}
+
+/* Floating tooltip card */
+.tip {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  width: 248px;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: linear-gradient(180deg, rgb(16 29 49 / 0.985), rgb(8 15 28 / 0.985));
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 24px 60px -18px rgb(0 0 0 / 0.8), inset 0 1px 0 rgb(255 255 255 / 0.06);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: tipIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes tipIn {
+  from { opacity: 0; transform: var(--tf) translateY(4px); }
+  to { opacity: 1; transform: var(--tf); }
+}
+
+/* Data table disclosure */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.table th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line-strong);
+  position: sticky;
+  top: 0;
+  background: var(--deep);
+}
+.table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-2);
+}
+.table tr:hover td {
+  background: rgb(255 255 255 / 0.03);
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wipe, .draw, .fade, .grow, .growX, .growY { transition: none !important; }
+  .tip { animation: none; }
+}

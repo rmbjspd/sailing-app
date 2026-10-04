@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "mapbox-gl/dist/mapbox-gl.css";
 
 /* ════════════════════════════════════════════════════════════════════════════
    S/V SABBATICAL — "Night Chart" design system
@@ -306,15 +305,3 @@ html.lenis, html.lenis body { height: auto; }
 .lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
 .lenis [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-smooth iframe { pointer-events: none; }
-
-/* ── Mapbox popups on the night chart ─────────────────────────────────────── */
-.mapboxgl-popup-content {
-  background: rgb(9 18 32 / 0.92) !important;
-  color: var(--ink) !important;
-  border: 1px solid var(--line-strong);
-  border-radius: 14px !important;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 20px 50px -10px rgb(0 0 0 / 0.7) !important;
-}
-.mapboxgl-popup-tip { border-top-color: rgb(9 18 32 / 0.92) !important; }
-.mapboxgl-popup-close-button { color: var(--ink-2); font-size: 18px; padding: 4px 8px; }

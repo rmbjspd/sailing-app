@@ -17,6 +17,11 @@ export interface StoryState {
   zoom?: number;
 }
 
+export const PORTRAIT_OVERVIEW = {
+  pos: new THREE.Vector3(-8.6, 23.5, 0.15),
+  target: new THREE.Vector3(-0.45, 0, 0.15),
+};
+
 const damp = (a: number, b: number, lambda: number, dt: number) =>
   THREE.MathUtils.lerp(a, b, 1 - Math.exp(-lambda * dt));
 
@@ -87,9 +92,10 @@ export function StoryRig({
     const ov = THREE.MathUtils.smootherstep(s.overview, 0, 1);
     const pan = portrait ? 0 : (s.pan ?? 0);
     const ovPos = OVERVIEW.pos.clone().add(new THREE.Vector3(Math.sin(t * 0.07) * 0.6 + pan, Math.sin(t * 0.05) * 0.2, 0));
-    if (portrait) ovPos.set(0.6, 12.5, 10.5);
+    // Portrait: look east along the voyage so it runs up the tall screen.
+    if (portrait) ovPos.copy(PORTRAIT_OVERVIEW.pos).add(new THREE.Vector3(0, 0, Math.sin(t * 0.07) * 0.4));
     const ovTgt = OVERVIEW.target.clone().add(new THREE.Vector3(pan, 0, 0));
-    if (portrait) ovTgt.set(0.4, 0, 0.6);
+    if (portrait) ovTgt.copy(PORTRAIT_OVERVIEW.target);
     const zoom = portrait ? 1 : (s.zoom ?? 1);
     ovPos.sub(ovTgt).multiplyScalar(zoom).add(ovTgt);
     const desiredPos = chasePos.lerp(ovPos, ov);
@@ -127,25 +133,35 @@ export function StoryRig({
 
 // Explore camera: pan/zoom/tilt like a chart plotter, with smooth fly-to when a
 // stop is selected. Constrained so you can't lose the map.
+const EXPLORE_HOME = {
+  pos: new THREE.Vector3(-0.35, 10.2, 8.3),
+  target: new THREE.Vector3(-0.75, 0, -0.35),
+};
+
 export function ExploreRig({ route, focusStopId }: { route: RouteModel; focusStopId?: string | null }) {
   const controls = useRef<MapControlsImpl>(null);
-  const { camera } = useThree();
+  const { camera, size } = useThree();
+  const home = useMemo(() => {
+    // Phones: pull back and centre; desktop: leave room for the port list.
+    if (size.width < size.height) return PORTRAIT_OVERVIEW;
+    return EXPLORE_HOME;
+  }, [size.width, size.height]);
   const fly = useRef<{ fromP: THREE.Vector3; fromT: THREE.Vector3; toP: THREE.Vector3; toT: THREE.Vector3; t: number } | null>(null);
 
   useEffect(() => {
-    camera.position.copy(OVERVIEW.pos);
-    controls.current?.target.copy(OVERVIEW.target);
+    camera.position.copy(home.pos);
+    controls.current?.target.copy(home.target);
     controls.current?.update();
-  }, [camera]);
+  }, [camera, home]);
 
   useEffect(() => {
     const c = controls.current;
     if (!c) return;
     const stop = focusStopId ? route.stops.find((s) => s.id === focusStopId) : null;
-    const toT = stop ? stop.pos.clone() : OVERVIEW.target.clone();
-    const toP = stop ? stop.pos.clone().add(new THREE.Vector3(0.35, 1.25, 1.35)) : OVERVIEW.pos.clone();
+    const toT = stop ? stop.pos.clone() : home.target.clone();
+    const toP = stop ? stop.pos.clone().add(new THREE.Vector3(0.35, 1.25, 1.35)) : home.pos.clone();
     fly.current = { fromP: camera.position.clone(), fromT: c.target.clone(), toP, toT, t: 0 };
-  }, [focusStopId, route, camera]);
+  }, [focusStopId, route, camera, home]);
 
   useFrame((_, dt) => {
     const c = controls.current;
@@ -168,7 +184,7 @@ export function ExploreRig({ route, focusStopId }: { route: RouteModel; focusSto
       enableDamping
       dampingFactor={0.08}
       minDistance={0.35}
-      maxDistance={13}
+      maxDistance={28}
       maxPolarAngle={1.25}
       screenSpacePanning={false}
       onStart={() => { fly.current = null; }}

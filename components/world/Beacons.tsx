@@ -44,12 +44,13 @@ const ringFrag = /* glsl */ `
 `;
 
 function Beacon({
-  stop, index, activeIndex, size,
+  stop, index, activeIndex, size, onSelect,
 }: {
   stop: RouteModel["stops"][number];
   index: number;
   activeIndex: React.RefObject<number>;
   size: number;
+  onSelect?: (id: string) => void;
 }) {
   const beam = useRef<THREE.ShaderMaterial>(null);
   const ring = useRef<THREE.ShaderMaterial>(null);
@@ -81,6 +82,17 @@ function Beacon({
         <cylinderGeometry args={[0.0035 * size, 0.0035 * size, h, 8, 1, true]} />
         <shaderMaterial ref={beam} vertexShader={beamVert} fragmentShader={beamFrag} uniforms={beamU} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
       </mesh>
+      {onSelect && (
+        <mesh
+          position={[0, h / 2, 0]}
+          onClick={(e) => { e.stopPropagation(); onSelect(stop.id); }}
+          onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = "pointer"; }}
+          onPointerOut={() => { document.body.style.cursor = ""; }}
+        >
+          <cylinderGeometry args={[0.035 * size, 0.035 * size, h, 8]} />
+          <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+        </mesh>
+      )}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.002, 0]} renderOrder={3}>
         <planeGeometry args={[0.14 * size, 0.14 * size]} />
         <shaderMaterial ref={ring} vertexShader={ringVert} fragmentShader={ringFrag} uniforms={ringU} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
@@ -89,11 +101,11 @@ function Beacon({
   );
 }
 
-export default function Beacons({ route, activeIndex, size = 1 }: { route: RouteModel; activeIndex: React.RefObject<number>; size?: number }) {
+export default function Beacons({ route, activeIndex, size = 1, onSelect }: { route: RouteModel; activeIndex: React.RefObject<number>; size?: number; onSelect?: (id: string) => void }) {
   return (
     <group>
       {route.stops.map((s, i) => (
-        <Beacon key={s.id} stop={s} index={i} activeIndex={activeIndex} size={size} />
+        <Beacon key={s.id} stop={s} index={i} activeIndex={activeIndex} size={size} onSelect={onSelect} />
       ))}
     </group>
   );

@@ -25,6 +25,8 @@ export interface VoyageWorldProps {
   focusStopId?: string | null;
   /** explore mode: highlight route up to this day (default: whole route) */
   exploreDay?: number;
+  /** explore mode: a beacon was clicked */
+  onStopSelect?: (id: string) => void;
   onReady?: (route: RouteModel) => void;
   className?: string;
 }
@@ -48,7 +50,7 @@ function Reveal({ value, duration = 3.4 }: { value: React.RefObject<number>; dur
 function ExploreProgress({ route, day, progress, activeIndex }: { route: RouteModel; day?: number; progress: React.RefObject<number>; activeIndex: React.RefObject<number> }) {
   useFrame((_, dt) => {
     const target = day == null ? 1 : route.fractionForDay(day);
-    progress.current = THREE.MathUtils.lerp(progress.current ?? 0, target, 1 - Math.exp(-4 * Math.min(dt, 0.1)));
+    progress.current = THREE.MathUtils.lerp(progress.current ?? 0, target, 1 - Math.exp(-7 * Math.min(dt, 0.1)));
     let ai = 0;
     for (let i = 0; i < route.stops.length; i++) if (route.stops[i].f <= (progress.current ?? 0) + 1e-4) ai = i;
     activeIndex.current = ai;
@@ -71,7 +73,7 @@ function Scene({ terrain, route, props, lowPower }: { terrain: TerrainData; rout
       <TerrainMesh terrain={terrain} segments={segments} reveal={props.mode === "story" ? reveal : undefined} />
       <Labels terrain={terrain} />
       <RouteLine route={route} progress={progress} />
-      <Beacons route={route} activeIndex={activeIndex} />
+      <Beacons route={route} activeIndex={activeIndex} onSelect={props.mode === "explore" ? props.onStopSelect : undefined} />
       <Boat route={route} progress={progress} mastDown={mastDown} />
       {props.mode === "story" && props.story ? (
         <>
@@ -100,7 +102,19 @@ export default function VoyageWorld(props: VoyageWorldProps) {
   const [failed, setFailed] = useState(false);
   const [lowPower, setLowPower] = useState(false);
   const [webgl, setWebgl] = useState<boolean | null>(null);
+  const [visible, setVisible] = useState(true);
+  const host = useRef<HTMLDivElement>(null);
   const { onReady } = props;
+
+  // Stop rendering entirely while the world is scrolled out of view (or the
+  // tab is hidden) so the rest of the page gets the whole frame budget.
+  useEffect(() => {
+    const el = host.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { rootMargin: "100px" });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [webgl]);
 
   useEffect(() => {
     const ok = hasWebGL2();
@@ -125,9 +139,10 @@ export default function VoyageWorld(props: VoyageWorldProps) {
   }
 
   return (
-    <div className={props.className} style={{ background: BG }}>
+    <div ref={host} className={props.className} style={{ background: BG }}>
       {data && (
         <Canvas
+          frameloop={visible ? "always" : "never"}
           dpr={lowPower ? [1, 1.5] : [1, 2]}
           gl={{ antialias: false, powerPreference: "high-performance", toneMapping: THREE.NoToneMapping, stencil: false }}
           camera={{ fov: 34, near: 0.01, far: 60, position: [1.2, 8.2, 6.6] }}

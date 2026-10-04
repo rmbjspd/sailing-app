@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["mapbox-gl", "three"],
+  transpilePackages: ["three"],
   // better-sqlite3 is a native Node addon; keep it out of the server bundle.
   serverExternalPackages: ["better-sqlite3"],
   experimental: {

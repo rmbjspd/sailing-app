@@ -1,6 +1,10 @@
+"use client";
+import { usePathname } from "next/navigation";
 import Mark from "./Mark";
 
+// Hidden on the full-screen chart, where it would sit under the canvas.
 export default function Footer() {
+  if (usePathname() === "/map") return null;
   return (
     <footer className="relative border-t border-line">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-5 pb-32 pt-14 md:flex-row md:items-end md:justify-between md:px-8 md:pb-14">
