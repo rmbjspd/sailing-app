@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { CountUp } from "@/components/kit";
@@ -5,6 +6,7 @@ import { itinerary } from "@/lib/data/itinerary";
 import { legGroups } from "@/lib/data/stats";
 import { legStyle } from "@/lib/data/legStyle";
 import { voyageTotals, placeName } from "./model";
+import styles from "./log.module.css";
 
 // Closing coda after the arrival: the logbook totals and the voyage as one
 // spectrum line. Reaching it pulls the chart back to the whole passage.
@@ -30,7 +32,7 @@ export function Coda() {
       aria-labelledby="landfall-h"
       className="relative isolate pb-40 pt-28 outline-none md:pb-48 md:pt-40"
     >
-      <div aria-hidden className="pointer-events-none absolute -left-[100vw] -right-[100vw] inset-y-0 -z-10 bg-[radial-gradient(45%_60%_at_35%_30%,rgb(255_93_143_/_0.10),transparent_70%)]">
+      <div aria-hidden className="pointer-events-none absolute -left-[100vw] -right-[100vw] inset-y-0 -z-10 bg-[radial-gradient(45%_60%_at_35%_30%,color-mix(in_srgb,var(--leg-8)_10%,transparent),transparent_70%)]">
         <div className="spectrum-line absolute inset-x-0 top-0 !h-px opacity-60" />
       </div>
 
@@ -64,8 +66,8 @@ export function Coda() {
           {legs.map(l => (
             <span
               key={l.legId}
-              className="rounded-full"
-              style={{ flex: l.days.length, background: legStyle(l.legId).color, boxShadow: `0 0 12px ${legStyle(l.legId).color}66` }}
+              className={`${styles.glow} rounded-full`}
+              style={{ flex: l.days.length, background: legStyle(l.legId).color, "--c": legStyle(l.legId).color, "--glow-a": "40%" } as CSSProperties}
             />
           ))}
         </div>
@@ -87,7 +89,7 @@ export function Coda() {
       <div className="mt-14 flex flex-wrap gap-3">
         <Link
           href="/map"
-          className="inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 text-[14px] font-medium text-abyss transition hover:bg-white"
+          className="inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 text-[14px] font-medium text-abyss transition hover:bg-white [[data-theme=day]_&]:hover:bg-ink-2"
         >
           Fly the 3D chart <ArrowUpRight className="size-4" strokeWidth={1.75} aria-hidden />
         </Link>

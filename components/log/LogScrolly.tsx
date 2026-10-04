@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { ChevronsUpDown, Map as MapIcon, ChevronUp } from "lucide-react";
 import { VoyageChart, type Box, type ChartView } from "./VoyageChart";
+import { alpha } from "@/lib/data/legStyle";
 import type { ChartData, DaySummary, LegSummary } from "./model";
 import styles from "./log.module.css";
 
@@ -181,13 +182,13 @@ export function LogScrolly({
           return (
             <span
               key={d.day}
-              className={`flex-1 rounded-[1.5px] transition-all duration-500 ${newLeg ? "ml-[3px]" : ""}`}
+              className={`flex-1 rounded-[1.5px] transition-all duration-500 ${newLeg ? "ml-[3px]" : ""} ${cur ? styles.glow : ""}`}
               style={{
+                "--c": c,
                 background: c,
                 opacity: cur ? 1 : past ? 0.9 : 0.22,
                 height: cur ? 24 : d.stationary ? 6 : past ? 14 : 10,
-                boxShadow: cur ? `0 0 12px ${c}` : undefined,
-              }}
+              } as CSSProperties}
             />
           );
         })}
@@ -223,12 +224,12 @@ export function LogScrolly({
         className="@container sticky top-0 z-30 -mx-4 md:-mx-8 lg:top-24 lg:mx-0 lg:w-[45%] lg:shrink-0 lg:self-start"
       >
         <div
-          className="glass-strong overflow-hidden rounded-b-3xl border-t-0 !bg-[#050c17] lg:rounded-[28px] lg:border-t lg:!bg-transparent"
+          className={`${styles.strip} glass-strong overflow-hidden rounded-b-3xl border-t-0 lg:rounded-[28px] lg:border-t`}
           style={{ "--accent": accent } as CSSProperties}
         >
           {/* map */}
           <div
-            className={`relative overflow-hidden bg-[#0a1220] transition-[height] duration-500 ${
+            className={`${styles.mapPanel} relative overflow-hidden transition-[height] duration-500 ${
               mapOpen ? "h-[clamp(150px,40vw,240px)]" : "h-0"
             } lg:h-[min(80cqw,calc(100dvh_-_27rem))] lg:max-h-[540px] lg:min-h-[240px]`}
           >
@@ -242,7 +243,7 @@ export function LogScrolly({
               desc={chartDesc}
             />
             {/* vignette + instrument chrome */}
-            <div aria-hidden className="pointer-events-none absolute inset-0 shadow-[inset_0_0_80px_20px_rgb(3_6_12_/_0.75)]" />
+            <div aria-hidden className={`${styles.vignette} pointer-events-none absolute inset-0`} />
             <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 hidden items-center justify-between px-5 pt-4 lg:flex">
               <span className="eyebrow flex items-center gap-2 text-ink-3">
                 <span className="size-1.5 rounded-full bg-glow pulse-glow" /> Position
@@ -335,18 +336,18 @@ export function LogScrolly({
               title={`Day ${d.day} · ${d.stationary ? d.to : `${d.from} → ${d.to}`}`}
             >
               {cur && (
-                <span className="num absolute right-9 rounded-full bg-abyss/80 px-2 py-0.5 text-[10px] text-ink" style={{ boxShadow: `0 0 0 1px ${L.color}66` }}>
+                <span className="num absolute right-9 rounded-full bg-abyss/80 px-2 py-0.5 text-[10px] text-ink backdrop-blur-sm" style={{ boxShadow: `0 0 0 1px ${alpha(L.color, 0.4)}` }}>
                   {String(d.day).padStart(2, "0")}
                 </span>
               )}
               <span
-                className="block h-[2px] rounded-full transition-all duration-500 group-hover:w-6 group-hover:opacity-100"
+                className={`block h-[2px] rounded-full transition-all duration-500 group-hover:w-6 group-hover:opacity-100 ${cur ? styles.glow : ""}`}
                 style={{
+                  "--c": L.color,
                   background: L.color,
                   width: cur ? 28 : past ? 16 : 10,
                   opacity: cur ? 1 : past ? 0.85 : 0.3,
-                  boxShadow: cur ? `0 0 12px ${L.color}` : undefined,
-                }}
+                } as CSSProperties}
               />
             </button>
           );

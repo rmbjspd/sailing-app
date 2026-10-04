@@ -1,6 +1,7 @@
 "use client";
 import { animate, useReducedMotion } from "motion/react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { ChartImage } from "@/components/kit/ChartImage";
 import type { ChartData } from "./model";
 import styles from "./log.module.css";
 
@@ -236,25 +237,20 @@ export function VoyageChart({
             <rect width={data.w} height={data.h} fill="url(#log-fy)" />
           </mask>
           <radialGradient id="log-boat-glow">
-            <stop offset="0" stopColor="#fff" stopOpacity="0.55" />
-            <stop offset="0.35" stopColor="var(--glow)" stopOpacity="0.25" />
+            <stop offset="0" className={styles.glowCore} />
+            <stop offset="0.35" stopColor="var(--glow)" className={styles.glowMid} />
             <stop offset="1" stopColor="var(--glow)" stopOpacity="0" />
           </radialGradient>
         </defs>
 
         <g mask="url(#log-mx)">
-          <image
-            href={hiRes ? "/geo/chart-dark.webp" : "/geo/chart-dark-sm.webp"}
-            width={data.w}
-            height={data.h}
-            preserveAspectRatio="none"
-            mask="url(#log-my)"
-            opacity={0.95}
-          />
+          <g mask="url(#log-my)">
+            <ChartImage width={data.w} height={data.h} hiRes={hiRes} preserveAspectRatio="none" opacity={0.95} />
+          </g>
         </g>
 
         {/* graticule, one degree */}
-        <g stroke="#fff" strokeOpacity={0.05} style={{ strokeWidth: "calc(var(--s) * 1px)" }} aria-hidden>
+        <g className={styles.grat} style={{ strokeWidth: "calc(var(--s) * 1px)" }} aria-hidden>
           {Array.from({ length: 31 }, (_, i) => -95 + i).map(lng => (
             <line key={lng} x1={lngX(lng, data.w)} x2={lngX(lng, data.w)} y1={-1200} y2={data.h + 1200} />
           ))}
@@ -265,7 +261,7 @@ export function VoyageChart({
 
         {/* water lettering */}
         {!compact && (
-          <g aria-hidden fill="#9fb6d4" fillOpacity={0.3} fontFamily="var(--font-fraunces), serif" fontStyle="italic" style={{ letterSpacing: "0.18em" }}>
+          <g aria-hidden className={styles.water} fontFamily="var(--font-fraunces), serif" fontStyle="italic" style={{ letterSpacing: "0.18em" }}>
             {WATER.map(([t, lng, lat, rot, fs]) => {
               const x = lngX(lng, data.w), y = latY(lat, data.h);
               return (
@@ -283,9 +279,8 @@ export function VoyageChart({
             <path
               key={l.legId}
               d={l.d}
-              className={styles.route}
+              className={`${styles.route} ${styles.ahead}`}
               stroke={l.color}
-              strokeOpacity={0.3}
               style={{
                 strokeWidth: "calc(var(--s) * 1.25px)",
                 strokeDasharray: l.inland ? "calc(var(--s) * 1px) calc(var(--s) * 4px)" : undefined,
@@ -303,13 +298,26 @@ export function VoyageChart({
                 key={`h${p.day}`}
                 d={p.d}
                 pathLength={1}
-                className={styles.route}
+                className={`${styles.route} ${p.day === view.current ? styles.wakeCur : styles.wake}`}
                 stroke={p.color}
-                strokeOpacity={p.day === view.current ? 0.32 : 0.16}
                 style={{ strokeWidth: "calc(var(--s) * 9px)", strokeDasharray: 1, strokeDashoffset: on ? 0 : 1 }}
               />
             );
           })}
+          {/* casing under the current passage (paper by day, none at night) */}
+          {data.dayPaths.map(p => (
+            <path
+              key={`k${p.day}`}
+              d={p.d}
+              pathLength={1}
+              className={`${styles.route} ${styles.casing}`}
+              style={{
+                strokeWidth: "calc(var(--s) * 5.5px)",
+                strokeDasharray: 1,
+                strokeDashoffset: p.day === view.current && p.day <= view.drawn ? 0 : 1,
+              }}
+            />
+          ))}
           {data.dayPaths.map(p => {
             const on = p.day <= view.drawn;
             const cur = p.day === view.current;
@@ -318,8 +326,8 @@ export function VoyageChart({
                 key={`c${p.day}`}
                 d={p.d}
                 pathLength={1}
-                className={styles.route}
-                stroke={cur ? "#fff" : p.color}
+                className={`${styles.route} ${cur ? styles.current : ""}`}
+                stroke={p.color}
                 style={{
                   strokeWidth: `calc(var(--s) * ${cur ? 2.75 : 2.25}px)`,
                   strokeDasharray: 1,
@@ -340,8 +348,8 @@ export function VoyageChart({
                 <circle
                   cx={s.x}
                   cy={s.y}
-                  className={styles.stop}
-                  fill={past ? s.color : "#07101d"}
+                  className={`${styles.stop} ${past ? "" : styles.hollow}`}
+                  fill={s.color}
                   stroke={s.color}
                   strokeOpacity={past ? 1 : 0.6}
                   style={{ r: `calc(var(--s) * ${past ? 3.6 : 2.8}px)`, strokeWidth: "calc(var(--s) * 1.25px)" }}
@@ -360,8 +368,7 @@ export function VoyageChart({
                 key={st.id}
                 x={st.x}
                 y={st.y}
-                className={styles.label}
-                fill="#a8b6c8"
+                className={`${styles.label} ${styles.stopLabel}`}
                 textAnchor={sideStyle[side].anchor}
                 style={{
                   fontSize: "calc(var(--s) * 10.5px)",
@@ -382,13 +389,13 @@ export function VoyageChart({
           pointerEvents="none"
           aria-hidden
         >
-          <line x1={-4000} x2={4000} y1={0} y2={0} stroke="var(--glow)" strokeOpacity={0.14} style={{ strokeWidth: "calc(var(--s) * 1px)" }} />
-          <line y1={-4000} y2={4000} x1={0} x2={0} stroke="var(--glow)" strokeOpacity={0.14} style={{ strokeWidth: "calc(var(--s) * 1px)" }} />
+          <line x1={-4000} x2={4000} y1={0} y2={0} stroke="var(--glow)" className={styles.cross} style={{ strokeWidth: "calc(var(--s) * 1px)" }} />
+          <line y1={-4000} y2={4000} x1={0} x2={0} stroke="var(--glow)" className={styles.cross} style={{ strokeWidth: "calc(var(--s) * 1px)" }} />
           <circle fill="url(#log-boat-glow)" style={{ r: "calc(var(--s) * 34px)" }} />
           <circle className={`${styles.ping} motion-reduce:hidden`} fill="none" stroke="var(--glow)" style={{ r: "calc(var(--s) * 7px)", strokeWidth: "calc(var(--s) * 1.5px)" }} />
-          <circle fill="#fff" stroke="var(--glow)" style={{ r: "calc(var(--s) * 4.75px)", strokeWidth: "calc(var(--s) * 2px)" }} />
+          <circle className={styles.boatDot} stroke="var(--glow)" style={{ r: "calc(var(--s) * 4.75px)", strokeWidth: "calc(var(--s) * 2px)" }} />
           <text
-            fill="#eef3f8"
+            className={styles.boatLabel}
             fontFamily="var(--font-geist), sans-serif"
             fontWeight={500}
             style={{

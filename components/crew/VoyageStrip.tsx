@@ -1,6 +1,6 @@
 "use client";
 import { Lock } from "lucide-react";
-import { legStyle } from "@/lib/data/legStyle";
+import { alpha, legStyle } from "@/lib/data/legStyle";
 import type { RosterLeg } from "@/lib/crew/types";
 import { dayCount, dayLabel } from "./crewFormat";
 import styles from "./crew.module.css";
@@ -44,7 +44,7 @@ export function VoyageStrip({ legs, onJump }: { legs: RosterLeg[]; onJump: (legI
                 type="button"
                 onClick={() => onJump(leg.legId)}
                 aria-label={`Leg ${s.numeral}, ${leg.title}: ${status}. Jump to leg.`}
-                className="group flex w-full flex-col gap-2.5 rounded-xl px-1 pb-2 pt-1.5 text-left transition-colors hover:bg-white/[0.035]"
+                className="group flex w-full flex-col gap-2.5 rounded-xl px-1 pb-2 pt-1.5 text-left transition-colors hover:bg-tint/[0.04]"
               >
                 <span className="flex min-w-0 items-baseline gap-2 px-1">
                   <span className="num text-[11px] font-medium" style={{ color: s.color }}>{s.numeral}</span>
@@ -53,10 +53,10 @@ export function VoyageStrip({ legs, onJump }: { legs: RosterLeg[]; onJump: (legI
                   </span>
                 </span>
                 <span
-                  className={`relative block h-2 w-full overflow-hidden rounded-full transition-[box-shadow] ${leg.closed ? styles.hatch : ""}`}
+                  className={`relative block h-2 w-full overflow-hidden rounded-full transition-[box-shadow] ${leg.closed ? styles.hatch : styles.glowBar}`}
                   style={{
-                    background: leg.closed ? `${s.color}26` : s.color,
-                    boxShadow: leg.closed ? undefined : `0 0 18px -4px ${s.color}`,
+                    background: leg.closed ? alpha(s.color, 0.15) : s.color,
+                    ["--c" as string]: s.color,
                   }}
                 />
                 <span className="flex items-center justify-between gap-2 px-1">
@@ -78,7 +78,7 @@ export function VoyageStrip({ legs, onJump }: { legs: RosterLeg[]; onJump: (legI
               <span
                 key={leg.legId}
                 className={`h-full rounded-full ${leg.closed ? styles.hatch : ""}`}
-                style={{ flex: `${days[i]} 1 0`, background: leg.closed ? `${s.color}33` : s.color }}
+                style={{ flex: `${days[i]} 1 0`, background: leg.closed ? alpha(s.color, 0.2) : s.color }}
               />
             );
           })}
@@ -97,7 +97,7 @@ export function VoyageStrip({ legs, onJump }: { legs: RosterLeg[]; onJump: (legI
                   type="button"
                   onClick={() => onJump(leg.legId)}
                   aria-label={`Leg ${s.numeral}, ${leg.title}: ${status}. Jump to leg.`}
-                  className="flex min-h-[52px] w-full flex-col items-center justify-center gap-1.5 rounded-lg active:bg-white/[0.05]"
+                  className="flex min-h-[52px] w-full flex-col items-center justify-center gap-1.5 rounded-lg active:bg-tint/[0.05]"
                 >
                   <span className="num text-[10.5px] font-medium" style={{ color: s.color }}>{s.numeral}</span>
                   <Pips leg={leg} color={s.color} small />
@@ -155,11 +155,11 @@ function Pips({ leg, color, small = false }: { leg: RosterLeg; color: string; sm
         return (
           <span
             key={i}
-            className={`${size} rounded-full`}
+            className={`${size} rounded-full ${taken ? styles.glowDot : ""}`}
             style={
               taken
-                ? { background: color, boxShadow: `0 0 6px ${color}` }
-                : { boxShadow: `inset 0 0 0 1px ${color}99` }
+                ? { background: color, ["--c" as string]: color }
+                : { boxShadow: `inset 0 0 0 1px ${alpha(color, 0.6)}` }
             }
           />
         );

@@ -22,8 +22,8 @@ function Briefing({ guide, color }: { guide: LegGuide; color: string }) {
   const [lead, ...rest] = guide.captainIntro.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
   const hid = `brief-${guide.legId}`;
   return (
-    <section aria-labelledby={hid} className="relative mt-10 overflow-hidden rounded-[26px] border border-line bg-gradient-to-b from-white/[0.045] to-white/[0.01]">
-      <div aria-hidden className="absolute inset-y-6 left-0 w-[2px] rounded-full" style={{ background: color, boxShadow: `0 0 16px ${color}` }} />
+    <section aria-labelledby={hid} className={`${styles.briefing} relative mt-10 overflow-hidden rounded-[26px] border border-line`}>
+      <div aria-hidden className={`${styles.glow} absolute inset-y-6 left-0 w-[2px] rounded-full`} style={{ background: color, "--c": color, "--glow-r": "16px" } as CSSProperties} />
       <div className="px-6 pb-2 pt-7 md:px-10 md:pt-9">
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
           <h3 id={hid} className="eyebrow flex items-center gap-2.5 !text-ink-2">
@@ -39,7 +39,7 @@ function Briefing({ guide, color }: { guide: LegGuide; color: string }) {
 
       <Disclosure
         label={`Full briefing: ${guide.title}`}
-        buttonClassName="flex min-h-14 w-full items-center gap-4 px-6 py-4 text-left transition-colors hover:bg-white/[0.025] md:px-10"
+        buttonClassName="flex min-h-14 w-full items-center gap-4 px-6 py-4 text-left transition-colors hover:bg-tint/[0.025] md:px-10"
         summary={
           <>
             <span className="h-px flex-1 bg-line" aria-hidden />
@@ -83,7 +83,7 @@ function Briefing({ guide, color }: { guide: LegGuide; color: string }) {
             </h4>
             <ul className="space-y-3">
               {guide.watchFor.map((w, i) => (
-                <li key={i} className="rounded-xl border border-alert/20 bg-alert/[0.05] px-4 py-3 text-[14px] leading-relaxed text-[#f3c3bc]">
+                <li key={i} className={`rounded-xl border border-alert/20 bg-alert/[0.05] px-4 py-3 text-[14px] leading-relaxed ${styles.hazardText}`}>
                   {w}
                 </li>
               ))}
@@ -101,7 +101,7 @@ function Briefing({ guide, color }: { guide: LegGuide; color: string }) {
               const name = cut > 0 ? b.slice(0, cut) : null;
               const body = cut > 0 ? b.slice(cut + 2) : b;
               return (
-                <li key={i} className="rounded-2xl border border-line bg-white/[0.02] p-4 sm:last:odd:col-span-2">
+                <li key={i} className={`${styles.card} rounded-2xl border border-line p-4 sm:last:odd:col-span-2`}>
                   {name && <p className="font-display text-[17px] leading-snug text-ink">{name}</p>}
                   <p className={`text-[13.5px] leading-relaxed text-ink-2 ${name ? "mt-1.5" : ""}`}>{body}</p>
                 </li>
@@ -164,7 +164,7 @@ export function Chapter({ chapter }: { chapter: ChapterModel }) {
           {stats.map(([k, v], i) => (
             <div
               key={k}
-              className={`bg-abyss/40 px-4 py-4 md:px-5 ${i % 2 ? "border-l border-line" : ""} ${i >= 2 ? "border-t border-line sm:border-t-0" : ""} ${i === 2 ? "sm:border-l" : ""}`}
+              className={`${styles.statCell} px-4 py-4 md:px-5 ${i % 2 ? "border-l border-line" : ""} ${i >= 2 ? "border-t border-line sm:border-t-0" : ""} ${i === 2 ? "sm:border-l" : ""}`}
             >
               <dt className="eyebrow !text-[10px]">{k}</dt>
               <dd className="num mt-2 text-[17px] text-ink md:text-[19px]">{v}</dd>

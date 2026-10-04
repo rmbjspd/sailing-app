@@ -1,8 +1,9 @@
 import { routeSegments } from "@/lib/data/routePath";
 import { legStyle } from "@/lib/data/legStyle";
+import { ChartImage } from "@/components/kit/ChartImage";
 import styles from "./crew.module.css";
 
-// Full-bleed night chart behind the crew sign-in. The baked chart raster and
+// Full-bleed chart behind the crew sign-in (night or day raster, by theme). The baked chart raster and
 // the voyage route share one SVG coordinate frame (the raster's own pixel
 // grid), so `slice` cropping keeps them registered at every viewport shape.
 // Server component: pure SVG, no client JS.
@@ -36,7 +37,9 @@ export function ChartBackdrop() {
             <feGaussianBlur stdDeviation="7" />
           </filter>
         </defs>
-        <image href="/geo/chart-dark.webp" width={W} height={H} opacity={0.62} />
+        <g className={styles.chart}>
+          <ChartImage width={W} height={H} />
+        </g>
         {routeSegments.map((seg, i) => {
           const s = legStyle(seg.leg);
           const d = pathFor(seg.coords);
@@ -46,7 +49,7 @@ export function ChartBackdrop() {
               <path
                 d={d}
                 pathLength={1}
-                className={styles.routeDraw}
+                className={`${styles.routeDraw} ${styles.routeHalo}`}
                 style={{ animationDelay: delay }}
                 fill="none"
                 stroke={s.color}
@@ -59,7 +62,7 @@ export function ChartBackdrop() {
               <path
                 d={d}
                 pathLength={1}
-                className={styles.routeDraw}
+                className={`${styles.routeDraw} ${styles.routeLine}`}
                 style={{ animationDelay: delay }}
                 fill="none"
                 stroke={s.color}
@@ -74,12 +77,12 @@ export function ChartBackdrop() {
         {[first, last].map(([lng, lat], i) => (
           <g key={i} transform={`translate(${x(lng)} ${y(lat)})`}>
             <circle r={7} fill={i ? legStyle("sound-saybrook").color : legStyle("lake-michigan").color} className={styles.portPulse} opacity={0.6} />
-            <circle r={5} fill="#eef3f8" />
+            <circle r={5} className={styles.portDot} />
           </g>
         ))}
       </svg>
-      {/* Vignette: sink the edges into the abyss and calm the centre for the card */}
-      <div className="absolute inset-0 bg-[radial-gradient(60%_70%_at_50%_50%,rgb(3_6_12/0.55)_0%,rgb(3_6_12/0.15)_60%,rgb(3_6_12/0.85)_100%)]" />
+      {/* Vignette: sink the edges into the page and calm the centre for the card */}
+      <div className={`absolute inset-0 ${styles.vignette}`} />
       <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-abyss to-transparent" />
       <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-abyss to-transparent" />
       <div className="graticule absolute inset-0 opacity-50" />

@@ -5,12 +5,87 @@
 /* ── Chart ──────────────────────────────────────────────────────────────── */
 .chart {
   --s: 3;
+  /* Night chart: luminous ink on the dark raster */
+  --c-grat: rgb(255 255 255 / 0.05);
+  --c-water: rgb(159 182 212 / 0.3);
+  --c-halo: #050b16;
+  --c-halo-a: 1;
+  --c-label: #a8b6c8;
+  --c-boat-label: #eef3f8;
+  --c-current: #fff;
+  --c-hollow: #07101d;
+  --c-boat: #fff;
+  --c-ahead-a: 0.3;
+  --c-wake-a: 0.16;
+  --c-wake-cur-a: 0.32;
+  --c-cross-a: 0.14;
+  --c-glow-core: #fff;
+  --c-glow-core-a: 0.55;
+  --c-glow-mid-a: 0.25;
+}
+/* Day chart: a printed sheet — blue water lettering, paper-cased labels, an
+   ink-navy current passage and no additive glow. */
+:root[data-theme="day"] .chart {
+  --c-grat: rgb(28 43 60 / 0.07);
+  --c-water: rgb(38 92 135 / 0.62);
+  --c-halo: #f4efe1;
+  --c-halo-a: 0.92;
+  --c-label: #2f3e50;
+  --c-boat-label: #13202e;
+  --c-current: #13202e;
+  --c-hollow: #faf6ec;
+  --c-boat: #faf6ec;
+  --c-ahead-a: 0.5;
+  --c-wake-a: 0.12;
+  --c-wake-cur-a: 0.22;
+  --c-cross-a: 0.22;
+  --c-glow-core: #fffdf6;
+  --c-glow-core-a: 0.7;
+  --c-glow-mid-a: 0.16;
 }
 .chart text {
   paint-order: stroke;
-  stroke: #050b16;
+  stroke: var(--c-halo);
+  stroke-opacity: var(--c-halo-a);
   stroke-linejoin: round;
 }
+.grat { stroke: var(--c-grat); }
+.water { fill: var(--c-water); }
+.ahead { stroke-opacity: var(--c-ahead-a); }
+.wake { stroke-opacity: var(--c-wake-a); }
+.wakeCur { stroke-opacity: var(--c-wake-cur-a); }
+.current { stroke: var(--c-current); }
+.hollow { fill: var(--c-hollow); }
+.stopLabel { fill: var(--c-label); }
+.boatLabel { fill: var(--c-boat-label); }
+.boatDot { fill: var(--c-boat); }
+.cross { stroke-opacity: var(--c-cross-a); }
+.glowCore { stop-color: var(--c-glow-core); stop-opacity: var(--c-glow-core-a); }
+.glowMid { stop-opacity: var(--c-glow-mid-a); }
+/* Day: the current passage gets a paper casing so the ink line reads cleanly
+   over both water and land. */
+.casing { stroke: transparent; }
+:root[data-theme="day"] .casing { stroke: #faf6ec; stroke-opacity: 0.85; }
+
+/* Panel the chart sits in (the raster's edges fade into it) */
+.mapPanel { background: #0a1220; }
+.vignette { box-shadow: inset 0 0 80px 20px rgb(3 6 12 / 0.75); }
+.strip { background: #050c17 !important; }
+:root[data-theme="day"] .mapPanel { background: #e6dec8; }
+:root[data-theme="day"] .vignette {
+  box-shadow:
+    inset 0 0 0 1px rgb(28 43 60 / 0.06),
+    inset 0 0 70px 6px rgb(239 232 214 / 0.7);
+}
+:root[data-theme="day"] .strip { background: #f3eddd !important; }
+@media (min-width: 1024px) {
+  .strip, :root[data-theme="day"] .strip { background: transparent !important; }
+}
+
+/* Leg-coloured glow (scrubber tick, rail mark, gauges, spectrum bars):
+   luminous at night, a soft ink lift by day. Set --c on the element. */
+.glow { box-shadow: 0 0 var(--glow-r, 12px) color-mix(in srgb, var(--c) var(--glow-a, 100%), transparent); }
+:root[data-theme="day"] .glow { box-shadow: 0 1px 3px -1px color-mix(in srgb, var(--c) 55%, transparent); }
 
 .route {
   fill: none;
@@ -104,6 +179,7 @@
   );
   box-shadow: 0 0 14px 0 color-mix(in oklab, var(--leg) 45%, transparent);
 }
+:root[data-theme="day"] .spine { box-shadow: none; }
 
 /* Active day (set by the scroll tracker): the node ignites. */
 .node {
@@ -124,6 +200,12 @@
     0 0 32px 4px color-mix(in oklab, var(--node, var(--leg)) 55%, transparent);
   transform: scale(1.06);
 }
+:root[data-theme="day"] [data-active] .node {
+  color: var(--paper);
+  box-shadow:
+    0 0 0 5px color-mix(in oklab, var(--node, var(--leg)) 14%, transparent),
+    0 6px 16px -6px color-mix(in oklab, var(--node, var(--leg)) 70%, transparent);
+}
 [data-active] .title {
   color: var(--ink);
 }
@@ -131,9 +213,31 @@
 .arrivalGlow {
   background:
     radial-gradient(80% 120% at 0% 0%, color-mix(in oklab, var(--leg) 22%, transparent), transparent 60%),
-    radial-gradient(60% 80% at 100% 100%, rgb(244 184 96 / 0.12), transparent 60%),
-    linear-gradient(180deg, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.015));
+    radial-gradient(60% 80% at 100% 100%, color-mix(in oklab, var(--brass) 12%, transparent), transparent 60%),
+    linear-gradient(180deg, rgb(var(--tint) / 0.05), rgb(var(--tint) / 0.015));
 }
+:root[data-theme="day"] .arrivalGlow {
+  background:
+    radial-gradient(80% 120% at 0% 0%, color-mix(in oklab, var(--leg) 12%, transparent), transparent 60%),
+    radial-gradient(60% 80% at 100% 100%, color-mix(in oklab, var(--brass) 10%, transparent), transparent 60%),
+    linear-gradient(180deg, rgb(255 253 247 / 0.8), rgb(250 246 236 / 0.55));
+  box-shadow: 0 24px 60px -30px rgb(70 55 25 / 0.35);
+}
+
+/* Paper cards: faint white wash at night, a lighter sheet of paper by day */
+.card { background: rgb(var(--tint) / 0.025); }
+:root[data-theme="day"] .card { background: rgb(255 253 247 / 0.55); }
+.briefing { background: linear-gradient(180deg, rgb(var(--tint) / 0.045), rgb(var(--tint) / 0.01)); }
+:root[data-theme="day"] .briefing {
+  background: linear-gradient(180deg, rgb(255 253 247 / 0.78), rgb(252 249 240 / 0.5));
+  box-shadow: 0 20px 50px -30px rgb(70 55 25 / 0.35);
+}
+.statCell { background: rgb(3 6 12 / 0.4); }
+:root[data-theme="day"] .statCell { background: rgb(255 253 247 / 0.5); }
+
+/* Hazard copy: rose on the night chart, deep brick by day (≥ 4.5:1) */
+.hazardText { color: #f3c3bc; }
+:root[data-theme="day"] .hazardText { color: #8a2e1f; }
 
 .dropcap::first-letter {
   float: left;
@@ -163,6 +267,12 @@
   background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--leg) 70%, transparent) 30%, color-mix(in oklab, var(--leg) 70%, transparent) 70%, transparent);
   box-shadow: 0 0 18px 1px color-mix(in oklab, var(--leg) 40%, transparent);
 }
+:root[data-theme="day"] .bandLine { box-shadow: none; }
+:root[data-theme="day"] .band {
+  background:
+    radial-gradient(40% 70% at 30% 0%, color-mix(in oklab, var(--leg) 9%, transparent), transparent 70%),
+    linear-gradient(180deg, color-mix(in oklab, var(--leg) 4%, transparent), transparent 60%);
+}
 
 /* ── Hero signature ─────────────────────────────────────────────────────── */
 .heroRoute path {
@@ -176,6 +286,8 @@
 }
 .heroPath { stroke-width: 3; }
 .heroHalo { stroke-width: 16; opacity: 0.18; filter: blur(6px); }
+:root[data-theme="day"] .heroHalo { stroke-width: 10; opacity: 0.1; filter: blur(4px); }
+:root[data-theme="day"] .heroPath { stroke-width: 2.5; }
 .heroDot {
   opacity: 0;
   animation: heroDot 0.8s var(--ease-out) forwards;

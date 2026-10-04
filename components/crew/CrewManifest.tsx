@@ -8,6 +8,7 @@ import type { RosterLeg } from "@/lib/crew/types";
 import { VoyageStrip } from "./VoyageStrip";
 import { LegPanel, type ActivePanel } from "./LegPanel";
 import { numberWord } from "./crewFormat";
+import styles from "./crew.module.css";
 
 export function CrewManifest({ initialLegs }: { initialLegs: RosterLeg[] }) {
   const router = useRouter();
@@ -124,7 +125,7 @@ export function CrewManifest({ initialLegs }: { initialLegs: RosterLeg[] }) {
                   </>
                 ) : (
                   <>
-                    <span className="size-1.5 rounded-full bg-ok shadow-[0_0_8px_var(--ok)]" aria-hidden />
+                    <span className={`size-1.5 rounded-full bg-ok ${styles.glowDot}`} style={{ ["--c" as string]: "var(--ok)" }} aria-hidden />
                     Manifest up to date
                   </>
                 )}
@@ -133,7 +134,7 @@ export function CrewManifest({ initialLegs }: { initialLegs: RosterLeg[] }) {
                 type="button"
                 onClick={logout}
                 disabled={loggingOut}
-                className="inline-flex min-h-[44px] shrink-0 items-center gap-2 rounded-full border border-line-strong px-4 text-[13px] text-ink-2 transition-colors hover:bg-white/[0.05] hover:text-ink disabled:opacity-60"
+                className="inline-flex min-h-[44px] shrink-0 items-center gap-2 rounded-full border border-line-strong px-4 text-[13px] text-ink-2 transition-colors hover:bg-tint/[0.05] hover:text-ink disabled:opacity-60"
               >
                 {loggingOut ? (
                   <Loader2 className="size-4 animate-spin" strokeWidth={1.75} />
@@ -155,7 +156,7 @@ export function CrewManifest({ initialLegs }: { initialLegs: RosterLeg[] }) {
         {error && (
           <div
             role="alert"
-            className="mb-6 flex flex-col gap-3 rounded-2xl border border-alert/30 bg-alert/[0.08] px-5 py-4 text-[14px] text-[#ffb3aa] sm:flex-row sm:items-center sm:justify-between"
+            className={`mb-6 flex flex-col gap-3 rounded-2xl border border-alert/30 bg-alert/[0.08] px-5 py-4 text-[14px] sm:flex-row sm:items-center sm:justify-between ${styles.alertText}`}
           >
             <span className="flex items-center gap-2.5">
               <AlertTriangle className="size-4 shrink-0 text-alert" strokeWidth={1.75} /> {error}

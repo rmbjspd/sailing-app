@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { ArrowRight, Anchor, ChevronDown, Sparkles, TriangleAlert, BedDouble } from "lucide-react";
 import type { ItineraryDay } from "@/lib/types";
-import { legStyle } from "@/lib/data/legStyle";
+import { alpha, legStyle } from "@/lib/data/legStyle";
 import { Disclosure } from "./Disclosure";
 import { dayDistanceEquiv, dayDistanceLabel, dayTrack, isStationary, maxDayEquiv, placeName, shortDate, lastDayNumber } from "./model";
 import styles from "./log.module.css";
@@ -17,11 +17,11 @@ function DistanceGauge({ day, color, large = false }: { day: ItineraryDay; color
     <span className="flex items-center gap-3">
       <span
         aria-hidden
-        className={`relative h-[3px] overflow-hidden rounded-full bg-white/[0.07] ${large ? "w-36" : "w-24 md:w-28"}`}
+        className={`relative h-[3px] overflow-hidden rounded-full bg-tint/[0.08] ${large ? "w-36" : "w-24 md:w-28"}`}
       >
         <span
-          className="absolute inset-y-0 left-0 rounded-full"
-          style={{ width: `${pct}%`, background: color, boxShadow: `0 0 10px ${color}` }}
+          className={`${styles.glow} absolute inset-y-0 left-0 rounded-full`}
+          style={{ width: `${pct}%`, background: color, "--c": color, "--glow-r": "10px" } as CSSProperties}
         />
       </span>
       <span>
@@ -46,9 +46,9 @@ function Track({ day, className = "" }: { day: number; className?: string }) {
   const [ex, ey] = pts[pts.length - 1].split(" ").map(Number);
   const u = vw / 72; // one screen px in track units
   return (
-    <div aria-hidden className={`overflow-hidden rounded-xl border border-line bg-[linear-gradient(rgb(255_255_255/0.035)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255/0.035)_1px,transparent_1px)] bg-[size:12px_12px] ${className}`}>
+    <div aria-hidden className={`overflow-hidden rounded-xl border border-line bg-[linear-gradient(rgb(var(--tint)/0.035)_1px,transparent_1px),linear-gradient(90deg,rgb(var(--tint)/0.035)_1px,transparent_1px)] [[data-theme=day]_&]:bg-paper/60 bg-[size:12px_12px] ${className}`}>
     <svg viewBox={`${cx - vw / 2} ${cy - vh / 2} ${vw} ${vh}`} className="h-full w-full">
-      <path d={t.d} fill="none" stroke={t.color} strokeOpacity={0.25} strokeWidth={6 * u} strokeLinecap="round" strokeLinejoin="round" />
+      <path d={t.d} fill="none" stroke={t.color} strokeOpacity={0.25} className="[[data-theme=day]_&]:[stroke-opacity:0.14]" strokeWidth={6 * u} strokeLinecap="round" strokeLinejoin="round" />
       <path d={t.d} fill="none" stroke={t.color} strokeWidth={1.5 * u} strokeLinecap="round" strokeLinejoin="round" />
       <circle cx={sx} cy={sy} r={2.5 * u} fill="var(--abyss)" stroke={t.color} strokeWidth={1.25 * u} />
       <circle cx={ex} cy={ey} r={3 * u} fill={t.color} />
@@ -78,14 +78,14 @@ function Notables({ day, open = false }: { day: ItineraryDay; open?: boolean }) 
   return (
     <div className={`grid items-start gap-3 ${both ? "md:grid-cols-2" : ""} ${open ? "" : "pt-4"}`}>
       {day.highlights.length > 0 && (
-        <div className="rounded-2xl border border-line bg-white/[0.025] p-4 md:p-5">
+        <div className={`${styles.card} rounded-2xl border border-line p-4 md:p-5`}>
           <p className="eyebrow mb-3 flex items-center gap-2 !text-glow">
             <Sparkles className="size-3.5" strokeWidth={1.75} aria-hidden /> Highlights
           </p>
           <ul className="space-y-2.5">
             {day.highlights.map((h, i) => (
               <li key={i} className="flex gap-3 text-[14px] leading-relaxed text-ink-2">
-                <span aria-hidden className="mt-[9px] size-1.5 shrink-0 rounded-full bg-glow shadow-[0_0_8px_var(--glow)]" />
+                <span aria-hidden className="mt-[9px] size-1.5 shrink-0 rounded-full bg-glow shadow-[0_0_8px_var(--glow)] [[data-theme=day]_&]:shadow-none" />
                 <span>{h}</span>
               </li>
             ))}
@@ -99,7 +99,7 @@ function Notables({ day, open = false }: { day: ItineraryDay; open?: boolean }) 
           </p>
           <ul className="space-y-2.5">
             {day.warnings.map((w, i) => (
-              <li key={i} className="flex gap-3 text-[14px] leading-relaxed text-[#f3c3bc]">
+              <li key={i} className={`flex gap-3 text-[14px] leading-relaxed ${styles.hazardText}`}>
                 <span aria-hidden className="mt-[8px] h-[7px] w-[7px] shrink-0 rotate-45 border border-alert" />
                 <span>{w}</span>
               </li>
@@ -130,12 +130,12 @@ export function DayEntry({ day }: { day: ItineraryDay }) {
         style={vars}
       >
         <div aria-hidden className="absolute left-0 top-12 grid size-11 place-items-center">
-          <span className="absolute inset-0 rounded-full pulse-glow" style={{ boxShadow: `0 0 0 1px ${s.color}, 0 0 40px 6px ${s.color}66` }} />
+          <span className="absolute inset-0 rounded-full pulse-glow" style={{ boxShadow: `0 0 0 1px ${s.color}, 0 0 40px 6px ${alpha(s.color, 0.4)}` }} />
           <span className={`${styles.node} num relative grid size-11 place-items-center rounded-full border bg-abyss text-[13px]`}>
             {pad(day.day)}
           </span>
         </div>
-        <div className={`${styles.arrivalGlow} relative overflow-hidden rounded-[28px] border p-6 md:p-10`} style={{ borderColor: `${s.color}55` }}>
+        <div className={`${styles.arrivalGlow} relative overflow-hidden rounded-[28px] border p-6 md:p-10`} style={{ borderColor: alpha(s.color, 0.33) }}>
           <div aria-hidden className="spectrum-line absolute inset-x-0 top-0 !h-px opacity-80" />
           <Track day={day.day} className="absolute right-6 top-6 h-16 w-24 md:right-10 md:top-10 md:h-20 md:w-32" />
           <p className="eyebrow flex flex-wrap items-center gap-x-3 gap-y-1 pr-24">
@@ -235,7 +235,7 @@ export function DayEntry({ day }: { day: ItineraryDay }) {
         <Disclosure
           listen
           className="mt-5"
-          buttonClassName="inline-flex min-h-11 items-center gap-4 rounded-full border border-line bg-white/[0.02] pl-4 pr-3 text-[13px] text-ink-2 transition-colors hover:border-line-strong hover:bg-white/[0.04] hover:text-ink aria-expanded:border-line-strong"
+          buttonClassName="inline-flex min-h-11 items-center gap-4 rounded-full border border-line bg-tint/[0.02] pl-4 pr-3 text-[13px] text-ink-2 transition-colors hover:border-line-strong hover:bg-tint/[0.04] [[data-theme=day]_&]:bg-paper/50 hover:text-ink aria-expanded:border-line-strong"
           summary={
             <>
               {day.highlights.length > 0 && (

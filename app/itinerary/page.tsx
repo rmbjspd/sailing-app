@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import { PageHero, CountUp } from "@/components/kit";
 import { itinerary } from "@/lib/data/itinerary";
@@ -10,6 +11,7 @@ import { HeroRoute } from "@/components/log/HeroRoute";
 import {
   buildChapters, buildChartData, buildDaySummaries, buildLegSummaries, placeName, voyageTotals,
 } from "@/components/log/model";
+import styles from "@/components/log/log.module.css";
 
 export const metadata: Metadata = {
   title: "Ship’s Log — S/V Sabbatical",
@@ -38,7 +40,7 @@ export default function ItineraryPage() {
       <div className="relative">
       <HeroRoute
         chart={chart}
-        className="pointer-events-none absolute -right-[18%] top-20 w-[125%] opacity-30 [mask-image:linear-gradient(90deg,transparent,black_40%)] md:right-[1%] md:top-[92px] md:w-[min(56vw,800px)] md:opacity-50"
+        className="pointer-events-none absolute -right-[18%] top-20 w-[125%] opacity-30 [mask-image:linear-gradient(90deg,transparent,black_40%)] md:right-[1%] md:top-[92px] md:w-[min(56vw,800px)] md:opacity-50 [[data-theme=day]_&]:opacity-35 [[data-theme=day]_&]:md:opacity-75"
       />
       <PageHero
         eyebrow={<>Ship&rsquo;s log &middot; Summer {year}</>}
@@ -106,8 +108,8 @@ export default function ItineraryPage() {
                   >
                     <span
                       aria-hidden
-                      className="block h-[3px] rounded-full transition-all duration-500 group-hover:h-[6px]"
-                      style={{ background: s.color, boxShadow: `0 0 14px ${s.color}55` }}
+                      className={`${styles.glow} block h-[3px] rounded-full transition-all duration-500 group-hover:h-[6px]`}
+                      style={{ background: s.color, "--c": s.color, "--glow-r": "14px", "--glow-a": "33%" } as CSSProperties}
                     />
                     <span aria-hidden className="mt-3 hidden min-w-0 md:block">
                       <span className="num block text-[10px] text-ink-3 transition-colors group-hover:text-ink-2">{s.numeral}</span>

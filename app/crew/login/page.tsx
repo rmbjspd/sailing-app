@@ -54,7 +54,7 @@ export default async function CrewLoginPage({
         >
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-3">
-              <span className="grid size-11 place-items-center rounded-full border border-line bg-white/[0.04]">
+              <span className="grid size-11 place-items-center rounded-full border border-line bg-tint/[0.04]">
                 <Mark className="size-7" />
               </span>
               <span className="leading-tight">

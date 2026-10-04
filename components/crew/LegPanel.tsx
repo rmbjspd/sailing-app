@@ -13,7 +13,7 @@ import {
   UserMinus,
   X,
 } from "lucide-react";
-import { legStyle } from "@/lib/data/legStyle";
+import { alpha, legStyle } from "@/lib/data/legStyle";
 import { FIELD_LIMITS, type RosterLeg, type RosterMember } from "@/lib/crew/types";
 import { contactHref, dayCount, dayLabel, firstName, initials, signedOn } from "./crewFormat";
 import styles from "./crew.module.css";
@@ -27,6 +27,12 @@ export type ActivePanel =
 const BERTH_X = [24, 49, 73];
 
 const EASE = [0.16, 1, 0.3, 1] as const;
+
+// Leg-coloured bloom whose strength follows the theme: `--halo` is set per
+// theme on the panel (crew.module.css) — a glow at night, a modest shadow by day.
+function halo(color: string, strong = false) {
+  return `color-mix(in srgb, ${color} ${strong ? "calc(var(--halo) * 1.5)" : "var(--halo)"}, transparent)`;
+}
 
 export function LegPanel({
   leg,
@@ -69,14 +75,10 @@ export function LegPanel({
       id={`leg-${leg.legId}`}
       tabIndex={-1}
       aria-labelledby={titleId}
-      className="relative scroll-mt-28 overflow-hidden rounded-[28px] border outline-none transition-colors"
-      style={{
-        borderColor: leg.closed ? "var(--line)" : `${s.color}33`,
-        background: leg.closed
-          ? "linear-gradient(180deg, rgb(255 255 255 / 0.03), rgb(255 255 255 / 0.012))"
-          : `radial-gradient(120% 140% at 0% 0%, ${s.color}1f 0%, transparent 46%), linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.015))`,
-        boxShadow: "inset 0 1px 0 rgb(255 255 255 / 0.05), 0 30px 80px -40px rgb(0 0 0 / 0.8)",
-      }}
+      className={`relative scroll-mt-28 overflow-hidden rounded-[28px] border outline-none transition-colors ${styles.panel} ${
+        leg.closed ? styles.panelClosed : ""
+      }`}
+      style={{ ["--c" as string]: s.color } as React.CSSProperties}
     >
       {/* Leg-colour waterline along the top edge */}
       <div
@@ -93,8 +95,10 @@ export function LegPanel({
         <header className="flex gap-4 sm:gap-7">
           <span
             aria-hidden
-            className="font-display shrink-0 text-[44px] font-light leading-[0.85] tracking-[-0.04em] sm:w-[96px] sm:text-[62px]"
-            style={{ color: leg.closed ? "var(--ink-4)" : s.color, textShadow: leg.closed ? undefined : `0 0 40px ${s.color}55` }}
+            className={`font-display shrink-0 text-[44px] font-light leading-[0.85] tracking-[-0.04em] sm:w-[96px] sm:text-[62px] ${
+              leg.closed ? "" : styles.glowText
+            }`}
+            style={{ color: leg.closed ? "var(--ink-4)" : s.color }}
           >
             <em>{s.numeral}</em>
           </span>
@@ -121,7 +125,7 @@ export function LegPanel({
         {/* ── Berth plan ──────────────────────────────────────────────── */}
         <div>
           <div className="relative mx-auto aspect-[440/150] w-full">
-            <Hull color={leg.closed ? "#6a7b92" : s.color} closed={leg.closed} />
+            <Hull color={leg.closed ? "var(--ink-4)" : s.color} closed={leg.closed} patternId={`hatch-${uid.replace(/[^a-zA-Z0-9_-]/g, "")}`} />
             {leg.closed ? (
               <div className="absolute inset-0 grid place-items-center">
                 <span className="grid size-12 place-items-center rounded-full border border-line-strong bg-abyss/70 text-ink-3 sm:size-14">
@@ -156,8 +160,8 @@ export function LegPanel({
                           background: s.color,
                           boxShadow:
                             selected?.id === m.id
-                              ? `inset 0 1px 0 rgb(255 255 255 / 0.45), 0 0 0 3px var(--abyss), 0 0 0 5px ${s.color}, 0 0 28px ${s.color}88`
-                              : `inset 0 1px 0 rgb(255 255 255 / 0.45), 0 0 0 3px var(--abyss), 0 8px 24px -6px ${s.color}aa`,
+                              ? `inset 0 1px 0 rgb(255 255 255 / 0.4), 0 0 0 3px var(--ring), 0 0 0 5px ${s.color}, 0 0 28px ${halo(s.color)}`
+                              : `inset 0 1px 0 rgb(255 255 255 / 0.4), 0 0 0 3px var(--ring), 0 8px 24px -6px ${halo(s.color)}`,
                         } as React.CSSProperties
                       }
                     >
@@ -174,8 +178,8 @@ export function LegPanel({
                         formOpen && i === leg.taken ? "" : styles.berthOpen
                       }`}
                       style={{
-                        borderColor: `${s.color}${formOpen && i === leg.taken ? "" : "b3"}`,
-                        background: formOpen && i === leg.taken ? `${s.color}2e` : "rgb(3 6 12 / 0.55)",
+                        borderColor: formOpen && i === leg.taken ? s.color : alpha(s.color, 0.7),
+                        background: formOpen && i === leg.taken ? alpha(s.color, 0.18) : "var(--berth)",
                         color: s.color,
                       }}
                     >
@@ -322,7 +326,7 @@ function Expand({ body, reduce }: { body: React.ReactNode; reduce: boolean }) {
 function StatusChip({ leg, full, color }: { leg: RosterLeg; full: boolean; color: string }) {
   if (leg.closed) {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-line-strong bg-white/[0.03] px-3 py-1 text-[12.5px] text-ink-2">
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-line-strong bg-tint/[0.03] px-3 py-1 text-[12.5px] text-ink-2">
         <Lock className="size-3" strokeWidth={2} /> Reserved
       </span>
     );
@@ -337,9 +341,9 @@ function StatusChip({ leg, full, color }: { leg: RosterLeg; full: boolean; color
   return (
     <span
       className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[12.5px]"
-      style={{ borderColor: `${color}4d`, background: `${color}14`, color }}
+      style={{ borderColor: alpha(color, 0.3), background: alpha(color, 0.08), color }}
     >
-      <span className="size-1.5 rounded-full" style={{ background: color, boxShadow: `0 0 8px ${color}` }} />
+      <span className={`size-1.5 rounded-full ${styles.glowDot}`} style={{ background: color, ["--c" as string]: color }} />
       <span>
         <span className="num">{leg.spotsRemaining}</span> of <span className="num">{leg.capacity}</span>{" "}
         berth{leg.spotsRemaining === 1 ? "" : "s"} open
@@ -349,20 +353,20 @@ function StatusChip({ leg, full, color }: { leg: RosterLeg; full: boolean; color
 }
 
 // Plan view of the boat, bow to the right. Decorative.
-function Hull({ color, closed }: { color: string; closed: boolean }) {
+function Hull({ color, closed, patternId: pid }: { color: string; closed: boolean; patternId: string }) {
   const hull =
     "M24 32C18 32 16 36 16 42L16 108C16 114 18 118 24 118C120 126 200 127 262 122C350 114 405 93 428 75C405 57 350 36 262 28C200 23 120 24 24 32Z";
   const deck =
     "M34 42L34 108C120 115 200 116 258 111C334 104 380 89 400 75C380 61 334 46 258 39C200 34 120 35 34 42Z";
-  const pid = `hatch-${color.replace("#", "")}`;
   return (
     <svg viewBox="0 0 440 150" className="absolute inset-0 h-full w-full overflow-visible" aria-hidden>
       <defs>
         <pattern id={pid} width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
-          <line x1="0" y1="0" x2="0" y2="8" stroke="rgb(255 255 255 / 0.06)" strokeWidth="1.2" />
+          <line x1="0" y1="0" x2="0" y2="8" stroke="rgb(var(--tint) / 0.07)" strokeWidth="1.2" />
         </pattern>
       </defs>
-      <path d={hull} fill={closed ? `url(#${pid})` : `${color}0d`} stroke={color} strokeOpacity={closed ? 0.35 : 0.55} strokeWidth={1.3} />
+      <path d={hull} className={closed ? undefined : styles.hullOutline} fill={closed ? `url(#${pid})` : alpha(color, 0.05)} stroke={color} strokeOpacity={closed ? 0.35 : 0.55} strokeWidth={1.3} />
+      <g className={styles.hullDetail}>
       <path d={deck} fill="none" stroke={color} strokeOpacity={closed ? 0.12 : 0.18} strokeWidth={1} />
       {/* centreline */}
       <line x1="16" y1="75" x2="428" y2="75" stroke={color} strokeOpacity={0.14} strokeDasharray="2 6" />
@@ -374,6 +378,7 @@ function Hull({ color, closed }: { color: string; closed: boolean }) {
       {/* forestay + fore hatch */}
       <path d="M268 75L424 75" stroke={color} strokeOpacity={0.16} />
       <rect x="372" y="67" width="14" height="16" rx="2.5" fill="none" stroke={color} strokeOpacity={0.14} />
+      </g>
     </svg>
   );
 }
@@ -415,7 +420,7 @@ function Field({
       </div>
       {control}
       {error ? (
-        <p id={`${id}-err`} className="mt-1.5 flex items-center gap-1.5 text-[12.5px] text-[#ffb3aa]">
+        <p id={`${id}-err`} className={`mt-1.5 flex items-center gap-1.5 text-[12.5px] ${styles.alertText}`}>
           <AlertTriangle className="size-3.5 text-alert" strokeWidth={1.75} />
           {error}
         </p>
@@ -427,7 +432,7 @@ function Field({
 }
 
 const inputCls =
-  "w-full rounded-xl border bg-abyss/60 px-4 text-[15px] text-ink outline-none transition-[border-color,box-shadow] placeholder:text-ink-4";
+  `w-full rounded-xl border ${styles.well} px-4 text-[15px] text-ink outline-none transition-[border-color,box-shadow] placeholder:text-ink-4`;
 
 function SignAboardForm({
   id,
@@ -460,7 +465,7 @@ function SignAboardForm({
 
   const borderFor = (bad?: string) =>
     bad
-      ? "border-alert/60 focus:shadow-[0_0_0_4px_rgb(255_107_91/0.12)]"
+      ? "border-alert/60 focus:shadow-[0_0_0_4px_color-mix(in_srgb,var(--alert)_12%,transparent)]"
       : "border-line-strong focus:border-[var(--leg)] focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--leg)_22%,transparent)]";
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
@@ -530,7 +535,7 @@ function SignAboardForm({
           type="button"
           onClick={onCancel}
           aria-label="Close sign-up form"
-          className="grid size-11 shrink-0 place-items-center rounded-full text-ink-3 transition-colors hover:bg-white/[0.06] hover:text-ink"
+          className="grid size-11 shrink-0 place-items-center rounded-full text-ink-3 transition-colors hover:bg-tint/[0.06] hover:text-ink"
         >
           <X className="size-5" strokeWidth={1.75} />
         </button>
@@ -603,7 +608,7 @@ function SignAboardForm({
       {error && (
         <p
           role="alert"
-          className="mt-5 flex items-start gap-2.5 rounded-xl border border-alert/30 bg-alert/[0.08] px-4 py-3 text-[14px] leading-snug text-[#ffb3aa]"
+          className={`mt-5 flex items-start gap-2.5 rounded-xl border border-alert/30 bg-alert/[0.08] px-4 py-3 text-[14px] leading-snug ${styles.alertText}`}
         >
           <AlertTriangle className="mt-px size-4 shrink-0 text-alert" strokeWidth={1.75} />
           {error}
@@ -614,7 +619,7 @@ function SignAboardForm({
         <button
           type="button"
           onClick={onCancel}
-          className="min-h-[48px] rounded-full border border-line-strong px-6 text-[14px] text-ink-2 transition-colors hover:bg-white/[0.05] hover:text-ink"
+          className="min-h-[48px] rounded-full border border-line-strong px-6 text-[14px] text-ink-2 transition-colors hover:bg-tint/[0.05] hover:text-ink"
         >
           Cancel
         </button>
@@ -622,7 +627,7 @@ function SignAboardForm({
           type="submit"
           disabled={busy}
           className="flex min-h-[48px] items-center justify-center gap-2 rounded-full px-7 text-[14.5px] font-medium text-abyss transition-[filter,transform] hover:brightness-110 active:scale-[0.99] disabled:cursor-wait disabled:opacity-80"
-          style={{ background: color, boxShadow: `0 12px 36px -12px ${color}` }}
+          style={{ background: color, boxShadow: `inset 0 1px 0 rgb(255 255 255 / 0.18), 0 12px 36px -12px ${halo(color, true)}` }}
         >
           {busy ? <Loader2 className="size-4 animate-spin" strokeWidth={2} /> : <Anchor className="size-4" strokeWidth={2} />}
           {busy ? "Signing aboard…" : "Sign aboard"}
@@ -686,7 +691,7 @@ function MemberDetail({
           <span
             aria-hidden
             className="grid size-14 shrink-0 place-items-center rounded-full text-[16px] font-semibold text-abyss"
-            style={{ background: color, boxShadow: `inset 0 1px 0 rgb(255 255 255 / 0.45), 0 8px 24px -8px ${color}` }}
+            style={{ background: color, boxShadow: `inset 0 1px 0 rgb(255 255 255 / 0.4), 0 8px 24px -8px ${halo(color, true)}` }}
           >
             {initials(member.name)}
           </span>
@@ -705,7 +710,7 @@ function MemberDetail({
           type="button"
           onClick={onClose}
           aria-label={`Close details for ${member.name}`}
-          className="grid size-11 shrink-0 place-items-center rounded-full text-ink-3 transition-colors hover:bg-white/[0.06] hover:text-ink"
+          className="grid size-11 shrink-0 place-items-center rounded-full text-ink-3 transition-colors hover:bg-tint/[0.06] hover:text-ink"
         >
           <X className="size-5" strokeWidth={1.75} />
         </button>
@@ -738,7 +743,7 @@ function MemberDetail({
       </dl>
 
       {error && (
-        <p role="alert" className="mt-5 flex items-center gap-2 text-[13.5px] text-[#ffb3aa]">
+        <p role="alert" className={`mt-5 flex items-center gap-2 text-[13.5px] ${styles.alertText}`}>
           <AlertTriangle className="size-4 text-alert" strokeWidth={1.75} />
           {error}
         </p>
@@ -756,7 +761,7 @@ function MemberDetail({
                 autoFocus
                 onClick={() => setConfirming(false)}
                 disabled={busy}
-                className="min-h-[44px] flex-1 rounded-full border border-line-strong px-5 text-[14px] text-ink-2 transition-colors hover:bg-white/[0.05] hover:text-ink sm:flex-none"
+                className="min-h-[44px] flex-1 rounded-full border border-line-strong px-5 text-[14px] text-ink-2 transition-colors hover:bg-tint/[0.05] hover:text-ink sm:flex-none"
               >
                 Keep aboard
               </button>
@@ -776,7 +781,7 @@ function MemberDetail({
             type="button"
             onClick={() => setConfirming(true)}
             aria-label={`Withdraw ${member.name} from ${legTitle}`}
-            className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-alert/30 px-5 text-[14px] text-[#ffb3aa] transition-colors hover:bg-alert/10"
+            className={`inline-flex min-h-[44px] items-center gap-2 rounded-full border border-alert/30 px-5 text-[14px] transition-colors hover:bg-alert/10 ${styles.alertText}`}
           >
             <UserMinus className="size-4" strokeWidth={1.75} />
             Withdraw from this leg

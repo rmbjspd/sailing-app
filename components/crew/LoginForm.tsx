@@ -3,6 +3,7 @@ import { useId, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { useAnimate, useReducedMotion } from "motion/react";
 import { AlertTriangle, ArrowRight, Check, Eye, EyeOff, Loader2 } from "lucide-react";
+import styles from "./crew.module.css";
 
 const noopSubscribe = () => () => {};
 
@@ -87,12 +88,12 @@ export function LoginForm({ from, initialError }: { from: string; initialError: 
           placeholder="Shared crew password"
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : undefined}
-          className={`h-14 w-full rounded-2xl border bg-abyss/60 pl-5 text-[16px] text-ink outline-none transition-[border-color,box-shadow] placeholder:text-ink-4 ${
+          className={`h-14 w-full rounded-2xl border pl-5 ${styles.well} text-[16px] text-ink outline-none transition-[border-color,box-shadow] placeholder:text-ink-4 ${
             hydrated ? "pr-14" : "pr-5"
           } ${
             error
-              ? "border-alert/70 focus:shadow-[0_0_0_3px_rgb(255_107_91/0.18)]"
-              : "border-line-strong focus:border-glow focus:shadow-[0_0_0_3px_rgb(94_242_214/0.2)]"
+              ? "border-alert/70 focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--alert)_18%,transparent)]"
+              : "border-line-strong focus:border-glow focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--glow)_20%,transparent)]"
           }`}
         />
         {hydrated && (
@@ -102,7 +103,7 @@ export function LoginForm({ from, initialError }: { from: string; initialError: 
             aria-label={reveal ? "Hide password" : "Show password"}
             aria-pressed={reveal}
             aria-controls={inputId}
-            className="absolute right-1.5 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-xl text-ink-3 transition-colors hover:bg-white/[0.06] hover:text-ink"
+            className="absolute right-1.5 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-xl text-ink-3 transition-colors hover:bg-tint/[0.06] hover:text-ink"
           >
             {reveal ? <EyeOff className="size-[18px]" strokeWidth={1.75} /> : <Eye className="size-[18px]" strokeWidth={1.75} />}
           </button>
@@ -113,7 +114,7 @@ export function LoginForm({ from, initialError }: { from: string; initialError: 
           <p
             id={errorId}
             role="alert"
-            className="mt-3 flex items-start gap-2.5 rounded-xl border border-alert/30 bg-alert/[0.08] px-3.5 py-2.5 text-[14px] leading-snug text-[#ffb3aa]"
+            className={`mt-3 flex items-start gap-2.5 rounded-xl border border-alert/30 bg-alert/[0.08] px-3.5 py-2.5 text-[14px] leading-snug ${styles.alertText}`}
           >
             <AlertTriangle className="mt-px size-4 shrink-0 text-alert" strokeWidth={1.75} />
             {error}
@@ -123,7 +124,7 @@ export function LoginForm({ from, initialError }: { from: string; initialError: 
       <button
         type="submit"
         disabled={busy}
-        className="group mt-5 flex h-14 w-full items-center justify-center gap-2.5 rounded-full bg-glow text-[15px] font-medium text-abyss shadow-[0_10px_40px_-10px_rgb(94_242_214/0.6)] transition-[transform,box-shadow,opacity] hover:shadow-[0_14px_50px_-8px_rgb(94_242_214/0.75)] active:scale-[0.99] disabled:cursor-wait disabled:opacity-80"
+        className={`group mt-5 flex h-14 w-full items-center justify-center gap-2.5 rounded-full bg-glow text-[15px] font-medium text-abyss transition-[transform,box-shadow,opacity] active:scale-[0.99] ${styles.cta} disabled:cursor-wait disabled:opacity-80`}
       >
         {done ? (
           <>
