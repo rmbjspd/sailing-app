@@ -3,10 +3,20 @@ import type { ReactNode } from "react";
 // Small presentational pieces shared by the figures. No hooks — safe in both
 // server and client components.
 
-export const INK = { ink: "#eef3f8", ink2: "#a8b6c8", ink3: "#6a7b92", ink4: "#3d4b5f" } as const;
-export const SIG = { glow: "#5ef2d6", brass: "#f4b860", alert: "#ff6b5b" } as const;
-export const GRID = "rgb(255 255 255 / 0.06)";
-export const GRID_STRONG = "rgb(255 255 255 / 0.14)";
+// Theme-following colours. The custom properties live on `.root` in
+// viz.module.css (night values = the original Night Chart literals; day values
+// = ink on chart paper), so SVG fill/stroke attributes follow the theme with
+// no React branching.
+export const INK = { ink: "var(--vz-ink)", ink2: "var(--vz-ink2)", ink3: "var(--vz-ink3)", ink4: "var(--vz-ink4)" } as const;
+export const SIG = { glow: "var(--vz-glow)", brass: "var(--vz-brass)", alert: "var(--vz-alert)" } as const;
+export const GRID = "var(--vz-grid)";
+export const GRID_STRONG = "var(--vz-grid-strong)";
+/** Fill for knocked-out markers (hollow dots, badges): the page surface. */
+export const KNOCK = "var(--vz-knock)";
+/** Cross-highlight band for the active day. */
+export const HILITE = "var(--vz-hilite)";
+/** Theme overlay (white at night, ink-navy by day) at the given alpha. */
+export const tint = (a: number) => `rgb(var(--tint) / ${a})`;
 
 export const fmt = (n: number, d = 0) =>
   n.toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -69,7 +79,7 @@ export function Callout({
   return (
     <g className={className} style={style} aria-hidden>
       <path d={`M${x},${y} L${x},${ty} L${tx},${ty}`} fill="none" stroke={col} strokeOpacity={0.55} strokeWidth={0.75} />
-      {dot && <circle cx={x} cy={y} r={2.5} fill="#03060c" stroke={col} strokeWidth={1.25} />}
+      {dot && <circle cx={x} cy={y} r={2.5} fill={KNOCK} stroke={col} strokeWidth={1.25} />}
       {kicker && (
         <text x={lx} y={ty - 5} textAnchor={anchor} className="font-mono" fontSize={9.5} letterSpacing="0.12em" fill={col}>
           {kicker.toUpperCase()}
@@ -89,7 +99,7 @@ export function KeyBadge({ x, y, n, tone = "brass" }: { x: number; y: number; n:
   const col = tone === "brass" ? SIG.brass : tone === "glow" ? SIG.glow : INK.ink2;
   return (
     <g aria-hidden>
-      <circle cx={x} cy={y} r={7.5} fill="#03060c" stroke={col} strokeWidth={1} />
+      <circle cx={x} cy={y} r={7.5} fill={KNOCK} stroke={col} strokeWidth={1} />
       <text x={x} y={y + 3.2} textAnchor="middle" fontSize={9} className="font-mono" fill={col}>{n}</text>
     </g>
   );

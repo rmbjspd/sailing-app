@@ -2,6 +2,7 @@
 import { legGroups } from "@/lib/data/stats";
 import { legStyle } from "@/lib/data/legStyle";
 import { formatEntryDate, isoForDay, routeLabel } from "./logFormat";
+import css from "./journal.module.css";
 
 // The voyage as a row of pages: one cell per day, coloured by leg, lit when
 // the day has an entry. Logged days jump to their entry; empty days open the
@@ -36,22 +37,19 @@ export function VoyageStrip({
         onClick={() => onPick(day)}
         aria-label={label}
         title={label}
-        className={`group/cell relative grid place-items-center rounded-[7px] border transition-[transform,background-color,box-shadow] duration-300 hover:-translate-y-0.5 ${
+        data-logged={n > 0}
+        className={`${css.cell} group/cell relative grid place-items-center rounded-[7px] border transition-[transform,background-color,border-color,box-shadow] duration-300 hover:-translate-y-0.5 ${
           variant === "band" ? "h-10 min-w-0 flex-1" : "h-11"
         }`}
-        style={{
-          borderColor: n ? s.color : `${s.color}40`,
-          background: n ? `${s.color}` : `${s.color}0d`,
-          boxShadow: n ? `0 0 16px -2px ${s.color}aa` : undefined,
-        }}
+        style={{ "--c": s.color } as React.CSSProperties}
       >
         <span
-          className={`num text-[10px] leading-none ${n ? "font-semibold text-abyss" : "text-ink-3 group-hover/cell:text-ink"}`}
+          className={`num text-[10px] leading-none ${n ? `font-semibold ${css.cellNum}` : "text-ink-3 group-hover/cell:text-ink"}`}
         >
           {day}
         </span>
         {isToday && (
-          <span className="absolute -bottom-2 left-1/2 size-1 -translate-x-1/2 rounded-full bg-glow shadow-[0_0_8px_var(--glow)]" />
+          <span className={`${css.dot} absolute -bottom-2 left-1/2 size-1 -translate-x-1/2 rounded-full bg-glow`} />
         )}
       </button>
     );
@@ -65,7 +63,7 @@ export function VoyageStrip({
           {ready ? (
             <><span className="text-ink">{logged}</span> of {total} days logged</>
           ) : (
-            <span className="shimmer inline-block h-3 w-28 rounded bg-white/[0.04] align-middle" />
+            <span className="shimmer inline-block h-3 w-28 rounded bg-tint/[0.05] align-middle" />
           )}
         </p>
       </div>

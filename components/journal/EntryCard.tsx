@@ -5,6 +5,7 @@ import { ChevronDown, MapPin, Pencil, Trash2 } from "lucide-react";
 import { LegChip } from "@/components/kit";
 import type { JournalEntry } from "@/lib/types";
 import { formatEntryDate, itineraryDay, routeLabel, wordCount } from "./logFormat";
+import css from "./journal.module.css";
 
 const LONG_BODY = 520; // characters before an entry folds by default
 
@@ -42,11 +43,12 @@ export function EntryCard({
   return (
     <article
       aria-labelledby={`${uid}-title`}
-      className={`group/card relative rounded-[24px] border bg-[linear-gradient(180deg,rgb(255_255_255/0.045),rgb(255_255_255/0.012))] shadow-[inset_0_1px_0_rgb(255_255_255/0.05),0_24px_60px_-30px_rgb(0_0_0/0.8)] transition-[border-color,box-shadow] duration-700 ${
-        highlight ? "border-glow/50 shadow-[0_0_0_4px_rgb(94_242_214/0.08),0_0_40px_-8px_rgb(94_242_214/0.35)]" : "border-line hover:border-line-strong"
-      }`}
+      data-highlight={!!highlight}
+      className={`${css.card} group/card relative rounded-[24px] border border-line transition-[border-color,box-shadow] duration-700 hover:border-line-strong`}
     >
-      <div className="px-5 pb-5 pt-5 sm:px-8 sm:pb-7 sm:pt-7">
+      {/* Margin rule, as on a printed log page */}
+      <span aria-hidden className={`${css.margin} pointer-events-none absolute bottom-7 left-[30px] top-7 hidden w-px sm:block`} />
+      <div className="px-5 pb-5 pt-5 sm:pb-7 sm:pl-[52px] sm:pr-8 sm:pt-7">
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
             {it ? (
@@ -64,7 +66,7 @@ export function EntryCard({
               onClick={onEdit}
               aria-label={`Edit “${title}”`}
               title="Edit"
-              className="grid size-11 place-items-center rounded-full text-ink-3 transition-colors hover:bg-white/[0.06] hover:text-ink"
+              className="grid size-11 place-items-center rounded-full text-ink-3 transition-colors hover:bg-tint/[0.06] hover:text-ink"
             >
               <Pencil className="size-4" strokeWidth={1.6} />
             </button>
@@ -156,7 +158,7 @@ export function EntryCard({
                     ref={keepRef}
                     type="button"
                     onClick={cancelConfirm}
-                    className="min-h-11 rounded-full px-4 text-sm font-medium text-ink-2 transition-colors hover:bg-white/[0.06] hover:text-ink"
+                    className="min-h-11 rounded-full px-4 text-sm font-medium text-ink-2 transition-colors hover:bg-tint/[0.06] hover:text-ink"
                   >
                     Keep it
                   </button>

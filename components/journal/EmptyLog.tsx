@@ -2,7 +2,9 @@
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { LegChip } from "@/components/kit";
+import { alpha } from "@/lib/data/legStyle";
 import { formatEntryDate, isoForDay, itineraryDay, routeLabel } from "./logFormat";
+import css from "./journal.module.css";
 
 // The blank first page: an open logbook in line-art — ruled lines on the left
 // page with the first line half-written, a compass rose on the right — and an
@@ -36,7 +38,7 @@ export function EmptyLog({ onBegin, onBlank }: { onBegin: (day: number) => void;
               <stop offset="1" stopColor="var(--glow)" stopOpacity="0" />
             </radialGradient>
           </defs>
-          <ellipse cx="160" cy="112" rx="170" ry="100" fill="url(#log-halo)" />
+          <ellipse className={css.halo} cx="160" cy="112" rx="170" ry="100" fill="url(#log-halo)" />
 
           {/* Page edges (thickness) */}
           {[8, 4].map(o => (
@@ -46,20 +48,20 @@ export function EmptyLog({ onBegin, onBlank }: { onBegin: (day: number) => void;
             </g>
           ))}
           {/* Pages */}
-          <path d="M160 44 C120 32 72 32 28 40 L28 172 C72 164 120 164 160 176 Z" fill="rgb(14 26 44 / 0.9)" stroke="var(--ink-3)" strokeWidth="1.1" />
-          <path d="M160 44 C200 32 248 32 292 40 L292 172 C248 164 200 164 160 176 Z" fill="rgb(14 26 44 / 0.9)" stroke="var(--ink-3)" strokeWidth="1.1" />
+          <path className={css.page} d="M160 44 C120 32 72 32 28 40 L28 172 C72 164 120 164 160 176 Z" stroke="var(--ink-3)" strokeWidth="1.1" />
+          <path className={css.page} d="M160 44 C200 32 248 32 292 40 L292 172 C248 164 200 164 160 176 Z" stroke="var(--ink-3)" strokeWidth="1.1" />
           <line x1="160" y1="44" x2="160" y2="176" stroke="url(#log-spine)" strokeWidth="1.5" />
 
           {/* Ruled lines + margin */}
-          <line x1="52" y1="48" x2="52" y2="164" stroke="var(--brass)" strokeOpacity="0.35" strokeWidth="0.8" />
+          <line className={css.marginStroke} x1="52" y1="48" x2="52" y2="164" strokeWidth="0.8" />
           {rules.map(y => (
-            <path key={y} d={`M40 ${y} C80 ${y - 6} 120 ${y - 5} 150 ${y + 2}`} fill="none" stroke="var(--ink-4)" strokeWidth="0.7" />
+            <path key={y} className={css.ruleStroke} d={`M40 ${y} C80 ${y - 6} 120 ${y - 5} 150 ${y + 2}`} fill="none" strokeWidth="0.7" />
           ))}
           {/* The first line, half written */}
           <motion.path
             d="M58 59 c4 -5 7 4 11 -1 s6 -3 9 1 s7 -4 11 -1 s5 2 9 -2 s8 3 12 0"
             fill="none" stroke="var(--glow)" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"
-            style={{ filter: "drop-shadow(0 0 3px rgb(94 242 214 / 0.8))" }}
+            className={css.pen}
             {...draw(0.4)}
           />
           {/* Day / date header on the left page */}
@@ -81,7 +83,7 @@ export function EmptyLog({ onBegin, onBlank }: { onBegin: (day: number) => void;
               );
             })}
             <motion.path d="M0 -28 L5 -5 L28 0 L5 5 L0 28 L-5 5 L-28 0 L-5 -5 Z"
-              fill="rgb(244 184 96 / 0.08)" stroke="var(--brass)" strokeWidth="0.9" strokeLinejoin="round" {...draw(0.1)} />
+              fill={alpha("var(--brass)", 0.08)} stroke="var(--brass)" strokeWidth="0.9" strokeLinejoin="round" {...draw(0.1)} />
             <path d="M0 -28 L5 -5 L0 0 Z" fill="var(--brass)" opacity="0.85" />
             <path d="M-14 -14 L2 -2 L-2 2 Z M14 -14 L2 2 L-2 -2 Z M14 14 L-2 2 L2 -2 Z M-14 14 L2 2 L-2 -2 Z" fill="none" stroke="var(--ink-3)" strokeWidth="0.6" />
             <circle r="2" fill="var(--abyss)" stroke="var(--brass)" strokeWidth="0.8" />
@@ -109,7 +111,7 @@ export function EmptyLog({ onBegin, onBlank }: { onBegin: (day: number) => void;
           type="button"
           onClick={() => onBegin(1)}
           aria-label={`Begin the log with Day 1, ${formatEntryDate(isoForDay(1), { weekday: "long", month: "long", day: "numeric", year: "numeric" })}: ${routeLabel(day1)}`}
-          className="group mx-auto mt-8 flex w-full max-w-md items-center gap-4 rounded-2xl border border-line-strong bg-white/[0.03] p-4 text-left transition-[border-color,background-color,box-shadow] duration-300 hover:border-glow/40 hover:bg-glow/[0.04] hover:shadow-[0_0_40px_-12px_rgb(94_242_214/0.5)] sm:p-5"
+          className={`${css.begin} group mx-auto mt-8 flex w-full max-w-md items-center gap-4 rounded-2xl border border-line-strong p-4 text-left transition-[border-color,background-color,box-shadow] duration-300 sm:p-5`}
         >
           <span className="grid size-14 shrink-0 place-items-center rounded-xl border border-line bg-abyss/60">
             <span className="text-center leading-none">

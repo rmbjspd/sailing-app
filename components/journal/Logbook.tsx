@@ -10,6 +10,7 @@ import { Composer } from "./Composer";
 import { EmptyLog } from "./EmptyLog";
 import { EntryCard } from "./EntryCard";
 import { VoyageStrip } from "./VoyageStrip";
+import css from "./journal.module.css";
 import {
   LAST_DAY, compareEntries, dayForIso, formatEntryDate, isoForDay, itineraryDay, todayIso, wordCount,
 } from "./logFormat";
@@ -30,7 +31,7 @@ function VoyageClock() {
   const t = todayIso();
   const toStart = Math.round((Date.parse(isoForDay(1)) - Date.parse(t)) / DAY_MS);
   const day = dayForIso(t);
-  const dot = <span className="size-1.5 shrink-0 rounded-full bg-brass shadow-[0_0_8px_var(--brass)]" />;
+  const dot = <span className={`${css.dot} size-1.5 shrink-0 rounded-full bg-brass`} style={{ "--dot": "var(--brass)" } as React.CSSProperties} />;
   if (toStart > 0)
     return <>{dot}<span>Dock lines in <span className="text-ink">{toStart.toLocaleString("en-US")}</span> {toStart === 1 ? "day" : "days"} · {formatEntryDate(isoForDay(1), { month: "short", day: "numeric", year: "numeric" })}</span></>;
   if (day > 0)
@@ -143,7 +144,7 @@ export function Logbook() {
                         {s.of && <span className="text-[15px] text-ink-4">/{s.of}</span>}
                       </span>
                     ) : (
-                      <span className="shimmer block h-7 w-12 rounded-md bg-white/[0.04]" />
+                      <span className="shimmer block h-7 w-12 rounded-md bg-tint/[0.05]" />
                     )}
                   </dd>
                 </div>
@@ -156,7 +157,7 @@ export function Logbook() {
               type="button"
               onClick={() => openComposer(today)}
               disabled={!ready}
-              className="group mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2.5 rounded-full bg-glow px-6 text-[15px] font-semibold text-abyss shadow-[0_0_32px_-8px_var(--glow)] transition-[filter,box-shadow] hover:shadow-[0_0_44px_-6px_var(--glow)] hover:brightness-110 disabled:opacity-50"
+              className={`${css.cta} group mt-6 inline-flex min-h-12 w-full items-center justify-center gap-2.5 rounded-full bg-glow px-6 text-[15px] font-semibold text-abyss transition-[filter,box-shadow] hover:brightness-110 disabled:opacity-50`}
             >
               <Feather className="size-[18px] transition-transform duration-500 group-hover:-rotate-12" strokeWidth={1.75} />
               New entry
@@ -193,8 +194,8 @@ export function Logbook() {
           <div className="space-y-6" aria-busy="true" aria-label="Loading the log">
             {[0, 1].map(i => (
               <div key={i} className="grid gap-6 md:grid-cols-[140px_minmax(0,1fr)]">
-                <span className="shimmer hidden h-16 rounded-xl bg-white/[0.03] md:block" />
-                <span className="shimmer block h-64 rounded-[24px] border border-line bg-white/[0.02]" />
+                <span className="shimmer hidden h-16 rounded-xl bg-tint/[0.04] md:block" />
+                <span className="shimmer block h-64 rounded-[24px] border border-line bg-tint/[0.03]" />
               </div>
             ))}
           </div>
@@ -218,7 +219,7 @@ export function Logbook() {
                       className={`relative min-h-10 rounded-full px-4 text-[13px] font-medium transition-colors ${order === id ? "text-ink" : "text-ink-3 hover:text-ink-2"}`}
                     >
                       {order === id && (
-                        <motion.span layoutId="order-pill" className="absolute inset-0 rounded-full bg-white/[0.08] ring-1 ring-white/10"
+                        <motion.span layoutId="order-pill" className={`${css.pill} absolute inset-0 rounded-full`}
                           transition={{ type: "spring", stiffness: 420, damping: 34 }} />
                       )}
                       <span className="relative">{label}</span>
@@ -254,8 +255,8 @@ export function Logbook() {
                       <div className="md:sticky md:top-28 md:self-start md:pr-8 md:text-right">
                         <span
                           aria-hidden
-                          className="absolute left-[140px] top-3 hidden size-3 -translate-x-1/2 rounded-full border-2 md:block"
-                          style={{ borderColor: color, background: "var(--abyss)", boxShadow: `0 0 0 4px var(--abyss), 0 0 14px ${color}` }}
+                          className={`${css.marker} absolute left-[140px] top-3 hidden size-3 -translate-x-1/2 rounded-full border-2 md:block`}
+                          style={{ "--c": color } as React.CSSProperties}
                         />
                         <p className="flex items-baseline gap-3 md:block">
                           {g.day > 0 ? (

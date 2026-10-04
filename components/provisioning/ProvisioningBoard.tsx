@@ -10,6 +10,7 @@ import { CRITICAL_ITEMS, TOTAL_ITEMS, categoryMeta, type Priority } from "./cate
 import { CategoryPanel } from "./CategoryPanel";
 import { MiniRing } from "./MiniRing";
 import { ReadinessGauge } from "./ReadinessGauge";
+import css from "./provisioning.module.css";
 
 type PriorityFilter = "all" | Priority;
 
@@ -175,7 +176,7 @@ export function ProvisioningBoard() {
                     onClick={() => refilter(() => setActive(null))}
                     label="All lockers"
                     sub={ready ? `${TOTAL_ITEMS - priorityLeft("all")}/${TOTAL_ITEMS}` : "—"}
-                    ring={<MiniRing frac={ready ? (TOTAL_ITEMS - priorityLeft("all")) / TOTAL_ITEMS : 0} color="#5ef2d6" ready={ready} />}
+                    ring={<MiniRing frac={ready ? (TOTAL_ITEMS - priorityLeft("all")) / TOTAL_ITEMS : 0} color="var(--glow)" ready={ready} />}
                   />
                   {checklists.map(g => {
                     const meta = categoryMeta(g);
@@ -222,7 +223,7 @@ export function ProvisioningBoard() {
                           {on && (
                             <motion.span
                               layoutId="prio-pill"
-                              className="absolute inset-0 rounded-full bg-white/[0.08] ring-1 ring-white/10 lg:rounded-xl"
+                              className={`${css.pill} absolute inset-0 rounded-full lg:rounded-xl`}
                               transition={{ type: "spring", stiffness: 420, damping: 34 }}
                             />
                           )}
@@ -235,7 +236,7 @@ export function ProvisioningBoard() {
                             <span className="sm:hidden" aria-hidden>{f.short}</span>
                             <span className="max-sm:sr-only">{f.label}</span>
                           </span>
-                          <span className={`num relative hidden text-[11px] lg:inline ${f.id === "critical" && left ? "text-alert/90" : "text-ink-4"}`}>
+                          <span className={`num relative hidden text-[11px] lg:inline ${f.id === "critical" && left ? "text-alert" : "text-ink-4"}`}>
                             {left === null ? "" : `${left} left`}
                           </span>
                         </button>
@@ -258,11 +259,11 @@ export function ProvisioningBoard() {
                 </span>
                 <span
                   className={`relative inline-flex h-6 w-10 items-center rounded-full border transition-colors duration-300 ${
-                    hideStowed ? "border-glow/50 bg-glow/25" : "border-line-strong bg-white/[0.04]"
+                    hideStowed ? "border-glow/50 bg-glow/25" : "border-line-strong bg-tint/[0.05]"
                   }`}
                 >
                   <motion.span
-                    className={`absolute size-[18px] rounded-full ${hideStowed ? "bg-glow shadow-[0_0_12px_rgb(94_242_214/0.8)]" : "bg-ink-3"}`}
+                    className={`absolute size-[18px] rounded-full ${hideStowed ? `bg-glow ${css.knobOn}` : "bg-ink-3"}`}
                     initial={false}
                     animate={{ x: hideStowed ? 19 : 2 }}
                     transition={{ type: "spring", stiffness: 520, damping: 32 }}
@@ -334,7 +335,7 @@ export function ProvisioningBoard() {
                 type="button"
                 onClick={() => setUndo(null)}
                 aria-label="Dismiss"
-                className="grid size-11 place-items-center rounded-xl text-ink-3 transition-colors hover:bg-white/[0.06] hover:text-ink"
+                className="grid size-11 place-items-center rounded-xl text-ink-3 transition-colors hover:bg-tint/[0.06] hover:text-ink"
               >
                 <X className="size-4" strokeWidth={1.75} />
               </button>
@@ -373,13 +374,13 @@ function RailButton({
         aria-pressed={active}
         aria-label={fullLabel ? `${fullLabel}, ${sub} stowed` : undefined}
         className={`relative flex min-h-[52px] items-center gap-3 rounded-2xl py-2 pl-2.5 pr-4 text-left transition-colors lg:min-h-11 lg:w-full lg:py-1.5 ${
-          active ? "text-ink" : "text-ink-2 hover:bg-white/[0.03] hover:text-ink"
+          active ? "text-ink" : "text-ink-2 hover:bg-tint/[0.04] hover:text-ink"
         }`}
       >
         {active && (
           <motion.span
             layoutId="rail-active"
-            className="absolute inset-0 rounded-2xl border border-line-strong bg-white/[0.06]"
+            className={`${css.railPill} absolute inset-0 rounded-2xl`}
             transition={{ type: "spring", stiffness: 420, damping: 36 }}
           />
         )}

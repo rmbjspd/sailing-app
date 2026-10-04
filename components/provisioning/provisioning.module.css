@@ -1,0 +1,137 @@
+/* Provisioning — theme treatments.
+   Night: luminous instrument light on the dark chart (glows, washes).
+   Day:   crisp ink on khaki chart paper — paper cards, hairline borders, warm
+          shadows, no additive glow.
+   Leg/locker colour arrives as --c (a theme-following var(--leg-…)). */
+
+/* ── Locker panel ──────────────────────────────────────────────────────── */
+.panel {
+  --wash: 7%;
+  background:
+    radial-gradient(420px circle at 48px 48px, color-mix(in srgb, var(--c) var(--wash), transparent), transparent 70%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.015));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.06),
+    0 20px 60px -20px rgb(0 0 0 / 0.6);
+}
+.panel[data-complete="true"] { --wash: 15%; }
+:root[data-theme="day"] .panel {
+  --wash: 8%;
+  background:
+    radial-gradient(380px circle at 48px 48px, color-mix(in srgb, var(--c) var(--wash), transparent), transparent 70%),
+    linear-gradient(180deg, rgb(252 250 243 / 0.94), rgb(247 242 231 / 0.88));
+  border-color: rgb(var(--tint) / 0.12);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 1px 2px rgb(70 55 25 / 0.06),
+    0 28px 56px -34px rgb(70 55 25 / 0.42);
+}
+:root[data-theme="day"] .panel[data-complete="true"] { --wash: 14%; }
+
+/* Icon seal: a tinted tile at night; a printed stamp by day, inked solid when full */
+.seal {
+  border-color: color-mix(in srgb, var(--c) 33%, transparent);
+  background: color-mix(in srgb, var(--c) 8%, transparent);
+  color: var(--c);
+  transition: background-color 0.5s, border-color 0.5s, box-shadow 0.5s, color 0.5s;
+}
+.seal[data-complete="true"] {
+  background: color-mix(in srgb, var(--c) 20%, transparent);
+  box-shadow: 0 0 28px -4px var(--c);
+}
+:root[data-theme="day"] .seal {
+  border-color: color-mix(in srgb, var(--c) 42%, transparent);
+  background: color-mix(in srgb, var(--c) 6%, rgb(255 253 247 / 0.7));
+  box-shadow: inset 0 0 0 3px rgb(255 253 247 / 0.55);
+}
+:root[data-theme="day"] .seal[data-complete="true"] {
+  background: var(--c);
+  border-color: var(--c);
+  color: #fffdf7;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 14%, transparent), 0 6px 14px -8px rgb(70 55 25 / 0.6);
+}
+
+/* Progress */
+.track { background: rgb(var(--tint) / 0.06); }
+:root[data-theme="day"] .track { background: rgb(var(--tint) / 0.09); }
+.bar { background: var(--c); box-shadow: 0 0 12px var(--c); }
+:root[data-theme="day"] .bar { box-shadow: none; }
+
+/* ── Checkbox ─────────────────────────────────────────────────────────── */
+.box {
+  background-color: rgb(255 255 255 / 0.02);
+  border-color: rgb(255 255 255 / 0.22);
+  box-shadow: 0 0 0 0 transparent, 0 0 0 0 transparent;
+  transition:
+    background-color 0.32s var(--ease-out),
+    border-color 0.32s var(--ease-out),
+    box-shadow 0.45s var(--ease-out);
+}
+.box[data-checked="true"] {
+  background-color: var(--c);
+  border-color: var(--c);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--c) 12%, transparent),
+    0 0 18px -2px color-mix(in srgb, var(--c) 67%, transparent);
+}
+:root[data-theme="day"] .box {
+  background-color: rgb(255 253 247 / 0.85);
+  border-color: rgb(var(--tint) / 0.34);
+  box-shadow: inset 0 1px 1.5px rgb(70 55 25 / 0.1), 0 0 0 0 transparent;
+}
+:root[data-theme="day"] .box[data-checked="true"] {
+  background-color: var(--c);
+  border-color: var(--c);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    0 0 0 3px color-mix(in srgb, var(--c) 13%, transparent);
+}
+.tick { stroke: var(--abyss); }
+:root[data-theme="day"] .tick { stroke: #fffdf7; }
+.hoverRing { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 60%, transparent); }
+
+.critDot { box-shadow: 0 0 8px color-mix(in srgb, var(--alert) 70%, transparent); }
+:root[data-theme="day"] .critDot { box-shadow: none; }
+
+/* ── Selected pill (priority filter, locker rail) ──────────────────────── */
+.pill {
+  background: rgb(255 255 255 / 0.08);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+}
+.railPill {
+  background: rgb(255 255 255 / 0.06);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+:root[data-theme="day"] .pill,
+:root[data-theme="day"] .railPill {
+  background: #fffdf8;
+  box-shadow:
+    0 0 0 1px rgb(var(--tint) / 0.11),
+    0 1px 2px rgb(70 55 25 / 0.1),
+    0 6px 14px -10px rgb(70 55 25 / 0.45);
+}
+
+/* Toggle knob */
+.knobOn { box-shadow: 0 0 12px color-mix(in srgb, var(--glow) 80%, transparent); }
+:root[data-theme="day"] .knobOn { box-shadow: 0 1px 2px rgb(28 43 60 / 0.35); }
+
+/* Mini ring */
+.ringGlow { filter: drop-shadow(0 0 4px color-mix(in srgb, var(--c) 53%, transparent)); }
+:root[data-theme="day"] .ringGlow { filter: none; }
+
+/* ── Readiness gauge ──────────────────────────────────────────────────── */
+.gaugeHalo { background: radial-gradient(circle, color-mix(in srgb, var(--glow) 18%, transparent), transparent 65%); }
+:root[data-theme="day"] .gaugeHalo {
+  background: radial-gradient(circle, color-mix(in srgb, var(--powder) 70%, transparent), transparent 65%);
+  opacity: 0.8;
+}
+/* The face: invisible at night, a faint printed compass card by day */
+.gaugeFace { fill: transparent; stroke: none; }
+:root[data-theme="day"] .gaugeFace { fill: rgb(255 253 247 / 0.55); stroke: rgb(var(--tint) / 0.08); }
+:root[data-theme="day"] .arc { filter: none; }
+
+/* ── Completion burst ─────────────────────────────────────────────────── */
+.burstHalo { background: radial-gradient(circle, color-mix(in srgb, var(--c) 40%, transparent), transparent 70%); }
+:root[data-theme="day"] .burstHalo { background: radial-gradient(circle, color-mix(in srgb, var(--c) 22%, transparent), transparent 70%); }
+.spark { background: var(--c); box-shadow: 0 0 8px var(--c); }
+:root[data-theme="day"] .spark { box-shadow: none; }

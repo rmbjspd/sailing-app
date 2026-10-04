@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { checklists } from "@/lib/data/checklists";
 import { categoryMeta, CRITICAL_ITEMS, TOTAL_ITEMS } from "./categories";
+import css from "./provisioning.module.css";
 
 // The hero instrument: a segmented ring, one arc per locker (sized by item
 // count, filled by how much is stowed), wrapped in a compass-style bezel. The
@@ -68,8 +69,7 @@ export function ReadinessGauge({
     <div className="glass-strong relative w-full overflow-hidden rounded-[28px] p-5 sm:p-6 lg:w-[540px]">
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-16 -top-16 size-80 rounded-full opacity-50 blur-3xl"
-        style={{ background: "radial-gradient(circle, rgb(94 242 214 / 0.18), transparent 65%)" }}
+        className={`${css.gaugeHalo} pointer-events-none absolute -left-16 -top-16 size-80 rounded-full opacity-50 blur-3xl`}
       />
       <div className="relative flex flex-col items-center gap-5 sm:flex-row sm:items-stretch sm:gap-6">
       <div className="relative aspect-square w-full max-w-[224px] shrink-0 sm:w-[230px] sm:max-w-[250px]">
@@ -85,6 +85,8 @@ export function ReadinessGauge({
               <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
           </defs>
+
+          <circle className={css.gaugeFace} cx={C} cy={C} r={133} />
 
           {/* Bezel ticks — every 5°, majors at the cardinal and inter-cardinal points */}
           {Array.from({ length: 72 }, (_, i) => {
@@ -125,6 +127,7 @@ export function ReadinessGauge({
                   strokeWidth={13}
                   strokeLinecap="round"
                   filter="url(#gauge-glow)"
+                  className={css.arc}
                   initial={false}
                   animate={{ pathLength: frac, opacity: frac > 0 ? 1 : 0 }}
                   transition={spring}
@@ -157,7 +160,7 @@ export function ReadinessGauge({
                 <span className="ml-0.5 align-top text-[22px] text-ink-3">%</span>
               </p>
             ) : (
-              <span className="shimmer mx-auto block h-14 w-24 rounded-xl bg-white/[0.04]" aria-hidden />
+              <span className="shimmer mx-auto block h-14 w-24 rounded-xl bg-tint/[0.05]" aria-hidden />
             )}
             <p className="eyebrow mt-2">Stowed</p>
           </div>
@@ -171,7 +174,7 @@ export function ReadinessGauge({
           <p className="eyebrow num">{ready ? `${done}/${TOTAL_ITEMS}` : "—"}</p>
         </div>
         {!ready ? (
-          <span className="shimmer mt-4 block h-40 rounded-xl bg-white/[0.03]" aria-hidden />
+          <span className="shimmer mt-4 block h-40 rounded-xl bg-tint/[0.04]" aria-hidden />
         ) : critLeft > 0 ? (
           <>
             <p className="mt-4 flex items-baseline gap-2.5">
@@ -189,7 +192,7 @@ export function ReadinessGauge({
               {critByLocker.slice(0, 4).map(r => (
                 <li key={r.id} className="flex items-center gap-2.5 text-[12px]">
                   <span className="w-[68px] shrink-0 truncate text-ink-2">{r.short}</span>
-                  <span className="relative h-[3px] flex-1 overflow-hidden rounded-full bg-white/[0.05]">
+                  <span className="relative h-[3px] flex-1 overflow-hidden rounded-full bg-tint/[0.07]">
                     <motion.span
                       className="absolute inset-y-0 left-0 rounded-full bg-alert/80"
                       initial={false}

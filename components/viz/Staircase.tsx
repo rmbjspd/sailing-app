@@ -2,7 +2,7 @@
 import { scaleLinear } from "d3-scale";
 import { useId, useMemo, useRef, useState, type PointerEvent as RPointerEvent } from "react";
 import type { ProfileLock, SurfacePoint, VizDay, WaterModel } from "@/lib/data/vizModel";
-import { Callout, GRID, GRID_STRONG, INK, KeyBadge, SIG, fmt } from "./parts";
+import { Callout, GRID, GRID_STRONG, HILITE, INK, KNOCK, KeyBadge, SIG, fmt, tint } from "./parts";
 import { useDrawIn } from "./useDrawIn";
 import { useViz } from "./VizContext";
 import s from "./viz.module.css";
@@ -25,6 +25,7 @@ function placeName(to: string, end: "to" | "from" = "to") {
   return p.replace(/,\s*[A-Z]{2}\b.*$/, "").replace(/\(.*\)/, "").trim();
 }
 const stripE = (id: string) => id.replace(/^E-/, "");
+const CANAL = "var(--leg-erie-canal)";
 
 /** Group locks that would collide at this scale into one label. */
 function lockClusters(locks: ProfileLock[], sx: Lin, minGap: number) {
@@ -185,7 +186,7 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
             <rect x={0} y={0} width={W} height={H} fill={`url(#${uid}-col)`} />
           </mask>
           <pattern id={`${uid}-rock`} width={4} height={4} patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <line x1={0} y1={0} x2={0} y2={4} stroke="#fff" strokeOpacity={0.07} strokeWidth={1} />
+            <line className={s.hatch} x1={0} y1={0} x2={0} y2={4} stroke={tint(1)} strokeOpacity={0.07} strokeWidth={1} />
           </pattern>
           <linearGradient id={`${uid}-rockfade`} x1={0} x2={0} y1={0} y2={1}>
             <stop offset={0} stopColor="#fff" stopOpacity={1} />
@@ -210,7 +211,7 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
         {/* enlarged-region marker */}
         <g aria-hidden>
           <rect x={sx(loupeX0)} y={m.t - (compact ? 16 : 22)} width={sx(loupeX1) - sx(loupeX0)} height={y0 - m.t + (compact ? 22 : 30)}
-            fill="rgb(255 255 255 / 0.025)" stroke="rgb(255 255 255 / 0.16)" strokeDasharray="2 3" rx={4} />
+            fill={tint(0.025)} stroke={tint(0.16)} strokeDasharray="2 3" rx={4} />
           <text x={sx(loupeX0) + 6} y={m.t - (compact ? 6 : 9)} fontSize={compact ? 8 : 9.5} letterSpacing="0.14em" className="font-mono" fill={INK.ink2}>
             {compact ? "1B ↓" : "ENLARGED IN 1B ↓"}
           </text>
@@ -218,19 +219,19 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
 
         {/* active day band (cross-highlight) */}
         {active && active.nm > 0 && (
-          <rect x={sx(active.x0)} y={m.t - 6} width={Math.max(1.5, sx(active.x1) - sx(active.x0))} height={H - m.b - m.t + 6} fill="rgb(94 242 214 / 0.07)" />
+          <rect x={sx(active.x0)} y={m.t - 6} width={Math.max(1.5, sx(active.x1) - sx(active.x0))} height={H - m.b - m.t + 6} fill={HILITE} />
         )}
 
         <g clipPath={`url(#${uid}-clip)`}>
           {/* height above the sea (where there is no floor data: canal, rivers) */}
-          <path d={areaPath(model.surface, sx, sy, 0)} fill={`url(#${uid}-leg)`} fillOpacity={0.16} mask={`url(#${uid}-m)`} />
+          <path className={s.relief} d={areaPath(model.surface, sx, sy, 0)} fill={`url(#${uid}-leg)`} fillOpacity={0.16} mask={`url(#${uid}-m)`} />
           {/* ground under the track */}
           <g mask={`url(#${uid}-colm)`}>
             {runPaths.map(r => <path key={`g${r.key}`} d={r.ground} fill={`url(#${uid}-rock)`} />)}
           </g>
           {/* the water column, surface to floor */}
           <g mask={`url(#${uid}-colm)`}>
-            {runPaths.map(r => <path key={`w${r.key}`} d={r.water} fill={r.color} fillOpacity={0.26} />)}
+            {runPaths.map(r => <path key={`w${r.key}`} className={s.water} style={{ ["--c" as string]: r.color }} d={r.water} fill={r.color} fillOpacity={0.26} />)}
           </g>
           {/* the floor */}
           {runPaths.map(r => (
@@ -239,7 +240,7 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
           {/* the water surface */}
           <path d={linePath(model.surface, sx, sy)} fill="none" stroke={`url(#${uid}-leg)`} strokeWidth={2} strokeLinejoin="round" />
         </g>
-        <line x1={m.l} x2={W - m.r} y1={y0} y2={y0} stroke="rgb(255 255 255 / 0.22)" strokeDasharray="1 3" aria-hidden />
+        <line x1={m.l} x2={W - m.r} y1={y0} y2={y0} stroke="var(--vz-sea)" strokeDasharray="1 3" aria-hidden />
         {/* published deepest point of Lake Michigan (reference) */}
         {!compact && (
           <g aria-hidden className={s.fade} style={{ ["--d" as string]: "1.6s" }}>
@@ -301,7 +302,7 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
         ) : (
           <g className={s.fade} style={{ ["--d" as string]: "1.2s" }}>
             <text x={sx(4)} y={sy(surf0) - 8} fontSize={10} className="num" fill={SIG.brass}>{fmt(surf0, 1)} ft</text>
-            <circle cx={sx(deepest.x)} cy={sy(deepest.ft)} r={2.5} fill="#03060c" stroke={SIG.glow} strokeWidth={1.25} />
+            <circle cx={sx(deepest.x)} cy={sy(deepest.ft)} r={2.5} fill={KNOCK} stroke={SIG.glow} strokeWidth={1.25} />
             <text x={sx(deepest.x) + 7} y={sy(deepest.ft) + 4} fontSize={9.5} fill={INK.ink2}>
               <tspan className="num" fill={SIG.glow}>{fmt(deepest.depthFt)} ft</tspan> deep · Day {deepest.day}
             </text>
@@ -314,7 +315,7 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
             <line x1={sx(hoverX)} x2={sx(hoverX)} y1={m.t - 6} y2={H - m.b} stroke={SIG.glow} strokeOpacity={0.5} strokeWidth={1} />
             {hoverFloor != null && <line x1={sx(hoverX)} x2={sx(hoverX)} y1={sy(hoverFt)} y2={sy(hoverFloor)} stroke={SIG.glow} strokeWidth={2.5} strokeLinecap="round" />}
             {hoverFloor != null && <circle cx={sx(hoverX)} cy={sy(hoverFloor)} r={2.5} fill={SIG.glow} />}
-            <circle cx={sx(hoverX)} cy={sy(hoverFt)} r={3.5} fill="#03060c" stroke={SIG.glow} strokeWidth={1.5} />
+            <circle cx={sx(hoverX)} cy={sy(hoverFt)} r={3.5} fill={KNOCK} stroke={SIG.glow} strokeWidth={1.5} />
           </g>
         )}
         <rect x={m.l} y={m.t - 10} width={W - m.l - m.r} height={H - m.b - m.t + 10} fill="transparent"
@@ -453,8 +454,8 @@ export function StaircaseLoupe({ model, domain, compact = false, inset = false, 
             {stops.map((st, i) => <stop key={i} offset={st.o} stopColor={st.c} />)}
           </linearGradient>
           <linearGradient id={`${uid}-fade`} x1={0} x2={0} y1={0} y2={1}>
-            <stop offset={0} stopColor="#fff" stopOpacity={0.5} />
-            <stop offset={1} stopColor="#fff" stopOpacity={0.03} />
+            <stop className={s.poolTop} offset={0} stopColor="#fff" stopOpacity={0.5} />
+            <stop className={s.poolBot} offset={1} stopColor="#fff" stopOpacity={0.03} />
           </linearGradient>
           <mask id={`${uid}-m`} maskUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}>
             <rect x={0} y={sy(600)} width={W} height={sy(-10) - sy(600)} fill={`url(#${uid}-fade)`} />
@@ -480,7 +481,7 @@ export function StaircaseLoupe({ model, domain, compact = false, inset = false, 
           return (
             <g key={d.day}>
               {d.nm > 0 && (
-                <rect x={a} y={m.t - 12} width={w} height={H - m.b - m.t + 12} fill={on ? "rgb(94 242 214 / 0.06)" : d.day % 2 ? "rgb(255 255 255 / 0.014)" : "transparent"}
+                <rect x={a} y={m.t - 12} width={w} height={H - m.b - m.t + 12} fill={on ? HILITE : d.day % 2 ? tint(0.014) : "transparent"}
                   onPointerEnter={() => setActiveDay(d.day)} />
               )}
               {d.x1 < domain[1] - 0.01 && <line x1={sx(d.x1)} x2={sx(d.x1)} y1={m.t - 12} y2={H - m.b + 6} stroke={GRID} />}
@@ -522,7 +523,7 @@ export function StaircaseLoupe({ model, domain, compact = false, inset = false, 
 
         {/* the staircase */}
         <g clipPath={`url(#${uid}-clip)`}>
-          <path d={areaPath(model.surface, sx, sy, -10)} fill={`url(#${uid}-leg)`} fillOpacity={0.34} mask={`url(#${uid}-m)`} />
+          <path className={s.pool} d={areaPath(model.surface, sx, sy, -10)} fill={`url(#${uid}-leg)`} fillOpacity={0.34} mask={`url(#${uid}-m)`} />
           <path d={linePath(model.surface, sx, sy)} fill="none" stroke={`url(#${uid}-leg)`} strokeWidth={compact ? 1.6 : 2} strokeLinejoin="miter" />
           {/* lock lips */}
           {locks.map((l) => (
@@ -636,13 +637,13 @@ export function StaircaseLoupe({ model, domain, compact = false, inset = false, 
         {/* Waterford magnifier */}
         {inset && (
           <g className={s.fade} style={{ ["--d" as string]: "2.4s" }}>
-            <rect x={ins.x} y={ins.y} width={ins.w} height={ins.h} rx={12} fill="rgb(7 16 29 / 0.9)" stroke="rgb(255 255 255 / 0.14)" />
+            <rect className={s.inset} x={ins.x} y={ins.y} width={ins.w} height={ins.h} rx={12} fill="rgb(7 16 29 / 0.9)" stroke={tint(0.14)} />
             <text x={ins.x + 16} y={ins.y + 20} fontSize={9.5} letterSpacing="0.14em" className="font-mono" fill={SIG.brass}>WATERFORD FLIGHT</text>
             <text x={ins.x + 16} y={ins.y + 40} fontSize={15} className="font-display" fill={INK.ink}>
               {fmt(flight.reduce((a, l) => a + l.liftFt, 0))} ft in {fmt(flight[flight.length - 1].canalMi! - flight[0].canalMi!, 1)} miles
             </text>
-            <path d={flightPts.map((p, i) => `${i ? "L" : "M"}${ix(p[0])},${iy(p[1])}`).join("")} fill="none" stroke="#ffb547" strokeWidth={1.75} />
-            <path d={`${flightPts.map((p, i) => `${i ? "L" : "M"}${ix(p[0])},${iy(p[1])}`).join("")}L${ix(flightPts[flightPts.length - 1][0])},${iy(0)}L${ix(flightPts[0][0])},${iy(0)}Z`} fill="#ffb547" fillOpacity={0.1} />
+            <path d={flightPts.map((p, i) => `${i ? "L" : "M"}${ix(p[0])},${iy(p[1])}`).join("")} fill="none" stroke={CANAL} strokeWidth={1.75} />
+            <path d={`${flightPts.map((p, i) => `${i ? "L" : "M"}${ix(p[0])},${iy(p[1])}`).join("")}L${ix(flightPts[flightPts.length - 1][0])},${iy(0)}L${ix(flightPts[0][0])},${iy(0)}Z`} className={s.insetPool} fill={CANAL} fillOpacity={0.1} />
             {flight.map((l) => (
               <g key={l.id}>
                 <text x={ix(l.canalMi!) + 3} y={iy(l.fromFt) - 4} fontSize={9} className="num" fill={hover?.id === l.id ? SIG.glow : INK.ink2}>{stripE(l.id)}</text>
@@ -669,7 +670,7 @@ export function StaircaseLoupe({ model, domain, compact = false, inset = false, 
           <g pointerEvents="none">
             <line x1={sx(hover.x)} x2={sx(hover.x)} y1={m.t - 12} y2={H - m.b} stroke={SIG.glow} strokeOpacity={0.35} />
             <line x1={sx(hover.x)} x2={sx(hover.x)} y1={sy(hover.fromFt)} y2={sy(hover.toFt)} stroke={SIG.glow} strokeWidth={3} strokeLinecap="round" />
-            <circle cx={sx(hover.x)} cy={sy(hover.fromFt)} r={4} fill="#03060c" stroke={SIG.glow} strokeWidth={1.5} />
+            <circle cx={sx(hover.x)} cy={sy(hover.fromFt)} r={4} fill={KNOCK} stroke={SIG.glow} strokeWidth={1.5} />
           </g>
         )}
 

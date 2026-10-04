@@ -34,7 +34,7 @@ export default function VoyageInNumbers() {
   const rows: [number, number][] = [0, 1, 2].map(i => [loupe[0] + i * third, loupe[0] + (i + 1) * third]);
 
   return (
-    <section id="numbers" aria-labelledby="numbers-title" className="relative py-24 md:py-36">
+    <section id="numbers" aria-labelledby="numbers-title" className={`${s.root} relative py-24 md:py-36`}>
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <div id="numbers-title">
           <SectionHeader

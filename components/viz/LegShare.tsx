@@ -54,7 +54,7 @@ export function LegShare({ legs, totalNm, totalDays, compact = false }: { legs: 
             const mid = xa + bw + (xb - xa - bw) / 2;
             return (
               <g key={l.legId} style={{ opacity: dim ? 0.35 : 1, transition: "opacity .25s" }}>
-                <path className={s.fade} style={{ ["--d" as string]: `${0.4 + i * 0.06}s` }}
+                <path className={`${s.fade} ${s.ribbon}`} style={{ ["--d" as string]: `${0.4 + i * 0.06}s`, ["--c" as string]: l.color }}
                   d={`M${xa + bw},${a.x0} C${mid},${a.x0} ${mid},${b.x0} ${xb},${b.x0} L${xb},${b.x1} C${mid},${b.x1} ${mid},${a.x1} ${xa + bw},${a.x1} Z`}
                   fill={`url(#rib-h-${l.legId})`} fillOpacity={on ? 1 : 0.6} />
                 <rect className={s.growY} style={{ ["--d" as string]: `${i * 0.05}s` }} x={xa} y={a.x0} width={bw} height={a.x1 - a.x0} rx={2} fill={l.color} />
@@ -117,7 +117,7 @@ export function LegShare({ legs, totalNm, totalDays, compact = false }: { legs: 
           const wa = a.x1 - a.x0, wb = b.x1 - b.x0;
           return (
             <g key={l.legId} style={{ opacity: dim ? 0.32 : 1, transition: "opacity .25s" }}>
-              <path className={s.fade} style={{ ["--d" as string]: `${0.5 + i * 0.07}s` }}
+              <path className={`${s.fade} ${s.ribbon}`} style={{ ["--d" as string]: `${0.5 + i * 0.07}s`, ["--c" as string]: l.color }}
                 d={`M${a.x0},${yA + bh} C${a.x0},${ym} ${b.x0},${ym} ${b.x0},${yB} L${b.x1},${yB} C${b.x1},${ym} ${a.x1},${ym} ${a.x1},${yA + bh} Z`}
                 fill={`url(#rib-v-${l.legId})`} fillOpacity={on ? 1 : 0.6} />
               <rect className={s.growX} style={{ ["--d" as string]: `${i * 0.06}s` }} x={a.x0} y={yA} width={wa} height={bh} rx={3} fill={l.color} />
@@ -148,9 +148,9 @@ function RibbonDefs({ legs, dir }: { legs: VizLeg[]; dir: "h" | "v" }) {
     <defs>
       {legs.map((l) => (
         <linearGradient key={l.legId} id={`rib-${dir}-${l.legId}`} x1={0} y1={0} x2={dir === "h" ? 1 : 0} y2={dir === "v" ? 1 : 0}>
-          <stop offset={0} stopColor={l.color} stopOpacity={0.55} />
-          <stop offset={0.5} stopColor={l.color} stopOpacity={0.16} />
-          <stop offset={1} stopColor={l.color} stopOpacity={0.55} />
+          <stop className={s.ribEnd} offset={0} stopColor={l.color} stopOpacity={0.55} />
+          <stop className={s.ribMid} offset={0.5} stopColor={l.color} stopOpacity={0.16} />
+          <stop className={s.ribEnd} offset={1} stopColor={l.color} stopOpacity={0.55} />
         </linearGradient>
       ))}
     </defs>

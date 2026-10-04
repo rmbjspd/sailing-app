@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import type { CriticalOp, VizDay } from "@/lib/data/vizModel";
-import { GRID, INK, SIG } from "./parts";
+import { GRID, HILITE, INK, KNOCK, SIG } from "./parts";
 import { useDrawIn } from "./useDrawIn";
 import { useViz } from "./VizContext";
 import s from "./viz.module.css";
@@ -46,7 +46,7 @@ export function OpsTimeline({ ops, days }: { ops: CriticalOp[]; days: VizDay[] }
             : op.dayEnd > op.dayStart ? `${d0.dateShort} – ${d1.dateShort}` : d0.dateLabel;
           return (
             <li key={op.id}
-              className={`${s.fade} relative rounded-2xl border p-5 transition-colors duration-300 ${on ? "border-[var(--line-strong)] bg-[rgb(255_255_255/0.05)]" : "border-line bg-[rgb(255_255_255/0.02)]"}`}
+              className={`${s.fade} relative rounded-2xl border p-5 transition-colors duration-300 ${on ? "border-[var(--line-strong)] bg-tint/[0.05]" : "border-line bg-tint/[0.02]"}`}
               style={{ ["--d" as string]: `${0.3 + i * 0.07}s` }}
               tabIndex={0}
               onPointerEnter={() => enter(op)} onPointerLeave={leave} onFocus={() => enter(op)} onBlur={leave}>
@@ -99,7 +99,7 @@ function Timeline({
         const on = activeDay === d.day;
         return (
           <g key={d.day} aria-hidden>
-            {on && <rect x={cx(d.day) - slot / 2} y={8} width={slot} height={yRibbon + 4} fill="rgb(94 242 214 / 0.07)" rx={3} />}
+            {on && <rect x={cx(d.day) - slot / 2} y={8} width={slot} height={yRibbon + 4} fill={HILITE} rx={3} />}
             <line x1={cx(d.day) - slot / 2} x2={cx(d.day) - slot / 2} y1={laneY[1] - 22} y2={yRibbon - 4} stroke={GRID} />
             <rect className={s.growX} style={{ ["--d" as string]: `${d.day * 0.012}s` }} x={cx(d.day) - slot / 2 + 0.75} y={yRibbon} width={slot - 1.5} height={compact ? 5 : 6} rx={1.5}
               fill={d.color} fillOpacity={d.nm > 0 ? 0.9 : 0.35} />
@@ -135,20 +135,20 @@ function Timeline({
             ) : (
               <>
                 <line x1={x0} x2={x0} y1={y + 6} y2={yRibbon - 2} stroke={c} strokeOpacity={0.5} />
-                <path d={`M${x0},${y - 6} L${x0 + 6},${y} L${x0},${y + 6} L${x0 - 6},${y} Z`} fill={on ? c : "#03060c"} stroke={c} strokeWidth={1.25} />
+                <path d={`M${x0},${y - 6} L${x0 + 6},${y} L${x0},${y + 6} L${x0 - 6},${y} Z`} fill={on ? c : KNOCK} stroke={c} strokeWidth={1.25} />
               </>
             )}
             {op.dayAlt && (
               <>
                 <path d={`M${x0 + 8},${y} L${cx(op.dayAlt) - 8},${y}`} stroke={c} strokeOpacity={0.4} strokeDasharray="2 3" />
                 <line x1={cx(op.dayAlt)} x2={cx(op.dayAlt)} y1={y + 6} y2={yRibbon - 2} stroke={c} strokeOpacity={0.5} />
-                <path d={`M${cx(op.dayAlt)},${y - 6} L${cx(op.dayAlt) + 6},${y} L${cx(op.dayAlt)},${y + 6} L${cx(op.dayAlt) - 6},${y} Z`} fill={on ? c : "#03060c"} stroke={c} strokeWidth={1.25} />
+                <path d={`M${cx(op.dayAlt)},${y - 6} L${cx(op.dayAlt) + 6},${y} L${cx(op.dayAlt)},${y + 6} L${cx(op.dayAlt) - 6},${y} Z`} fill={on ? c : KNOCK} stroke={c} strokeWidth={1.25} />
               </>
             )}
             {/* badge + label */}
             {compact ? (
               <g>
-                <circle cx={range ? (x0 + x1) / 2 : x0} cy={y - (range ? 0 : 16)} r={7} fill="#03060c" stroke={c} />
+                <circle cx={range ? (x0 + x1) / 2 : x0} cy={y - (range ? 0 : 16)} r={7} fill={KNOCK} stroke={c} />
                 <text x={range ? (x0 + x1) / 2 : x0} y={y - (range ? 0 : 16) + 3.2} textAnchor="middle" fontSize={9} className="num" fill={c}>{k}</text>
               </g>
             ) : (

@@ -2,7 +2,7 @@
 import { arc as d3arc } from "d3-shape";
 import { useId, useMemo } from "react";
 import type { ClockFacts, VizDay, VizLeg } from "@/lib/data/vizModel";
-import { GRID, INK, SIG, fmt } from "./parts";
+import { GRID, INK, SIG, fmt, tint } from "./parts";
 import { useDrawIn } from "./useDrawIn";
 import { useViz } from "./VizContext";
 import s from "./viz.module.css";
@@ -59,8 +59,8 @@ export function VoyageClock({ days, legs, compact = false }: { days: VizDay[]; l
           </g>
         ))}
         <text x={C} y={C - rMax - 4} textAnchor="middle" fontSize={compact ? 13 : 9.5} className="num" fill={INK.ink3} aria-hidden>{Math.round(maxNm)} nm</text>
-        <circle cx={C} cy={C} r={r0 - 2} fill="none" stroke="rgb(255 255 255 / 0.1)" />
-        <circle cx={C} cy={C} r={rCore} fill="none" stroke="rgb(255 255 255 / 0.06)" />
+        <circle cx={C} cy={C} r={r0 - 2} fill="none" stroke={tint(0.1)} />
+        <circle cx={C} cy={C} r={rCore} fill="none" stroke={tint(0.06)} />
 
         {/* start / finish notch */}
         <g aria-hidden>
@@ -98,7 +98,7 @@ export function VoyageClock({ days, legs, compact = false }: { days: VizDay[]; l
                 {d.nm > 0 ? (
                   <path className={s.grow} style={{ ["--ox" as string]: `${C}px`, ["--oy" as string]: `${C}px`, ["--sx" as string]: "0.6", ["--sy" as string]: "0.6", ["--d" as string]: `${i * 0.03}s` }}
                     d={arc({ a0: a - half, a1: a + half, r0, r1: len(d.nm) })!} transform={`translate(${C},${C})`}
-                    fill={d.color} fillOpacity={on ? 1 : 0.88} stroke={on ? "#fff" : "none"} strokeWidth={1} />
+                    fill={d.color} fillOpacity={on ? 1 : 0.88} stroke={on ? "var(--vz-spoke-on)" : "none"} strokeWidth={1} />
                 ) : (
                   <circle cx={pt(a, r0 + 8)[0]} cy={pt(a, r0 + 8)[1]} r={4} fill="none" stroke={d.color} strokeWidth={1.25} />
                 )}
@@ -190,7 +190,7 @@ export function ClockReadout({ days, facts, nmPerMi }: { days: VizDay[]; facts: 
       <ul className="grid gap-px overflow-hidden rounded-2xl border border-line">
         {factRows.map((f) => (
           <li key={`${f.k}-${f.day}`}>
-            <button type="button" className="flex min-h-11 w-full items-baseline gap-3 bg-[rgb(255_255_255/0.02)] px-4 py-2.5 text-left transition-colors hover:bg-[rgb(255_255_255/0.05)] focus-visible:bg-[rgb(255_255_255/0.05)]"
+            <button type="button" className="flex min-h-11 w-full items-baseline gap-3 bg-tint/[0.02] px-4 py-2.5 text-left transition-colors hover:bg-tint/[0.05] focus-visible:bg-tint/[0.05]"
               onPointerEnter={() => setActiveDay(f.day)} onPointerLeave={() => setActiveDay(null)}
               onFocus={() => setActiveDay(f.day)} onBlur={() => setActiveDay(null)}
               onClick={() => setActiveDay(activeDay === f.day ? null : f.day)}>

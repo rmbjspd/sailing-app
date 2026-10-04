@@ -7,6 +7,7 @@ import type { JournalEntry } from "@/lib/types";
 import {
   VOYAGE_DAYS, formatEntryDate, isoForDay, itineraryDay, placeShort, routeLabel, todayIso, wordCount,
 } from "./logFormat";
+import css from "./journal.module.css";
 
 type Draft = Omit<JournalEntry, "id" | "createdAt">;
 
@@ -91,7 +92,7 @@ export function Composer({
   // Composer only ever mounts after a click, so reading navigator here is safe.
   const mod = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform) ? "⌘" : "Ctrl";
   const fieldCls =
-    "w-full min-h-11 rounded-xl border border-line-strong bg-white/[0.03] px-3.5 text-[15px] text-ink placeholder:text-ink-4 transition-colors hover:border-white/25 focus:border-glow/60 focus:bg-white/[0.05] focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-glow/25";
+    `${css.field} w-full min-h-11 rounded-xl border border-line-strong px-3.5 text-[15px] text-ink placeholder:text-ink-4 transition-colors focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-glow/25`;
 
   return (
     <motion.form
@@ -109,7 +110,7 @@ export function Composer({
 
       <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-4 sm:px-8">
         <p className="eyebrow flex items-center gap-2.5">
-          <span className="size-1.5 rounded-full bg-glow shadow-[0_0_10px_var(--glow)]" />
+          <span className={`${css.dot} size-1.5 rounded-full bg-glow`} />
           {mode === "new" ? "New entry" : "Editing entry"}
         </p>
         <p className="hidden items-center gap-3 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-4 sm:flex">
@@ -150,7 +151,7 @@ export function Composer({
               type="date"
               value={date}
               onChange={e => setDate(e.target.value)}
-              className={`${fieldCls} num [color-scheme:dark]`}
+              className={`${fieldCls} num`}
               style={noOutline}
             />
           </div>
@@ -221,16 +222,10 @@ export function Composer({
             onChange={e => setBody(e.target.value)}
             placeholder={"Wind, weather, sea state. Who came aboard, what slid past the rail, how the light fell on the water…"}
             rows={10}
-            className="peer font-display block w-full resize-none overflow-hidden border-0 bg-transparent pl-5 pr-1 text-[18px] font-light leading-[2rem] text-ink placeholder:italic placeholder:text-ink-4 focus:outline-none focus-visible:outline-none sm:pl-7"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(to bottom, transparent 0, transparent calc(2rem - 1px), rgb(255 255 255 / 0.06) calc(2rem - 1px), rgb(255 255 255 / 0.06) 2rem)",
-              backgroundAttachment: "local",
-              outline: "none",
-              backgroundPositionY: "-0.3rem",
-            }}
+            className={`${css.ruled} font-display block w-full resize-none overflow-hidden border-0 bg-transparent pl-5 pr-1 text-[18px] font-light leading-[2rem] text-ink placeholder:italic placeholder:text-ink-4 focus:outline-none focus-visible:outline-none sm:pl-7`}
+            style={noOutline}
           />
-          <span aria-hidden className="pointer-events-none absolute bottom-0 left-0 top-0 w-px bg-brass/25 transition-[background-color,box-shadow] duration-300 peer-focus:bg-glow peer-focus:shadow-[0_0_10px_var(--glow)] sm:left-1" />
+          <span aria-hidden className={`${css.marginRule} pointer-events-none absolute bottom-0 left-0 top-0 w-px transition-[background-color,box-shadow] duration-300 sm:left-1`} />
         </div>
       </div>
 
@@ -246,14 +241,14 @@ export function Composer({
           <button
             type="button"
             onClick={onCancel}
-            className="min-h-11 rounded-full px-5 text-sm font-medium text-ink-2 transition-colors hover:bg-white/[0.06] hover:text-ink"
+            className="min-h-11 rounded-full px-5 text-sm font-medium text-ink-2 transition-colors hover:bg-tint/[0.06] hover:text-ink"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={!canSave}
-            className="inline-flex min-h-11 items-center gap-2 rounded-full bg-glow px-5 text-sm font-semibold text-abyss shadow-[0_0_24px_-6px_var(--glow)] transition-[filter,opacity,box-shadow] hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-35 disabled:shadow-none"
+            className={`${css.ctaSm} inline-flex min-h-11 items-center gap-2 rounded-full bg-glow px-5 text-sm font-semibold text-abyss transition-[filter,opacity,box-shadow] hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-35`}
           >
             <Check className="size-4" strokeWidth={2.25} />
             {mode === "new" ? "Save entry" : "Save changes"}
@@ -270,7 +265,7 @@ const noOutline: React.CSSProperties = { outline: "none" };
 
 function Kbd({ children }: { children: React.ReactNode }) {
   return (
-    <kbd className="mr-1 inline-grid min-w-[18px] place-items-center rounded border border-line-strong bg-white/[0.03] px-1 py-px align-middle font-mono text-[10px] normal-case tracking-normal text-ink-3">
+    <kbd className="mr-1 inline-grid min-w-[18px] place-items-center rounded border border-line-strong bg-tint/[0.04] px-1 py-px align-middle font-mono text-[10px] normal-case tracking-normal text-ink-3">
       {children}
     </kbd>
   );
