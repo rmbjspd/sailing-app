@@ -74,7 +74,26 @@ export default function ItineraryPage() {
       >
         {/* chapter index: the voyage as a spectrum, legs proportional to days */}
         <nav aria-label="Chapters" className="mt-14 md:mt-20">
-          <ol className="flex gap-[3px] overflow-hidden">
+          {/* phones: proportional slivers are too thin to tap, so use a chip grid */}
+          <ol className="grid grid-cols-4 gap-2 md:hidden">
+            {legs.map(l => {
+              const s = legStyle(l.legId);
+              return (
+                <li key={l.legId}>
+                  <a
+                    href={`#leg-${l.legId}`}
+                    className="flex min-h-11 items-center gap-1.5 rounded-xl border px-2.5 text-[12px]"
+                    style={{ borderColor: s.border, background: s.bg, color: s.color }}
+                    aria-label={`Chapter ${s.numeral}: ${s.label}, ${l.dates}`}
+                  >
+                    <span className="num opacity-80">{s.numeral}</span>
+                    <span className="truncate text-ink-2">{s.short}</span>
+                  </a>
+                </li>
+              );
+            })}
+          </ol>
+          <ol className="hidden gap-[3px] overflow-hidden md:flex">
             {legs.map(l => {
               const s = legStyle(l.legId);
               const n = l.dayEnd - l.dayStart + 1;
@@ -95,7 +114,6 @@ export default function ItineraryPage() {
                       <span className="mt-1 block truncate text-[12.5px] text-ink-2 transition-colors group-hover:text-ink">{s.short}</span>
                       <span className="num mt-0.5 block truncate text-[10.5px] text-ink-4">{l.dates}</span>
                     </span>
-                    <span aria-hidden className="num mt-2 block text-center text-[10px] text-ink-3 md:hidden">{s.numeral}</span>
                   </a>
                 </li>
               );

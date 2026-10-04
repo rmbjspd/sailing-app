@@ -10,10 +10,12 @@ const px = (lng: number, lat: number) =>
   [((lng - BBOX.lngMin) / (BBOX.lngMax - BBOX.lngMin)) * W, ((BBOX.latMax - lat) / (BBOX.latMax - BBOX.latMin)) * H] as const;
 
 export default function StaticChart({ className }: { className?: string }) {
+  // Positioning comes from the caller's className (e.g. "absolute inset-0");
+  // never force position here or the box collapses to zero height.
   return (
-    <div className={className} style={{ background: "#03060c", position: "relative", overflow: "hidden" }}>
+    <div className={`overflow-hidden ${className ?? "relative h-full w-full"}`} style={{ background: "#03060c" }}>
       <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full" role="img" aria-label="Chart of the voyage from Chicago to Old Saybrook">
-        <image href="/geo/chart-dark.webp" x={0} y={0} width={W} height={H} />
+        <image href="/geo/chart-dark-sm.webp" x={0} y={0} width={W} height={H} />
         {routeSegments.map((s) => (
           <polyline
             key={s.leg}

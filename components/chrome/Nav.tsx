@@ -25,10 +25,12 @@ export default function Nav() {
   return (
     <>
       <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-4 px-4 pt-4 md:px-6">
+        {/* scrim: content scrolling under the floating chrome fades out instead of colliding with it */}
+        <span aria-hidden className="absolute inset-x-0 top-0 -z-10 h-24 bg-gradient-to-b from-abyss via-abyss/75 to-transparent" />
         <Link
           href="/"
           aria-label="S/V Sabbatical — home"
-          className="pointer-events-auto glass flex items-center gap-2.5 rounded-full py-1.5 pl-1.5 pr-4 transition-colors hover:bg-white/[0.06]"
+          className="pointer-events-auto glass-strong flex items-center gap-2.5 rounded-full py-1.5 pl-1.5 pr-4 transition-colors hover:bg-white/[0.06]"
         >
           <span className="grid size-8 place-items-center rounded-full bg-white/[0.04]">
             <Mark className="size-6" />
@@ -39,7 +41,7 @@ export default function Nav() {
           </span>
         </Link>
 
-        <nav aria-label="Primary" className="pointer-events-auto glass hidden items-center gap-0.5 rounded-full p-1 md:flex">
+        <nav aria-label="Primary" className="pointer-events-auto glass-strong hidden items-center gap-0.5 rounded-full p-1 md:flex">
           {links.map(({ href, label }) => {
             const active = isActive(pathname, href);
             return (
@@ -67,7 +69,8 @@ export default function Nav() {
         <span className="hidden w-[148px] md:block" aria-hidden />
       </header>
 
-      {/* Mobile dock */}
+      {/* Mobile dock (+ a scrim so content fades before it reaches the dock) */}
+      <span aria-hidden className="pointer-events-none fixed inset-x-0 bottom-0 z-40 h-28 bg-gradient-to-t from-abyss via-abyss/70 to-transparent md:hidden" />
       <nav
         aria-label="Primary"
         className="glass-strong fixed inset-x-3 bottom-3 z-50 flex items-stretch justify-between rounded-2xl p-1 md:hidden"

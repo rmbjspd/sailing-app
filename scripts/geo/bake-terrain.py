@@ -144,6 +144,16 @@ out[..., 2] = water.astype(np.uint8)
 out[..., 3] = 255
 os.makedirs(os.path.join(ROOT, "public/geo"), exist_ok=True)
 Image.fromarray(out, "RGBA").save(os.path.join(ROOT, "public/geo/terrain.png"), optimize=True)
+
+# Half-resolution variant for phones / low-power devices (≈¼ the bytes).
+SW, SH = OUT_W // 2, OUT_H // 2
+e_sm = np.asarray(Image.fromarray(elev.astype(np.float32), "F").resize((SW, SH), Image.BILINEAR))
+w_sm = np.asarray(Image.fromarray(water.astype(np.float32), "F").resize((SW, SH), Image.BILINEAR))
+v_sm = np.clip(np.round((e_sm + 1000) * 4), 0, 65535).astype(np.uint32)
+o_sm = np.zeros((SH, SW, 4), dtype=np.uint8)
+o_sm[..., 0] = (v_sm >> 8) & 255; o_sm[..., 1] = v_sm & 255
+o_sm[..., 2] = np.clip(w_sm, 0, 255).astype(np.uint8); o_sm[..., 3] = 255
+Image.fromarray(o_sm, "RGBA").save(os.path.join(ROOT, "public/geo/terrain-sm.png"), optimize=True)
 print(f"wrote public/geo/terrain.png {OUT_W}x{OUT_H}  elev range {elev.min():.0f}..{elev.max():.0f} m", file=sys.stderr)
 
 # Debug preview (hillshade-ish) to scratch for eyeballing

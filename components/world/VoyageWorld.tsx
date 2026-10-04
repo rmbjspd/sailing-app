@@ -104,6 +104,7 @@ export default function VoyageWorld(props: VoyageWorldProps) {
   const [lowPower, setLowPower] = useState(false);
   const [webgl, setWebgl] = useState<boolean | null>(null);
   const [visible, setVisible] = useState(true);
+  const [ready, setReady] = useState(false);
   const host = useRef<HTMLDivElement>(null);
   const { onReady } = props;
 
@@ -124,7 +125,7 @@ export default function VoyageWorld(props: VoyageWorldProps) {
     const small = window.innerWidth < 768 || (navigator.hardwareConcurrency ?? 8) <= 4;
     setLowPower(small);
     let cancelled = false;
-    loadTerrain()
+    loadTerrain(small)
       .then((terrain) => {
         if (cancelled) return;
         const route = buildRoute(terrain);
@@ -141,8 +142,13 @@ export default function VoyageWorld(props: VoyageWorldProps) {
 
   return (
     <div ref={host} className={props.className} style={{ background: BG }}>
+      {/* Poster frame: the baked 2D chart shows instantly while the terrain
+          streams and decodes; the 3D canvas fades in over it. */}
+      <StaticChart className={`absolute inset-0 transition-opacity duration-[2500ms] ${ready ? "opacity-0" : "opacity-60"}`} />
       {data && (
         <Canvas
+          onCreated={() => requestAnimationFrame(() => setReady(true))}
+          style={{ position: "absolute", inset: 0, opacity: ready ? 1 : 0, transition: "opacity 1.2s ease" }}
           frameloop={visible ? "always" : "never"}
           dpr={lowPower ? [1, 1.5] : [1, 2]}
           gl={{ antialias: false, powerPreference: "high-performance", toneMapping: THREE.NoToneMapping, stencil: false }}

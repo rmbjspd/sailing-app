@@ -25,11 +25,13 @@ export default function ChartExplorer() {
   const [day, setDay] = useState(LAST_DAY);
   const [playing, setPlaying] = useState(false);
   const [listOpen, setListOpen] = useState(true);
+  const [sheet, setSheet] = useState(false);
   const raf = useRef(0);
   const port = useMemo(() => PORTS.find((p) => p.id === selected) ?? null, [selected]);
 
   const select = useCallback((p: Waypoint | null) => {
     setPlaying(false);
+    setSheet(false);
     setSelected(p?.id ?? null);
     if (p) setDay(p.day);
   }, []);
@@ -105,39 +107,7 @@ export default function ChartExplorer() {
                 <X className="size-4" />
               </button>
             </div>
-            <ol className="flex-1 overflow-y-auto overscroll-contain p-2" data-lenis-prevent>
-              {LEG_ORDER.map((legId) => {
-                const s = legStyle(legId);
-                const ports = PORTS.filter((p) => p.leg === legId);
-                if (!ports.length) return null;
-                return (
-                  <li key={legId} className="mb-1">
-                    <p className="eyebrow sticky top-0 z-10 flex items-center gap-2 bg-[rgb(10_20_35/0.92)] px-3 py-2 backdrop-blur" style={{ color: s.color }}>
-                      <span className="num">{s.numeral}</span> {s.label}
-                    </p>
-                    <ul>
-                      {ports.map((p) => {
-                        const on = p.id === selected;
-                        return (
-                          <li key={p.id}>
-                            <button
-                              onClick={() => select(on ? null : p)}
-                              aria-pressed={on}
-                              className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors ${on ? "bg-white/[0.09]" : "hover:bg-white/[0.04]"}`}
-                            >
-                              <span className="num w-7 shrink-0 text-[11px] text-ink-3">{p.day === 0 ? "—" : String(p.day).padStart(2, "0")}</span>
-                              <span className="size-2 shrink-0 rounded-full transition-transform group-hover:scale-125" style={{ background: s.color, boxShadow: on ? `0 0 12px ${s.color}` : undefined }} />
-                              <span className={`truncate text-sm ${on ? "text-ink" : "text-ink-2"}`}>{p.name}</span>
-                              <span className="ml-auto text-[10px] text-ink-4">{p.state}</span>
-                            </button>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </li>
-                );
-              })}
-            </ol>
+            <PortList selected={selected} onSelect={select} />
           </motion.aside>
         )}
       </AnimatePresence>
@@ -146,6 +116,27 @@ export default function ChartExplorer() {
           <Anchor className="size-4" /> Ports
         </button>
       )}
+
+      {/* Port directory — phones: bottom sheet above the scrubber */}
+      <AnimatePresence>
+        {sheet && (
+          <motion.div
+            key="sheet"
+            initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 24 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            role="dialog" aria-label="Ports of call"
+            className="glass-strong absolute inset-x-3 bottom-[14rem] top-20 z-20 flex flex-col overflow-hidden rounded-3xl md:hidden"
+          >
+            <div className="flex items-center justify-between border-b border-line px-5 py-3">
+              <p className="font-display text-xl font-light">{PORTS.length} ports of call</p>
+              <button onClick={() => setSheet(false)} className="grid size-11 place-items-center rounded-full text-ink-3 hover:bg-white/5 hover:text-ink" aria-label="Close port list">
+                <X className="size-4" />
+              </button>
+            </div>
+            <PortList selected={selected} onSelect={select} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Port detail */}
       <AnimatePresence mode="wait">
@@ -159,7 +150,7 @@ export default function ChartExplorer() {
             <button
               onClick={togglePlay}
               className="grid size-11 shrink-0 place-items-center rounded-full bg-ink text-abyss transition-transform hover:scale-105 active:scale-95"
-              aria-label={playing ? "Pause voyage replay" : "Replay the voyage"}
+              aria-label={playing ? "Pause voyage replay" : day >= LAST_DAY - 0.01 ? "Replay the voyage from Chicago" : `Sail on from Day ${Math.ceil(day)}`}
             >
               {playing ? <Pause className="size-4" fill="currentColor" /> : <Play className="ml-0.5 size-4" fill="currentColor" />}
             </button>
@@ -183,9 +174,55 @@ export default function ChartExplorer() {
             </button>
           </div>
         </div>
+        <div className="mt-2 flex gap-2 md:hidden">
+          <button onClick={() => setSheet((v) => !v)} aria-expanded={sheet} className="glass-strong flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl text-sm text-ink-2">
+            <Anchor className="size-4" /> Ports
+          </button>
+          <button onClick={() => select(null)} className="glass-strong flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl text-sm text-ink-2">
+            <Maximize2 className="size-4" /> Whole route
+          </button>
+        </div>
         <p className="mt-2 hidden text-center text-[11px] text-ink-4 md:block">Drag to pan · scroll to zoom · right-drag to tilt · ← → to step through ports</p>
       </div>
     </div>
+  );
+}
+
+function PortList({ selected, onSelect }: { selected: string | null; onSelect: (p: Waypoint | null) => void }) {
+  return (
+    <ol className="flex-1 overflow-y-auto overscroll-contain p-2" data-lenis-prevent>
+      {LEG_ORDER.map((legId) => {
+        const s = legStyle(legId);
+        const ports = PORTS.filter((p) => p.leg === legId);
+        if (!ports.length) return null;
+        return (
+          <li key={legId} className="mb-1">
+            <p className="eyebrow sticky top-0 z-10 flex items-center gap-2 bg-[rgb(10_20_35/0.92)] px-3 py-2 backdrop-blur" style={{ color: s.color }}>
+              <span className="num">{s.numeral}</span> {s.label}
+            </p>
+            <ul>
+              {ports.map((p) => {
+                const on = p.id === selected;
+                return (
+                  <li key={p.id}>
+                    <button
+                      onClick={() => onSelect(on ? null : p)}
+                      aria-pressed={on}
+                      className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors ${on ? "bg-white/[0.09]" : "hover:bg-white/[0.04]"}`}
+                    >
+                      <span className="num w-7 shrink-0 text-[11px] text-ink-3">{p.day === 0 ? "—" : String(p.day).padStart(2, "0")}</span>
+                      <span className="size-2 shrink-0 rounded-full transition-transform group-hover:scale-125" style={{ background: s.color, boxShadow: on ? `0 0 12px ${s.color}` : undefined }} />
+                      <span className={`truncate text-sm ${on ? "text-ink" : "text-ink-2"}`}>{p.name}</span>
+                      <span className="ml-auto text-[10px] text-ink-4">{p.state}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
@@ -222,7 +259,7 @@ function PortCard({ port, onClose, onStep }: { port: Waypoint; onClose: () => vo
       exit={{ opacity: 0, y: 10, filter: "blur(4px)", transition: { duration: 0.2 } }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       aria-label={`${port.name} details`}
-      className="glass-strong absolute inset-x-3 top-20 max-h-[calc(100dvh-16rem)] overflow-y-auto rounded-3xl md:inset-x-auto md:right-6 md:top-24 md:w-[380px]"
+      className="glass-strong absolute inset-x-3 top-20 max-h-[calc(100dvh-19rem)] md:max-h-[calc(100dvh-16rem)] overflow-y-auto rounded-3xl md:inset-x-auto md:right-6 md:top-24 md:w-[380px]"
       data-lenis-prevent
     >
       <span className="absolute inset-x-0 top-0 h-[2px]" style={{ background: `linear-gradient(90deg, ${s.color}, transparent)` }} />

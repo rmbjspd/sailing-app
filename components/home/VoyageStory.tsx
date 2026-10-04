@@ -215,7 +215,7 @@ function Hero({ data, opacity, y }: { data: StoryData; opacity: MotionValue<numb
         >
           {stats.map((s) => (
             <div key={s.l}>
-              <dt className="eyebrow !text-[10px]">{s.l}</dt>
+              <dt className="eyebrow whitespace-nowrap !text-[9px] !tracking-[0.16em] sm:!text-[10px] sm:!tracking-[0.22em]">{s.l}</dt>
               <dd className="num mt-1 text-2xl text-ink md:text-3xl">{s.v}</dd>
             </div>
           ))}

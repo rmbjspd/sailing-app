@@ -58,7 +58,7 @@ export function EntryCard({
               <span className="eyebrow">Ashore</span>
             )}
           </div>
-          <div className="-mr-2 -mt-2 flex shrink-0 items-center opacity-100 transition-opacity sm:opacity-60 sm:group-hover/card:opacity-100 sm:group-focus-within/card:opacity-100">
+          <div className="-mr-2 -mt-2 flex shrink-0 items-center opacity-100 transition-opacity sm:opacity-80 sm:group-hover/card:opacity-100 sm:group-focus-within/card:opacity-100">
             <button
               type="button"
               onClick={onEdit}

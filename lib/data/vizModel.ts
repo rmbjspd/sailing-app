@@ -8,7 +8,7 @@ import { itinerary } from "./itinerary";
 import { legGroups, tripTotals } from "./stats";
 import { legStyle, LEG_ORDER } from "./legStyle";
 import { dateForDay } from "./voyage";
-import { TRACK_DEPTH_FT } from "./vizBathymetry";
+import { TRACK_FLOOR_FT } from "./vizBathymetry";
 import {
   LAKE_BASINS, LAKE_DATUM_FT, NM_PER_MI, placedLocks, lockLiftTotals, type PlacedLock,
 } from "./waterProfile";
@@ -123,14 +123,27 @@ export interface ProfileLock extends PlacedLock {
 
 export interface SurfacePoint { x: number; ft: number; legId: string }
 
+export interface FloorSample { x: number; ft: number; depthFt: number; day: number; legId: string }
+export interface SeabedRun { legId: string; day: number; pts: FloorSample[] }
+
+/** Ignore floor samples shallower than this under the chart's surface (shore pixels). */
+const MIN_KEEL_FT = 6;
+
 export interface WaterModel {
   days: VizDay[];
   legs: VizLeg[];
   locks: ProfileLock[];
   /** Water-surface polyline, eastbound; locks are vertical steps (duplicate x). */
   surface: SurfacePoint[];
-  /** Along-track depth samples (Long Island Sound), ft below sea level (negative). */
-  seabed: { x: number; ft: number }[];
+  /** Lake / sea floor under the keel (ETOPO 2022), contiguous runs split at no-data gaps. */
+  seabed: SeabedRun[];
+  /** Deepest water under the keel on the whole voyage. */
+  deepest: FloorSample;
+  /** Under-keel depth summary per open-water leg that has floor data. */
+  legDepth: { legId: string; label: string; color: string; meanFt: number; max: FloorSample; nm: number }[];
+  /** Track distance (nm) over lake floor that lies below sea level. */
+  belowSeaNm: number;
+  /** Published basin depths [EPA], kept as reference marks. */
   basins: { legId: string; name: string; x0: number; x1: number; surfaceFt: number; floorFt: number; maxDepthFt: number; meanDepthFt: number }[];
   totalNm: number;
   lift: ReturnType<typeof lockLiftTotals>;
@@ -178,14 +191,40 @@ export function waterModel(): WaterModel {
   push(sound.x0, 0, "hudson");
   push(total, 0, "sound-saybrook");
 
-  // Along-track depth for the tidal legs (baked from terrain.png).
-  const seabed: { x: number; ft: number }[] = [];
-  for (const [dayStr, samples] of Object.entries(TRACK_DEPTH_FT)) {
+  // Floor under the keel (baked from terrain.png / ETOPO 2022). A sample at or
+  // above the chart's own water surface (a shoreline pixel whose datum differs
+  // by a few feet) is treated as no data rather than drawn as dry land.
+  const seabed: SeabedRun[] = [];
+  const all: FloorSample[] = [];
+  for (const [dayStr, samples] of Object.entries(TRACK_FLOOR_FT)) {
     const d = byDay.get(Number(dayStr));
-    if (!d) continue;
-    for (const [t, depth] of samples) if (depth != null) seabed.push({ x: d.x0 + t * d.nm, ft: -depth });
+    if (!d || d.nm === 0) continue;
+    let run: SeabedRun | null = null;
+    for (const [t, floor] of samples) {
+      const x = d.x0 + t * d.nm;
+      const surf = surfaceAt(surface, x);
+      if (floor == null || floor > surf - MIN_KEEL_FT) { run = null; continue; }
+      const p: FloorSample = { x, ft: floor, depthFt: surf - floor, day: d.day, legId: d.legId };
+      all.push(p);
+      if (!run) { run = { legId: d.legId, day: d.day, pts: [] }; seabed.push(run); }
+      run.pts.push(p);
+    }
   }
-  seabed.sort((a, b) => a.x - b.x);
+  seabed.sort((a, b) => a.pts[0].x - b.pts[0].x);
+  const deepest = all.reduce((a, b) => (b.depthFt > a.depthFt ? b : a));
+  const step = (run: SeabedRun, i: number) => (i ? run.pts[i].x - run.pts[i - 1].x : 0);
+  const belowSeaNm = seabed.filter(r => !legStyle(r.legId).inland && r.legId !== "sound-saybrook")
+    .reduce((acc, r) => acc + r.pts.reduce((a, p, i) => a + (p.ft < 0 ? step(r, i) : 0), 0), 0);
+  const legDepth = legs.filter(l => !l.inland).flatMap((l) => {
+    const pts = all.filter(p => p.legId === l.legId);
+    if (!pts.length) return [];
+    return [{
+      legId: l.legId, label: l.label, color: l.color,
+      meanFt: pts.reduce((a, p) => a + p.depthFt, 0) / pts.length,
+      max: pts.reduce((a, b) => (b.depthFt > a.depthFt ? b : a)),
+      nm: l.nm,
+    }];
+  });
 
   const basins = LAKE_BASINS.map((b) => {
     const lg = legs.find(l => l.legId === b.legId)!;
@@ -203,7 +242,7 @@ export function waterModel(): WaterModel {
     x0: byDay.get(canal.dayStart)!.x0, x1: byDay.get(upDayN)!.x1,
   };
 
-  return { days, legs, locks, surface, seabed, basins, totalNm: total, lift: lockLiftTotals(placed), mast };
+  return { days, legs, locks, surface, seabed, deepest, legDepth, belowSeaNm, basins, totalNm: total, lift: lockLiftTotals(placed), mast };
 }
 
 function legIdForX(days: VizDay[], x: number): string {

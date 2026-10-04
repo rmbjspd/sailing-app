@@ -314,9 +314,9 @@ export function ProvisioningBoard() {
               exit={{ opacity: 0, y: 16, scale: 0.98 }}
               transition={{ type: "spring", stiffness: 380, damping: 30 }}
             >
-              <p className="min-w-0 flex-1 truncate text-sm text-ink-2">
+              <p className="min-w-0 flex-1 text-sm leading-snug text-ink-2">
                 <span className="text-ink">{undo.title}</span> reset
-                <span className="num text-ink-3"> · {undo.count} unchecked</span>
+                <span className="num block text-ink-3 sm:inline"><span className="hidden sm:inline"> · </span>{undo.count} unchecked</span>
               </p>
               <button
                 type="button"

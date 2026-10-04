@@ -145,7 +145,7 @@ export function Chapter({ chapter }: { chapter: ChapterModel }) {
         <p className="eyebrow flex flex-wrap items-center gap-x-3 gap-y-1" style={{ color: s.color }}>
           <span>Chapter {s.numeral}</span>
           <span aria-hidden className="h-px w-8 bg-current opacity-50" />
-          <span className="num !text-ink-3">Days {leg.dayStart}–{leg.dayEnd}</span>
+          <span className="num !text-ink-3">{leg.dayStart === leg.dayEnd ? `Day ${leg.dayStart}` : `Days ${leg.dayStart}–${leg.dayEnd}`}</span>
           <span className="num !text-ink-3">{formatVoyageDateRange(leg.dayStart, leg.dayEnd)}</span>
         </p>
 

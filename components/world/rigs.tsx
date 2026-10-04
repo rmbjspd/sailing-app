@@ -145,8 +145,8 @@ export function StoryRig({
 // Explore camera: pan/zoom/tilt like a chart plotter, with smooth fly-to when a
 // stop is selected. Constrained so you can't lose the map.
 const EXPLORE_HOME = {
-  pos: new THREE.Vector3(-0.35, 10.2, 8.3),
-  target: new THREE.Vector3(-0.75, 0, -0.35),
+  pos: new THREE.Vector3(-1.0, 11.2, 9.0),
+  target: new THREE.Vector3(-1.45, 0, -0.3),
 };
 
 export function ExploreRig({ route, focusStopId }: { route: RouteModel; focusStopId?: string | null }) {

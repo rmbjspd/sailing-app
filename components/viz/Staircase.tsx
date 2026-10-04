@@ -44,6 +44,17 @@ function lockClusters(locks: ProfileLock[], sx: Lin, minGap: number) {
   });
 }
 
+/** 0.24 → "a quarter", 0.5 → "half", 0.15 → "a seventh"… */
+function fractionWord(f: number) {
+  const n = Math.round(1 / f);
+  const words: Record<number, string> = { 1: "about the same as", 2: "half", 3: "a third", 4: "a quarter", 5: "a fifth", 6: "a sixth", 7: "a seventh", 8: "an eighth" };
+  return words[n] ?? `1/${n}`;
+}
+
+function legColor(model: WaterModel, legId: string) {
+  return model.legs.find(l => l.legId === legId)?.color ?? INK.ink2;
+}
+
 function legGradientStops(model: WaterModel) {
   const t = model.totalNm;
   return model.legs.flatMap((l) => [
@@ -93,24 +104,45 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
   const H = compact ? 262 : 340;
   const m = compact ? { l: 36, r: 10, t: 34, b: 44 } : { l: 58, r: 22, t: 44, b: 58 };
   const sx = scaleLinear().domain([0, model.totalNm]).range([m.l, W - m.r]);
-  const sy = scaleLinear().domain([-420, 640]).range([H - m.b, m.t]);
+  const yMin = compact ? -380 : -400;
+  const sy = scaleLinear().domain([yMin, 640]).range([H - m.b, m.t]);
   const y0 = sy(0);
   const ticks = compact ? [600, 300, 0, -300] : [600, 400, 200, 0, -200, -400];
   const stops = legGradientStops(model);
   const loupeX0 = model.locks[0].x - 8;
   const loupeX1 = model.mast.x1;
-  const mich = model.basins.find(b => b.legId === "lake-michigan")!;
-  const erie = model.basins.find(b => b.legId === "lake-erie")!;
-  const huron = model.basins.find(b => b.legId === "lake-huron")!;
-  const deepest = model.seabed.reduce((a, b) => (b.ft < a.ft ? b : a), model.seabed[0]);
-  const deepestDay = model.days.find(d => d.nm > 0 && deepest.x >= d.x0 && deepest.x <= d.x1);
   const surf0 = model.surface[0].ft;
+  const byDay = new Map(model.days.map(d => [d.day, d]));
+  const deepest = model.deepest;
+  const deepestDay = byDay.get(deepest.day)!;
+  const ld = (id: string) => model.legDepth.find(l => l.legId === id);
+  const mich = ld("lake-michigan"), huron = ld("lake-huron"), erie = ld("lake-erie"), sound = ld("sound-saybrook");
+  const michBasin = model.basins.find(b => b.legId === "lake-michigan")!;
+  const r1 = (n: number) => n.toFixed(1);
 
-  const lens = (b: WaterModel["basins"][number]) => {
-    const pad = (b.x1 - b.x0) * 0.06;
-    const a = sx(b.x0 + pad), z = sx(b.x1 - pad);
-    const ys = sy(b.surfaceFt), cy = sy(b.surfaceFt + (b.floorFt - b.surfaceFt) / 0.75);
-    return `M${a},${ys} C${a + (z - a) * 0.12},${cy} ${z - (z - a) * 0.12},${cy} ${z},${ys} Z`;
+  // Water column (surface → floor) and the ground beneath, per contiguous run.
+  const runPaths = model.seabed.filter(r => r.pts.length > 1).map((r) => {
+    const top = r.pts.map(p => `${r1(sx(p.x))},${r1(sy(surfaceFtAt(model.surface, p.x)))}`);
+    const bed = r.pts.map(p => `${r1(sx(p.x))},${r1(sy(p.ft))}`);
+    const first = r.pts[0], last = r.pts[r.pts.length - 1];
+    return {
+      key: `${r.day}-${first.x}`,
+      color: legColor(model, r.legId),
+      water: `M${top.join("L")}L${[...bed].reverse().join("L")}Z`,
+      floor: `M${bed.join("L")}`,
+      ground: `M${bed.join("L")}L${r1(sx(last.x))},${r1(sy(yMin))}L${r1(sx(first.x))},${r1(sy(yMin))}Z`,
+    };
+  });
+  const floorAt = (x: number) => {
+    for (const r of model.seabed) {
+      const a = r.pts[0].x, b = r.pts[r.pts.length - 1].x;
+      if (x < a || x > b) continue;
+      for (let i = 1; i < r.pts.length; i++) {
+        const p = r.pts[i - 1], q = r.pts[i];
+        if (x >= p.x && x <= q.x) return q.x === p.x ? q.ft : p.ft + (q.ft - p.ft) * ((x - p.x) / (q.x - p.x));
+      }
+    }
+    return null;
   };
 
   const onMove = (e: RPointerEvent<SVGRectElement>) => {
@@ -123,6 +155,7 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
   };
   const hoverDay = hoverX != null ? model.days.find(d => d.nm > 0 && hoverX >= d.x0 && hoverX <= d.x1) : undefined;
   const hoverFt = hoverX != null ? surfaceFtAt(model.surface, hoverX) : 0;
+  const hoverFloor = hoverX != null ? floorAt(hoverX) : null;
   const active = activeDay != null ? model.days.find(d => d.day === activeDay) : undefined;
 
   return (
@@ -131,7 +164,7 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
         aria-labelledby={`${uid}-t ${uid}-d`}>
         <title id={`${uid}-t`}>Water-surface elevation along the whole voyage, Chicago to Old Saybrook</title>
         <desc id={`${uid}-d`}>
-          {`The voyage begins on Lakes Michigan and Huron at ${surf0} ft above sea level, falls a few feet through the St. Clair and Detroit rivers to Lake Erie, then descends through ${model.lift.count} locks of the Erie Canal and the Troy lock to sea level on the Hudson. Lake Michigan is ${mich.maxDepthFt} ft deep at its deepest, putting its floor ${fmt(-mich.floorFt)} ft below sea level.`}
+          {`The voyage begins on Lakes Michigan and Huron at ${surf0} ft above sea level, falls a few feet through the St. Clair and Detroit rivers to Lake Erie, then descends through ${model.lift.count} locks of the Erie Canal and the Troy lock to sea level on the Hudson. Beneath the surface line, the lake and sea floor under the track: the deepest water is ${fmt(deepest.depthFt)} ft on Day ${deepest.day} in Lake Michigan, where the floor lies ${fmt(-deepest.ft)} ft below sea level${erie && mich ? `; Lake Erie averages ${fmt(erie.meanFt)} ft under the keel against Lake Michigan's ${fmt(mich.meanFt)} ft` : ""}.`}
         </desc>
         <defs>
           <linearGradient id={`${uid}-leg`} gradientUnits="userSpaceOnUse" x1={sx(0)} x2={sx(model.totalNm)} y1={0} y2={0}>
@@ -144,16 +177,23 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
           <mask id={`${uid}-m`} maskUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}>
             <rect x={0} y={sy(600)} width={W} height={y0 - sy(600)} fill={`url(#${uid}-fade)`} />
           </mask>
-          <linearGradient id={`${uid}-deep`} x1={0} x2={0} y1={0} y2={1}>
-            <stop offset={0} stopColor="#5aa9ff" stopOpacity={0.26} />
-            <stop offset={1} stopColor="#5aa9ff" stopOpacity={0.02} />
+          <linearGradient id={`${uid}-col`} gradientUnits="userSpaceOnUse" x1={0} x2={0} y1={sy(600)} y2={sy(yMin)}>
+            <stop offset={0} stopColor="#fff" stopOpacity={0.9} />
+            <stop offset={1} stopColor="#fff" stopOpacity={0.35} />
+          </linearGradient>
+          <mask id={`${uid}-colm`} maskUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}>
+            <rect x={0} y={0} width={W} height={H} fill={`url(#${uid}-col)`} />
+          </mask>
+          <pattern id={`${uid}-rock`} width={4} height={4} patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line x1={0} y1={0} x2={0} y2={4} stroke="#fff" strokeOpacity={0.07} strokeWidth={1} />
+          </pattern>
+          <linearGradient id={`${uid}-rockfade`} x1={0} x2={0} y1={0} y2={1}>
+            <stop offset={0} stopColor="#fff" stopOpacity={1} />
+            <stop offset={1} stopColor="#fff" stopOpacity={0.15} />
           </linearGradient>
           <clipPath id={`${uid}-clip`}>
             <rect className={s.wipe} x={m.l - 4} y={0} width={W - m.l - m.r + 8} height={H} />
           </clipPath>
-          <pattern id={`${uid}-hatch`} width={5} height={5} patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <line x1={0} y1={0} x2={0} y2={5} stroke="#ff5d8f" strokeOpacity={0.35} strokeWidth={1} />
-          </pattern>
         </defs>
 
         {/* grid */}
@@ -182,22 +222,33 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
         )}
 
         <g clipPath={`url(#${uid}-clip)`}>
-          {/* lake basins, max depth */}
-          {model.basins.map((b) => (
-            <path key={b.legId} d={lens(b)} fill={`url(#${uid}-deep)`} stroke={model.legs.find(l => l.legId === b.legId)!.color} strokeOpacity={0.45} strokeWidth={0.9} strokeDasharray="3 3" />
+          {/* height above the sea (where there is no floor data: canal, rivers) */}
+          <path d={areaPath(model.surface, sx, sy, 0)} fill={`url(#${uid}-leg)`} fillOpacity={0.16} mask={`url(#${uid}-m)`} />
+          {/* ground under the track */}
+          <g mask={`url(#${uid}-colm)`}>
+            {runPaths.map(r => <path key={`g${r.key}`} d={r.ground} fill={`url(#${uid}-rock)`} />)}
+          </g>
+          {/* the water column, surface to floor */}
+          <g mask={`url(#${uid}-colm)`}>
+            {runPaths.map(r => <path key={`w${r.key}`} d={r.water} fill={r.color} fillOpacity={0.26} />)}
+          </g>
+          {/* the floor */}
+          {runPaths.map(r => (
+            <path key={`f${r.key}`} d={r.floor} fill="none" stroke={r.color} strokeOpacity={0.85} strokeWidth={compact ? 0.9 : 1.1} strokeLinejoin="round" />
           ))}
-          {/* along-track seabed, Long Island Sound */}
-          {model.seabed.length > 1 && (
-            <path
-              d={`M${sx(model.seabed[0].x)},${y0} ${model.seabed.map(p => `L${sx(p.x).toFixed(2)},${sy(p.ft).toFixed(2)}`).join("")} L${sx(model.seabed[model.seabed.length - 1].x)},${y0}Z`}
-              fill={`url(#${uid}-hatch)`} stroke="#ff5d8f" strokeOpacity={0.6} strokeWidth={0.8}
-            />
-          )}
-          {/* height above the sea */}
-          <path d={areaPath(model.surface, sx, sy, 0)} fill={`url(#${uid}-leg)`} fillOpacity={0.3} mask={`url(#${uid}-m)`} />
           {/* the water surface */}
           <path d={linePath(model.surface, sx, sy)} fill="none" stroke={`url(#${uid}-leg)`} strokeWidth={2} strokeLinejoin="round" />
         </g>
+        <line x1={m.l} x2={W - m.r} y1={y0} y2={y0} stroke="rgb(255 255 255 / 0.22)" strokeDasharray="1 3" aria-hidden />
+        {/* published deepest point of Lake Michigan (reference) */}
+        {!compact && (
+          <g aria-hidden className={s.fade} style={{ ["--d" as string]: "1.6s" }}>
+            <line x1={sx(michBasin.x0) + 4} x2={sx(michBasin.x1) - 4} y1={sy(michBasin.floorFt)} y2={sy(michBasin.floorFt)} stroke={INK.ink3} strokeDasharray="1 3" />
+            <text x={sx(michBasin.x1) - 6} y={sy(michBasin.floorFt) + 12} textAnchor="end" fontSize={9} letterSpacing="0.1em" className="font-mono" fill={INK.ink3}>
+              LAKE&rsquo;S DEEPEST POINT · {fmt(michBasin.maxDepthFt)} FT (EPA)
+            </text>
+          </g>
+        )}
 
         {/* leg band */}
         <g aria-hidden>
@@ -219,30 +270,40 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
         {!compact ? (
           <g className={s.fade} style={{ ["--d" as string]: "1.2s" }}>
             <text x={sx(4)} y={sy(surf0) - 12} fontSize={9.5} letterSpacing="0.14em" className="font-mono" fill={INK.ink3}>CHICAGO · DAY 1</text>
-            <text x={sx(40)} y={sy(surf0) + 18} fontSize={12} fill={INK.ink}>
+            <text x={sx(4) + 128} y={sy(surf0) - 12} fontSize={12} fill={INK.ink}>
               <tspan className="num" fill={SIG.brass}>{fmt(surf0, 1)} ft</tspan>
               <tspan fill={INK.ink2} dx={6}>Michigan and Huron: one surface, two names</tspan>
             </text>
-            <Callout x={sx((mich.x0 + mich.x1) / 2)} y={sy(mich.floorFt)} tx={sx(mich.x1) - 10} ty={sy(mich.floorFt) - 16}
-              kicker={`${mich.name} · ${fmt(mich.maxDepthFt)} ft deep`} lines={[`Its floor lies ${fmt(-mich.floorFt)} ft below the sea`, "you'll finish the voyage on"]} tone="glow" />
-            <Callout x={sx((huron.x0 + huron.x1) / 2)} y={sy(huron.floorFt)} tx={sx(huron.x1) + 18} ty={sy(huron.floorFt) + 30}
-              kicker={`${huron.name} · ${fmt(huron.maxDepthFt)} ft`} lines={[`floor ${fmt(-huron.floorFt)} ft below sea level`]} />
-            <Callout x={sx((erie.x0 + erie.x1) / 2)} y={sy(erie.floorFt)} tx={sx((erie.x0 + erie.x1) / 2) + 14} ty={sy(150)}
-              kicker={`${erie.name} · ${fmt(erie.maxDepthFt)} ft`} lines={["shallowest of the five:", `floor still ${fmt(erie.floorFt)} ft up`]} />
+            <Callout x={sx(deepest.x)} y={sy(deepest.ft)} tx={sx(deepest.x) + 22} ty={sy(-120)}
+              kicker={`Day ${deepest.day} · ${placeName(deepestDay.from, "from")} → ${placeName(deepestDay.to)}`}
+              lines={[
+                `${fmt(deepest.depthFt)} ft under the keel, the voyage's deepest:`,
+                `the floor lies ${fmt(-deepest.ft)} ft below the sea we finish on`,
+                ...(model.belowSeaNm >= 1 ? [`(${fmt(model.belowSeaNm)} nm of track over lakebed below sea level)`] : []),
+              ]} tone="glow" />
+            {huron && (
+              <Callout x={sx(huron.max.x)} y={sy(huron.max.ft)} tx={sx(huron.max.x) + 16} ty={sy(huron.max.ft) + 34}
+                kicker={`${huron.label} · Day ${huron.max.day}`} lines={[`${fmt(huron.max.depthFt)} ft deep under the track`]} />
+            )}
+            {erie && mich && (
+              <Callout x={sx(erie.max.x)} y={sy(erie.max.ft)} tx={sx(erie.max.x) - 14} ty={sy(150)} side="left"
+                kicker={`${erie.label} · avg ${fmt(erie.meanFt)} ft`} lines={[`the shallow one: ${fractionWord(erie.meanFt / mich.meanFt)}`, `of Michigan's ${fmt(mich.meanFt)} ft average`]} />
+            )}
             <text x={(sx(model.legs[3].x0) + sx(model.legs[3].x1)) / 2} y={sy(surf0) - 16} textAnchor="middle" fontSize={11} fill={INK.ink2}>
               <tspan className="num" fill={INK.ink}>−{fmt(surf0 - model.surface.find(p => p.legId === "lake-erie")!.ft, 1)} ft</tspan> on current alone
             </text>
-            {deepestDay && (
-              <Callout x={sx(deepest.x)} y={sy(deepest.ft)} tx={sx(deepest.x) - 16} ty={sy(deepest.ft) + 26} side="left"
-                kicker={`Day ${deepestDay.day} · eastern Sound`} lines={[`${fmt(-deepest.ft)} ft under the keel`]} tone="ink" />
+            {sound && (
+              <Callout x={sx(sound.max.x)} y={sy(sound.max.ft)} tx={sx(sound.max.x) - 16} ty={sy(sound.max.ft) + 26} side="left"
+                kicker={`Day ${sound.max.day} · ${sound.label}`} lines={[`${fmt(sound.max.depthFt)} ft under the keel`]} tone="ink" />
             )}
             <text x={W - m.r} y={y0 - 8} textAnchor="end" fontSize={9.5} letterSpacing="0.14em" className="font-mono" fill={INK.ink3}>OLD SAYBROOK · DAY {model.days.length}</text>
           </g>
         ) : (
           <g className={s.fade} style={{ ["--d" as string]: "1.2s" }}>
             <text x={sx(4)} y={sy(surf0) - 8} fontSize={10} className="num" fill={SIG.brass}>{fmt(surf0, 1)} ft</text>
-            <text x={sx((mich.x0 + mich.x1) / 2)} y={sy(mich.floorFt) + 16} textAnchor="middle" fontSize={9.5} fill={INK.ink2}>
-              <tspan className="num" fill={SIG.glow}>−{fmt(-mich.floorFt)} ft</tspan> Michigan floor
+            <circle cx={sx(deepest.x)} cy={sy(deepest.ft)} r={2.5} fill="#03060c" stroke={SIG.glow} strokeWidth={1.25} />
+            <text x={sx(deepest.x) + 7} y={sy(deepest.ft) + 4} fontSize={9.5} fill={INK.ink2}>
+              <tspan className="num" fill={SIG.glow}>{fmt(deepest.depthFt)} ft</tspan> deep · Day {deepest.day}
             </text>
           </g>
         )}
@@ -251,6 +312,8 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
         {hoverX != null && (
           <g pointerEvents="none">
             <line x1={sx(hoverX)} x2={sx(hoverX)} y1={m.t - 6} y2={H - m.b} stroke={SIG.glow} strokeOpacity={0.5} strokeWidth={1} />
+            {hoverFloor != null && <line x1={sx(hoverX)} x2={sx(hoverX)} y1={sy(hoverFt)} y2={sy(hoverFloor)} stroke={SIG.glow} strokeWidth={2.5} strokeLinecap="round" />}
+            {hoverFloor != null && <circle cx={sx(hoverX)} cy={sy(hoverFloor)} r={2.5} fill={SIG.glow} />}
             <circle cx={sx(hoverX)} cy={sy(hoverFt)} r={3.5} fill="#03060c" stroke={SIG.glow} strokeWidth={1.5} />
           </g>
         )}
@@ -267,6 +330,9 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
           <p className="eyebrow !tracking-[0.16em]"><span className="num">Day {hoverDay.day}</span> · {hoverDay.dateShort}</p>
           <p className="mt-1 text-[13px] text-ink">{placeName(hoverDay.from, "from")} → {placeName(hoverDay.to)}</p>
           <p className="num mt-1 text-lg" style={{ color: hoverDay.color }}>{fmt(hoverFt, 1)} <span className="text-xs text-ink-3">ft above sea level</span></p>
+          {hoverFloor != null && (
+            <p className="num text-[13px] text-ink">{fmt(hoverFt - hoverFloor)} <span className="text-xs text-ink-3">ft of water under the keel</span></p>
+          )}
         </div>
       )}
     </div>

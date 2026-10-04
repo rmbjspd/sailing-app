@@ -37,15 +37,18 @@ async function decode(url: string): Promise<{ data: Uint8ClampedArray; w: number
   return { data, w: canvas.width, h: canvas.height };
 }
 
-let cache: Promise<TerrainData> | null = null;
+const cache = new Map<string, Promise<TerrainData>>();
 
-export function loadTerrain(): Promise<TerrainData> {
-  if (!cache) cache = build().catch((e) => { cache = null; throw e; });
-  return cache;
+/** `small` loads the half-resolution bake (phones / low-power devices). */
+export function loadTerrain(small = false): Promise<TerrainData> {
+  const key = small ? "sm" : "full";
+  if (!cache.has(key)) cache.set(key, build(small).catch((e) => { cache.delete(key); throw e; }));
+  return cache.get(key)!;
 }
 
-async function build(): Promise<TerrainData> {
-  const [t, l] = await Promise.all([decode(TERRAIN.url), decode("/geo/water-level.png")]);
+async function build(small: boolean): Promise<TerrainData> {
+  const sfx = small ? "-sm" : "";
+  const [t, l] = await Promise.all([decode(TERRAIN.url.replace(".png", `${sfx}.png`)), decode(`/geo/water-level${sfx}.png`)]);
   const { w, h } = t;
   const n = w * h;
   const elev = new Float32Array(n);

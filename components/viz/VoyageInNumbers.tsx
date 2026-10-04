@@ -94,10 +94,11 @@ export default function VoyageInNumbers() {
 
             <figcaption className="mt-8 grid gap-6 border-t border-line pt-6 text-[12.5px] leading-relaxed text-ink-3 md:grid-cols-[1fr_auto] md:items-start">
               <p className="max-w-3xl">
-                Lake surfaces at chart datum (IGLD 1985); summer levels run a foot or three higher. Canal pools are rebuilt from the published lift of
-                each lock, chained from Lake Erie and from tidewater; the two chains close within a few feet. Lake basins show each lake&rsquo;s
-                published maximum depth, not the depth under our track. Long Island Sound depths are sampled along the route. The Waterford Flight
-                (<span className="num">{flight.length}</span> locks) is magnified so you can see each step.
+                Lake surfaces at chart datum (IGLD 1985); summer levels run a foot or three higher. Below the surface line, the lake and sea floor
+                directly under our track, sampled every half mile from NOAA NCEI ETOPO 2022. It is drawn where the bed is resolved; canal and river
+                channels are too narrow, and the model carries no floor for Lake St. Clair or Oneida Lake. Canal pools are rebuilt from the
+                published lift of each lock, chained from Lake Erie and from tidewater; the two chains close within a few feet. The Waterford
+                Flight (<span className="num">{flight.length}</span> locks) is magnified so you can see each step.
               </p>
               <LockTable model={model} />
             </figcaption>
@@ -161,8 +162,8 @@ export default function VoyageInNumbers() {
 
           <p className="mt-20 max-w-3xl text-[11.5px] leading-relaxed text-ink-4">
             Sources: USACE / NOAA Great Lakes Low Water Datum (IGLD 1985); US EPA, Physical Features of the Great Lakes; NYS Canal Corporation
-            and OffshoreBlue Erie Canal lock tables (lifts, lock spacing, 338.75-mile canal); USACE Black Rock and Troy locks; AWS Terrain Tiles
-            (NOAA coastal relief) for Long Island Sound depths. Distances, locks and days from the S/V Sabbatical passage plan.
+            and OffshoreBlue Erie Canal lock tables (lifts, lock spacing, 338.75-mile canal); USACE Black Rock and Troy locks; NOAA NCEI ETOPO 2022
+            for lake and sea floors under the track. Distances, locks and days from the S/V Sabbatical passage plan.
           </p>
         </VizProvider>
       </div>

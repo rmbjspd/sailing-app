@@ -46,7 +46,7 @@ export const LEG_STYLE: Record<string, LegStyle> = {
   "lake-huron":     leg("Lake Huron",                 "Huron",      "III",  "The long Ontario shore south",                    "💧", "#7fd8ff"),
   "st-clair":       leg("St. Clair · Detroit River",  "St. Clair",  "IV",   "Freighter country, two knots of free speed",      "🚢", "#9d8cff"),
   "lake-erie":      leg("Lake Erie",                  "Erie",       "V",    "Shallow, quick-tempered, island-strewn",          "⛈️", "#c77dff"),
-  "erie-canal":     leg("Erie Canal",                 "Canal",      "VI",   "Mast down, 363 miles of locks and towpath",       "⚓", "#ffb547", true),
+  "erie-canal":     leg("Erie Canal",                 "Canal",      "VI",   "Mast down, 34 locks from Lake Erie to the Hudson",       "⚓", "#ffb547", true),
   "hudson":         leg("Hudson River",               "Hudson",     "VII",  "Riding the ebb past the Palisades",               "🌉", "#ff8a5c", true),
   "sound-saybrook": leg("Long Island Sound",          "The Sound",  "VIII", "Beam reach east to the Connecticut River",        "⛵", "#ff5d8f"),
 };

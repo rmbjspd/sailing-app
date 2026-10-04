@@ -151,7 +151,7 @@ export function LogScrolly({
   if (step.kind === "leg" && leg) {
     eyebrow = `Chapter · ${leg.dates}`;
     heading = leg.label;
-    sub = `Days ${leg.dayStart}–${leg.dayEnd} · ${leg.distance}`;
+    sub = `${leg.dayStart === leg.dayEnd ? `Day ${leg.dayStart}` : `Days ${leg.dayStart}–${leg.dayEnd}`} · ${leg.distance}`;
   } else if (step.kind === "day" && sum) {
     eyebrow = `Day ${sum.day} of ${lastDay}`;
     heading = sum.stationary ? `In harbour · ${sum.to}` : `${sum.from} → ${sum.to}`;

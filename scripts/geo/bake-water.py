@@ -31,7 +31,23 @@ H, W = water_all.shape
 chan = ndimage.binary_dilation(np.asarray(rasterize(W, H, 1.8)) > 0, iterations=2) & water_all
 water = water_all & ~chan
 
+# Published long-term mean surface levels (m, IGLD 1985; NOAA GLERL / USACE),
+# keyed by a point inside each water body. Anything else falls back to the
+# shore-ring estimate below.
+KNOWN = [
+    ((-87.0, 43.0), 176.5, "Michigan–Huron"),
+    ((-82.70, 42.45), 175.0, "Lake St. Clair"),
+    ((-81.2, 42.2), 174.4, "Erie"),
+    ((-77.8, 43.6), 74.8, "Ontario"),
+    ((-75.9, 43.2), 112.0, "Oneida"),
+]
+
 labels, n = ndimage.label(water)
+known_by_label = {}
+for (klng, klat), lev, name in KNOWN:
+    ky = int((47.5 - klat) / 7.5 * H); kx = int((klng + 89) / 18 * W)
+    if labels[ky, kx]:
+        known_by_label[labels[ky, kx]] = (lev, name)
 surface = np.zeros_like(elev)
 sizes = ndimage.sum(water, labels, range(1, n + 1))
 for i in range(1, n + 1):
@@ -44,6 +60,8 @@ for i in range(1, n + 1):
     ring = ndimage.binary_dilation(sub, iterations=3) & ~sub & ~water[y0:y1, x0:x1]
     shore = elev[y0:y1, x0:x1][ring]
     lvl = float(np.percentile(shore, 25)) if shore.size else 0.0
+    if i in known_by_label:
+        lvl = known_by_label[i][0]
     # Open ocean: big region with deep bathymetry well below sea level near the SE edge.
     if region[H - 1, W - 1] or (elev[region].min() < -40 and lvl < 30):
         lvl = 0.0
@@ -61,6 +79,7 @@ water = water_all
 # Spread each water level into the land (nearest water pixel) for clean filtering.
 _, (iy, ix) = ndimage.distance_transform_edt(~water, return_indices=True)
 spread = surface[iy, ix]
-Image.fromarray(np.clip(np.round(spread), 0, 255).astype(np.uint8), "L").save(
-    os.path.join(ROOT, "public/geo/water-level.png"), optimize=True)
+lv = Image.fromarray(np.clip(np.round(spread), 0, 255).astype(np.uint8), "L")
+lv.save(os.path.join(ROOT, "public/geo/water-level.png"), optimize=True)
+lv.resize((W // 2, H // 2), Image.BILINEAR).save(os.path.join(ROOT, "public/geo/water-level-sm.png"), optimize=True)
 print("wrote public/geo/water-level.png")
