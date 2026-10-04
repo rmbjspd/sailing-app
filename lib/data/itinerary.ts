@@ -156,18 +156,18 @@ export const itinerary: ItineraryDay[] = [
     notes: "After Lockport, no locks for ~60 miles. Pass through lift-bridge towns (operators see you and open). ~30–40 statute miles today."
   },
   {
-    day: 22, from: "Medina/Brockport, NY", to: "Pittsford, NY", distanceNm: 0, distanceMi: 60, locks: 5,
+    day: 22, from: "Medina/Brockport, NY", to: "Pittsford, NY", distanceNm: 0, distanceMi: 60, locks: 2,
     leg: "erie-canal", overnight: "Pittsford canal park dock (power/water)",
     highlights: ["Fairport: famous red liftbridge, Moonlight Creamery ice cream, great lunch stop", "Genesee River aqueduct crossing"],
-    warnings: ["5 locks today (E-33 to E-29) — get an early start", "If locks are slow, Newark (before E-28) has a free dock as fallback"],
-    notes: "Locks E-33/32 around Rochester (~25ft drop each). Locks E-31, E-30, E-29 toward Palmyra. ~60 statute miles."
+    warnings: ["Only 2 locks today (E-33, E-32) but 60 statute miles — get an early start", "If the day runs long, Fairport and Newark both have free walls as fallbacks"],
+    notes: "Locks E-33 and E-32 around Rochester and Pittsford (~25ft each). There is no Lock E-31 — the numbering skips it. ~60 statute miles."
   },
   {
-    day: 23, from: "Pittsford/Newark, NY", to: "Brewerton, NY", distanceNm: 0, distanceMi: 68, locks: 6,
+    day: 23, from: "Pittsford/Newark, NY", to: "Brewerton, NY", distanceNm: 0, distanceMi: 68, locks: 9,
     leg: "erie-canal", overnight: "Ess-Kay Yards / Winter Harbor Marina, Brewerton",
     highlights: ["Montezuma National Wildlife Refuge: herons, eagles, turtles", "Seneca-Cayuga Canal junction at Montezuma", "Brewerton: full-service marinas at the calm west end of Oneida Lake"],
     warnings: ["Lock E-24 at Baldwinsville: arrive before 5pm to ensure passage", "Stage at Brewerton for the night — do NOT push across Oneida Lake late in the day"],
-    notes: "Run the lock-heavy stretch through Montezuma and Baldwinsville and stop on the west shore of Oneida Lake. Ess-Kay Yards has fuel, pump-out, and laundry. Cross the lake fresh tomorrow morning."
+    notes: "Nine locks today — E-30 down through E-23, including the E-28A/28B pair. Run the lock-heavy stretch through Montezuma and Baldwinsville and stop on the west shore of Oneida Lake. Ess-Kay Yards has fuel, pump-out, and laundry. Cross the lake fresh tomorrow morning."
   },
   {
     day: 24, from: "Brewerton, NY", to: "Sylvan Beach, NY", distanceNm: 0, distanceMi: 20, locks: 0,
@@ -181,20 +181,20 @@ export const itinerary: ItineraryDay[] = [
     leg: "erie-canal", overnight: "Ilion Municipal Marina or Little Falls Rotary Park dock",
     highlights: ["Now on the canalized Mohawk River — scenery improves", "Ilion Marina: full services, laundry, grocery 5min away", "Little Falls: limestone cliff scenery, Moss Island glacial potholes"],
     warnings: ["Ilion is the best pump-out/fuel point before the final push to the Hudson", "Little Falls: Lock E-17 just past town is the deepest single lock (40.5ft) — tackle it next morning"],
-    notes: "Locks E-22, 21, 20 through Herkimer area. Stop at Ilion or push to Little Falls."
+    notes: "Locks E-22, 21, 20 and 19 through Rome, Utica and the Herkimer area. Stop at Ilion or push to Little Falls."
   },
   {
-    day: 26, from: "Ilion/Little Falls, NY", to: "Amsterdam, NY", distanceNm: 0, distanceMi: 55, locks: 5,
+    day: 26, from: "Ilion/Little Falls, NY", to: "Amsterdam, NY", distanceNm: 0, distanceMi: 55, locks: 8,
     leg: "erie-canal", overnight: "Amsterdam Riverlink Park dock (free wall, power, water)",
     highlights: ["Lock E-17 at Little Falls: 40.5ft drop — highest single lock on the Erie Canal", "Canajoharie: Arkell Museum and the 'Canajoharie Boiling Pot' gorge", "Amsterdam's pedestrian bridge and revitalized Mohawk waterfront"],
     warnings: ["Tackle Lock E-17 early while you're fresh — it's dramatic but well-operated", "Stage at Amsterdam so the Waterford Flight can be run first thing tomorrow, not against the afternoon clock"],
     notes: "Through Little Falls, Canajoharie, and Fonda down the Mohawk Valley. Stop at Amsterdam's free Riverlink Park wall — this sets up an unhurried, dawn run at the Waterford Flight."
   },
   {
-    day: 27, from: "Amsterdam, NY", to: "Waterford, NY", distanceNm: 0, distanceMi: 40, locks: 4,
+    day: 27, from: "Amsterdam, NY", to: "Waterford, NY", distanceNm: 0, distanceMi: 40, locks: 9,
     leg: "erie-canal", overnight: "Waterford Visitor Center Dock (free 48hr, power, water)",
     highlights: ["Waterford Flight (E-6 to E-2): 169ft descent in 1.5 miles — one of the great feats of 19th-century engineering", "MILESTONE: Great Lakes to Atlantic connected!"],
-    warnings: ["Run the Waterford Flight in the morning with the whole day in hand — once you start E-6, you go through all five without stopping", "Locks E-13 through E-7 come in succession ahead of the Flight — an early start clears them with margin"],
+    warnings: ["Run the Waterford Flight in the morning with the whole day in hand — once you start E-6, you go through all five without stopping", "Locks E-10 through E-7 come in succession ahead of the Flight — an early start clears them with margin"],
     notes: "A short morning down the lower Mohawk into the Waterford Flight. Staging at Amsterdam last night means you reach Lock E-6 with hours to spare instead of racing a 2:30pm cutoff. Celebrate at the bottom."
   },
 

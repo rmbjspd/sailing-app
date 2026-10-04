@@ -1,33 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# S/V Sabbatical — Chicago → Old Saybrook, Summer 2027
 
-## Getting Started
-
-First, run the development server:
+Planning site for a 35-day, ~1,711 nm passage on an Oceanis 30.1: Lake Michigan,
+the North Channel, Lake Huron, the St. Clair and Detroit rivers, Lake Erie, the
+Erie Canal (mast down), the Hudson and Long Island Sound.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## What's where
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Route | What it is |
+| --- | --- |
+| `/` | Scroll-driven 3D voyage (pinned WebGL scene sails the route leg by leg), "The Voyage in Numbers" data essay, links into the rest of the site |
+| `/map` | The Chart: free-flight 3D chart with port directory, fly-to, day scrubber and voyage replay |
+| `/itinerary` | The Ship's Log: every day, berth, lock and hazard, with a sticky chart that follows along |
+| `/checklists` | Provisioning, with readiness gauge (state in `localStorage`) |
+| `/journal` | The Logbook (state in `localStorage`) |
+| `/crew` | Crew Manifest — sign up for legs (password-gated, see below) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Design system** — tokens and utilities in `app/globals.css`, per-leg colours in
+`lib/data/legStyle.ts`, shared primitives in `components/kit`. Fonts: Fraunces
+(display), Geist (text), Geist Mono (numbers).
 
-## Learn More
+**Day & night charts** — the site follows the viewer's local clock: the *day chart*
+(khaki chart paper, powder-blue water) from 06:30 to 19:30, the *night chart*
+otherwise, turning over live at dawn and dusk. The sun/moon button in the nav cycles
+Auto → Day → Night (stored per device under `sv-theme`). A pre-paint script in
+`app/layout.tsx` sets `<html data-theme>` before first paint, so there's no flash.
+Rules for components: use the theme tokens (`ink`, `abyss`, `line`, and `tint` for
+overlays — never literal white/black), `legStyle(id).color` for leg colours with
+`alpha(color, a)` for translucency, `<ChartImage/>` for the baked chart rasters, and
+`.day-only` / `.night-only` for anything that genuinely differs. The 3D world reads
+`useTheme()` and cross-fades its shaders.
 
-To learn more about Next.js, take a look at the following resources:
+**Data** — `lib/data/itinerary.ts` is the single source of truth; every distance,
+lock count and date shown anywhere is derived from it (`lib/data/stats.ts`).
+`lib/data/waterProfile.ts` holds the Erie Canal lock lifts behind the staircase chart.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**3D world** — `components/world` (react-three-fiber). Terrain is a real DEM baked
+into textures by the scripts in `scripts/geo/` (needs Python with pillow, numpy, scipy):
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+python3 scripts/geo/bake-terrain.py   # public/geo/terrain.png  (AWS Terrain Tiles + Natural Earth)
+python3 scripts/geo/bake-water.py     # public/geo/water-level.png (per-lake surface levels)
+python3 scripts/geo/bake-route.py     # lib/data/routePath.ts (water-following track)
+python3 scripts/geo/audit-route.py    # reports any stretch of route over land (should be ~0 nm)
+python3 scripts/geo/bake-chart.py     # public/geo/chart-dark*.webp (2D night-chart raster)
+python3 scripts/geo/bake-profile.py   # lib/data/vizBathymetry.ts
+```
+
+The route is generated, not hand-drawn: each overnight passage is a least-cost
+path through navigable water (Natural Earth coast and lakes, plus the canal and
+river channels listed in `scripts/geo/waterways.py`), kept a mile or two
+offshore on open water. To change the track, move a waypoint, add a `VIA`
+point in `bake-route.py`, or adjust a channel in `waterways.py`, then re-run the
+bakes in order.
+
+Projection and bounds live in `lib/geo/projection.ts` and must match the bake scripts.
+Land relief comes from AWS Terrain Tiles; every lake and sea floor comes from NOAA's
+ETOPO 2022 (15″ grid via the CoastWatch ERDDAP), since the terrain tiles store the
+Great Lakes flat at their surface. Canal and river channels are OpenStreetMap
+waterway relations fetched from the OSM API (Natural Earth fallback when offline).
+Without WebGL2 the world falls back to a static chart.
 
 ## Crew Manifest (`/crew`)
 
@@ -46,9 +83,3 @@ is gated by a single shared password (no usernames).
   set, SQLite is not used.
 - Each leg accepts up to 3 crew. Some legs may be reserved and not open for
   sign-up.
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

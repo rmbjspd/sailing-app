@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+"""
+Bake public/geo/water-level.png — the water SURFACE elevation (metres, 0–255,
+8-bit grayscale) for every water body in terrain.png, so the 3D world can float
+each lake at its true level (Superior ≈183 m, Michigan–Huron ≈176, Erie ≈174,
+Ontario ≈75, the Atlantic 0) while terrain.png keeps the real lake-floor
+bathymetry underneath. Values are spread into adjacent land (nearest water
+body) so bilinear sampling is clean along shorelines.
+
+Method: label connected water regions; a region's surface = median elevation of
+the land ring just outside it (shores sit a few metres above the water), with
+regions touching the open Atlantic forced to 0.
+Run after bake-terrain.py:  python3 scripts/geo/bake-water.py   (needs scipy)
+"""
+import os
+import numpy as np
+from PIL import Image
+from scipy import ndimage
+
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from waterways import rasterize
+
+a = np.asarray(Image.open(os.path.join(ROOT, "public/geo/terrain.png")), dtype=np.float32)
+elev = (a[..., 0] * 256 + a[..., 1]) / 4 - 1000
+water_all = a[..., 2] > 127
+H, W = water_all.shape
+# Burned canal/river channels must not join separate lakes into one region
+# (the canal would otherwise give Erie, Ontario and the Atlantic one level).
+chan = ndimage.binary_dilation(np.asarray(rasterize(W, H, 1.8)) > 0, iterations=2) & water_all
+water = water_all & ~chan
+
+# Published long-term mean surface levels (m, IGLD 1985; NOAA GLERL / USACE),
+# keyed by a point inside each water body. Anything else falls back to the
+# shore-ring estimate below.
+KNOWN = [
+    ((-87.0, 43.0), 176.5, "Michigan–Huron"),
+    ((-82.70, 42.45), 175.0, "Lake St. Clair"),
+    ((-81.2, 42.2), 174.4, "Erie"),
+    ((-77.8, 43.6), 74.8, "Ontario"),
+    ((-75.9, 43.2), 112.0, "Oneida"),
+]
+
+labels, n = ndimage.label(water)
+known_by_label = {}
+for (klng, klat), lev, name in KNOWN:
+    ky = int((47.5 - klat) / 7.5 * H); kx = int((klng + 89) / 18 * W)
+    if labels[ky, kx]:
+        known_by_label[labels[ky, kx]] = (lev, name)
+surface = np.zeros_like(elev)
+sizes = ndimage.sum(water, labels, range(1, n + 1))
+for i in range(1, n + 1):
+    region = labels == i
+    if sizes[i - 1] < 4:
+        continue
+    ys, xs = np.nonzero(region)
+    y0, y1, x0, x1 = max(ys.min() - 4, 0), min(ys.max() + 5, H), max(xs.min() - 4, 0), min(xs.max() + 5, W)
+    sub = region[y0:y1, x0:x1]
+    ring = ndimage.binary_dilation(sub, iterations=3) & ~sub & ~water[y0:y1, x0:x1]
+    shore = elev[y0:y1, x0:x1][ring]
+    lvl = float(np.percentile(shore, 25)) if shore.size else 0.0
+    if i in known_by_label:
+        lvl = known_by_label[i][0]
+    # Open ocean: big region with deep bathymetry well below sea level near the SE edge.
+    if region[H - 1, W - 1] or (elev[region].min() < -40 and lvl < 30):
+        lvl = 0.0
+    surface[region] = max(lvl, 0.0)
+    if sizes[i - 1] > 5000:
+        cy, cx = int(ys.mean()), int(xs.mean())
+        lng = -89 + cx / W * 18; lat = 47.5 - cy / H * 7.5
+        print(f"region {i:4d} size {int(sizes[i-1]):7d} centre ({lng:.1f},{lat:.1f}) surface {lvl:6.1f} m  floor {elev[region].min():.0f} m")
+
+# Channels sit at the local valley floor (their own DEM surface).
+valley = ndimage.minimum_filter(elev, size=7)
+surface[chan] = np.maximum(valley[chan], 0)
+water = water_all
+
+# Spread each water level into the land (nearest water pixel) for clean filtering.
+_, (iy, ix) = ndimage.distance_transform_edt(~water, return_indices=True)
+spread = surface[iy, ix]
+lv = Image.fromarray(np.clip(np.round(spread), 0, 255).astype(np.uint8), "L")
+lv.save(os.path.join(ROOT, "public/geo/water-level.png"), optimize=True)
+lv.resize((W // 2, H // 2), Image.BILINEAR).save(os.path.join(ROOT, "public/geo/water-level-sm.png"), optimize=True)
+print("wrote public/geo/water-level.png")

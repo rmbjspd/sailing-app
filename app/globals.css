@@ -1,162 +1,406 @@
 @import "tailwindcss";
-@import "mapbox-gl/dist/mapbox-gl.css";
+
+/* ════════════════════════════════════════════════════════════════════════════
+   S/V SABBATICAL — "Night Chart" design system
+   A dark, cinematic nautical-chart aesthetic: abyssal navy, bioluminescent
+   cyan, brass instrument light, and a spectral dawn→dusk palette per leg
+   (lib/data/legStyle.ts). Editorial serif display (Fraunces), precise
+   grotesk body (Geist), tabular mono for every number (Geist Mono).
+   ════════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Deep ocean dark palette */
-  --background: 220 52% 9%;
-  --foreground: 42 55% 86%;
-  --card: 40 45% 93%;
-  --card-foreground: 220 52% 12%;
-  --primary: 188 65% 34%;
-  --primary-foreground: 42 55% 95%;
-  --secondary: 38 32% 82%;
-  --secondary-foreground: 220 48% 18%;
-  --muted: 38 22% 78%;
-  --muted-foreground: 38 30% 42%;
-  --accent: 16 78% 50%;
-  --accent-foreground: 42 55% 96%;
-  --destructive: 0 70% 48%;
-  --destructive-foreground: 42 55% 96%;
-  --border: 38 28% 72%;
-  --input: 38 28% 72%;
-  --ring: 188 65% 34%;
-  --radius: 0.375rem;
+  color-scheme: dark;
 
-  /* Maritime design tokens */
-  --navy: 220 55% 9%;
-  --navy-mid: 213 62% 17%;
-  --gold: 42 88% 50%;
-  --coral: 16 78% 50%;
-  --teal: 188 65% 34%;
-  --sea-foam: 175 45% 65%;
-  --parchment: 40 45% 93%;
-  --parchment-mid: 38 32% 82%;
-  --page-bg: 38 26% 84%;
-  --rope: 33 46% 40%;
-  --storm: 220 22% 36%;
-  --kelp: 148 45% 28%;
+  /* Surfaces — from the abyss upward */
+  --abyss: #03060c;
+  --deep: #07101d;
+  --trench: #0b1729;
+  --shoal: #12223a;
+
+  /* Glass panels */
+  /* Overlay tint: the colour hovers, hairlines and washes are mixed from.
+     White on the night chart, ink-navy on the day chart. Use rgb(var(--tint) / a)
+     in CSS or the Tailwind `tint` colour (bg-tint/[0.06], border-tint/10…). */
+  --tint: 255 255 255;
+
+  --glass: rgb(var(--tint) / 0.035);
+  --glass-strong: rgb(var(--tint) / 0.06);
+  --glass-hover: rgb(var(--tint) / 0.08);
+  --line: rgb(var(--tint) / 0.08);
+  --line-strong: rgb(var(--tint) / 0.16);
+
+  /* Ink */
+  --ink: #eef3f8;
+  --ink-2: #a8b6c8;
+  --ink-3: #8494aa;
+  --ink-4: #74859c;
+
+  /* Signals */
+  --glow: #5ef2d6;      /* bioluminescence — primary interactive */
+  --glow-dim: #2a9f8f;
+  --brass: #f4b860;     /* instrument light — highlights, milestones */
+  --alert: #ff6b5b;     /* warnings, hazards */
+  --ok: #4ade9a;        /* complete, safe */
+
+  /* Leg spectrum (mirrors lib/data/legStyle.ts) */
+  --leg-1: #5aa9ff;
+  --leg-2: #3ee0b5;
+  --leg-3: #7fd8ff;
+  --leg-4: #9d8cff;
+  --leg-5: #c77dff;
+  --leg-6: #ffb547;
+  --leg-7: #ff8a5c;
+  --leg-8: #ff5d8f;
+  --spectrum: linear-gradient(90deg, var(--leg-1), var(--leg-2), var(--leg-3), var(--leg-4), var(--leg-5), var(--leg-6), var(--leg-7), var(--leg-8));
+  /* Per-leg, by id (lib/data/legStyle.ts → var(--leg-<id>)) */
+  --leg-lake-michigan: var(--leg-1);
+  --leg-north-channel: var(--leg-2);
+  --leg-lake-huron: var(--leg-3);
+  --leg-st-clair: var(--leg-4);
+  --leg-lake-erie: var(--leg-5);
+  --leg-erie-canal: var(--leg-6);
+  --leg-hudson: var(--leg-7);
+  --leg-sound-saybrook: var(--leg-8);
+  --leg-fallback: var(--glow);
+
+  /* Water and paper accents (used most by the day chart) */
+  --powder: #9fc6dd;
+  --paper: #f7f2e6;
+
+  /* Page washes (body background) */
+  --wash-1: rgb(30 70 120 / 0.22);
+  --wash-2: rgb(20 90 100 / 0.14);
+  --wash-3: rgb(40 30 90 / 0.18);
+  --shadow-rgb: 0 0 0;
+  --shadow-a: 0.6;
+
+  --radius: 1rem;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* shadcn/ui compatibility (components/ui/*) — mapped onto the night palette */
+  --background: var(--abyss);
+  --foreground: var(--ink);
+  --card: var(--glass);
+  --card-foreground: var(--ink);
+  --primary: var(--glow);
+  --primary-foreground: var(--abyss);
+  --secondary: var(--glass-strong);
+  --secondary-foreground: var(--ink);
+  --muted: var(--glass-strong);
+  --muted-foreground: var(--ink-3);
+  --accent: var(--brass);
+  --accent-foreground: var(--abyss);
+  --destructive: var(--alert);
+  --destructive-foreground: var(--ink);
+  --border: var(--line);
+  --input: var(--line-strong);
+  --ring: var(--glow);
 }
 
 @theme inline {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --font-sans: var(--font-fell);
-  --font-mono: var(--font-typewriter);
-  --font-display: var(--font-pirata);
+  --color-abyss: var(--abyss);
+  --color-deep: var(--deep);
+  --color-trench: var(--trench);
+  --color-shoal: var(--shoal);
+  --color-glass: var(--glass);
+  --color-glass-strong: var(--glass-strong);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-4: var(--ink-4);
+  --color-glow: var(--glow);
+  --color-brass: var(--brass);
+  --color-alert: var(--alert);
+  --color-ok: var(--ok);
+  --color-tint: rgb(var(--tint));
+  --color-powder: var(--powder);
+  --color-paper: var(--paper);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Ocean body background */
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+
+html {
+  background: var(--abyss);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 body {
-  background-color: hsl(var(--background));
-  background-image:
-    radial-gradient(ellipse 130% 80% at 12% 60%, hsl(200 60% 13% / 0.6) 0%, transparent 55%),
-    radial-gradient(ellipse 80% 100% at 90% 18%, hsl(210 65% 10% / 0.45) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 60% at 50% 95%, hsl(188 55% 12% / 0.35) 0%, transparent 50%);
-  color: hsl(var(--foreground));
-}
-
-/* Warm sepia parchment page surface — wraps main content on each page */
-.parchment-page {
-  background-color: hsl(var(--page-bg));
-  background-image:
-    repeating-linear-gradient(
-      -48deg,
-      transparent,
-      transparent 4px,
-      hsl(33 40% 50% / 0.022) 4px,
-      hsl(33 40% 50% / 0.022) 8px
-    );
-  box-shadow: inset 0 4px 12px rgba(15, 10, 5, 0.18);
-}
-
-/* Card shadow — warmer than default */
-.shadow-card {
-  box-shadow:
-    0 2px 8px hsl(var(--navy) / 0.12),
-    0 1px 2px hsl(var(--navy) / 0.08);
-}
-
-/* Braided rope divider */
-.rope-divider {
-  border: none;
-  height: 5px;
   background:
-    repeating-linear-gradient(
-      90deg,
-      hsl(var(--rope))       0px,
-      hsl(var(--rope))       5px,
-      hsl(var(--rope) / 0.4) 5px,
-      hsl(var(--rope) / 0.4) 10px,
-      hsl(var(--gold) / 0.4) 10px,
-      hsl(var(--gold) / 0.4) 11px,
-      hsl(var(--rope) / 0.4) 11px,
-      hsl(var(--rope) / 0.4) 16px
-    );
-  border-radius: 2.5px;
-  opacity: 0.65;
+    radial-gradient(120% 80% at 15% -10%, var(--wash-1) 0%, transparent 55%),
+    radial-gradient(90% 70% at 100% 10%, var(--wash-2) 0%, transparent 50%),
+    radial-gradient(100% 60% at 50% 110%, var(--wash-3) 0%, transparent 60%),
+    var(--abyss);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
 }
 
-/* Parchment texture — use on card-like surfaces */
-.parchment {
+::selection {
+  background: rgb(94 242 214 / 0.28);
+  color: var(--ink);
+}
+
+/* In the base layer so components can override it with utilities. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--glow);
+    outline-offset: 3px;
+  }
+}
+
+/* Thin, quiet scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--tint) / 0.18) transparent;
+}
+
+/* Film grain — sits above everything, never intercepts input */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain 1.2s steps(6) infinite;
+}
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -3%); }
+  60% { transform: translate(-2%, -1%); }
+  80% { transform: translate(3%, 3%); }
+}
+
+/* ── Typography ───────────────────────────────────────────────────────────── */
+
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 50, "WONK" 0;
+  letter-spacing: -0.02em;
+}
+.font-display em,
+.font-display .wonk {
+  font-style: italic;
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+
+/* Eyebrow / instrument label */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Every number in the app: tabular, slashed-zero mono */
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums slashed-zero;
+  letter-spacing: -0.01em;
+}
+
+.text-spectrum {
+  background: var(--spectrum);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Surfaces ─────────────────────────────────────────────────────────────── */
+
+.glass {
+  background: linear-gradient(180deg, rgb(var(--tint) / 0.055), rgb(var(--tint) / 0.02));
+  border: 1px solid var(--line);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.06),
+    0 20px 60px -20px rgb(0 0 0 / 0.6);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+.glass-strong {
+  background: linear-gradient(180deg, rgb(14 26 44 / 0.82), rgb(7 14 26 / 0.78));
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.08),
+    0 30px 80px -24px rgb(0 0 0 / 0.75);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+}
+
+/* Hairline that fades out at both ends */
+.hairline {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line-strong) 20%, var(--line-strong) 80%, transparent);
+}
+
+/* Spectrum hairline (the voyage, as a line) */
+.spectrum-line {
+  height: 2px;
+  background: var(--spectrum);
+  border-radius: 2px;
+}
+
+/* Faint lat/long graticule used behind sections */
+.graticule {
   background-image:
-    repeating-linear-gradient(-45deg, transparent, transparent 3px, hsl(33 45% 45% / 0.028) 3px, hsl(33 45% 45% / 0.028) 6px),
-    linear-gradient(160deg, hsl(42 55% 94%) 0%, hsl(38 45% 89%) 60%, hsl(36 40% 86%) 100%);
+    linear-gradient(rgb(var(--tint) / 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--tint) / 0.028) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
 }
 
-/* Captain callout panels */
-.captain-callout {
-  border-left: 4px solid hsl(var(--gold));
-  background: linear-gradient(to right, hsl(var(--gold) / 0.14), hsl(var(--gold) / 0.05), transparent);
+/* Glow ring for interactive focus targets */
+.glow-ring {
+  box-shadow: 0 0 0 1px rgb(94 242 214 / 0.4), 0 0 24px -4px rgb(94 242 214 / 0.5);
 }
 
-/* Treasure-map card frame */
-.treasure-frame {
-  background-image:
-    repeating-linear-gradient(-45deg, transparent, transparent 2px, hsl(33 45% 45% / 0.024) 2px, hsl(33 45% 45% / 0.024) 4px),
-    linear-gradient(135deg, hsl(42 55% 93%) 0%, hsl(38 45% 88%) 100%);
-  background-color: hsl(42 55% 93%);
-  border: 2px solid hsl(var(--rope) / 0.5);
-  position: relative;
-}
-.treasure-frame::before,
-.treasure-frame::after {
-  content: '✦';
-  position: absolute;
-  font-size: 11px;
-  color: hsl(var(--gold));
-  line-height: 1;
-}
-.treasure-frame::before {
-  top: -8px; left: 50%; transform: translateX(-50%);
-  background: hsl(42 55% 93%); padding: 0 5px;
-}
-.treasure-frame::after {
-  bottom: -8px; left: 50%; transform: translateX(-50%);
-  background: hsl(38 45% 88%); padding: 0 5px;
-}
+/* ── Motion utilities ─────────────────────────────────────────────────────── */
 
-/* Gentle swell animation for icons/decorations */
-@keyframes swell {
+@keyframes float-y {
   0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-5px); }
+  50% { transform: translateY(-6px); }
 }
-.swell { animation: swell 3.5s ease-in-out infinite; }
+.float-y { animation: float-y 5s var(--ease-in-out) infinite; }
 
-/* Slow spin for compass */
-@keyframes compass-drift {
-  0%   { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.15); }
 }
+.pulse-glow { animation: pulse-glow 2.4s var(--ease-in-out) infinite; }
+
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgb(var(--tint) / 0.06), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2.2s linear infinite;
+}
+
+/* Page cross-fade via React <ViewTransition> (experimental.viewTransition) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 420ms;
+  animation-timing-function: var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .grain::after { animation: none; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   DAY CHART — applied when <html data-theme="day"> (local daytime, or pinned).
+   Light khaki chart paper, powder-blue water, the leg palette deepened to ink.
+   Every text colour is ≥ 4.5:1 on the paper (WCAG AA).
+   ════════════════════════════════════════════════════════════════════════════ */
+:root[data-theme="day"] {
+  color-scheme: light;
+
+  --abyss: #efe8d6;     /* chart paper */
+  --deep: #e7dfca;
+  --trench: #ddd3bb;
+  --shoal: #d1c6aa;
+
+  --tint: 28 43 60;     /* ink-navy overlays */
+
+  --ink: #1c2b3c;
+  --ink-2: #3c4b5d;
+  --ink-3: #56636f;
+  --ink-4: #5c6772;
+
+  --glow: #256591;      /* harbour blue — primary interactive */
+  --glow-dim: #4f86ad;
+  --brass: #83581a;
+  --alert: #b03c29;
+  --ok: #256b47;
+
+  --leg-1: #2a64a3;
+  --leg-2: #14705a;
+  --leg-3: #196e8c;
+  --leg-4: #5f55c4;
+  --leg-5: #8146b5;
+  --leg-6: #875408;
+  --leg-7: #a3441d;
+  --leg-8: #b8345f;
+
+  --powder: #a9cfe4;
+  --paper: #f7f2e6;
+
+  --wash-1: rgb(169 207 228 / 0.55);   /* powder-blue sky, top left */
+  --wash-2: rgb(255 248 228 / 0.7);    /* warm light, top right */
+  --wash-3: rgb(196 214 222 / 0.45);   /* cool haze below */
+  --shadow-rgb: 70 55 25;
+  --shadow-a: 0.28;
+}
+
+:root[data-theme="day"] .glass {
+  background: linear-gradient(180deg, rgb(255 253 247 / 0.72), rgb(250 246 236 / 0.5));
+  border-color: rgb(28 43 60 / 0.1);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.8),
+    0 18px 40px -22px rgb(70 55 25 / 0.35);
+}
+:root[data-theme="day"] .glass-strong {
+  background: linear-gradient(180deg, rgb(252 249 241 / 0.94), rgb(246 241 229 / 0.9));
+  border-color: rgb(28 43 60 / 0.14);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 24px 60px -26px rgb(70 55 25 / 0.4);
+}
+:root[data-theme="day"] ::selection { background: rgb(169 207 228 / 0.7); }
+:root[data-theme="day"] .grain::after { opacity: 0.06; mix-blend-mode: multiply; filter: invert(1); }
+:root[data-theme="day"] .glow-ring { box-shadow: 0 0 0 1px rgb(37 101 145 / 0.45), 0 0 18px -6px rgb(37 101 145 / 0.45); }
+
+/* Theme-specific content (e.g. the day/night chart rasters) */
+:root[data-theme="day"] .night-only { display: none !important; }
+:root:not([data-theme="day"]) .day-only { display: none !important; }
+
+/* A soft cross-fade when the chart turns over at dawn or dusk */
+html.theme-fade, html.theme-fade * { transition: background-color 0.8s ease, color 0.8s ease, border-color 0.8s ease, fill 0.8s ease, stroke 0.8s ease !important; }
+
+/* ── Lenis smooth scroll ──────────────────────────────────────────────────── */
+html.lenis, html.lenis body { height: auto; }
+.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
+.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-smooth iframe { pointer-events: none; }

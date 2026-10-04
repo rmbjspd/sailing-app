@@ -1,0 +1,175 @@
+/* Logbook — theme treatments.
+   Night: pages glow faintly on the dark chart.
+   Day:   a printed log on khaki chart paper — cream pages, powder-blue rules,
+          a red margin line, warm paper shadows and no additive glow.
+   Leg colour arrives as --c (a theme-following var(--leg-…)). */
+
+/* ── Entry card (a page of the log) ─────────────────────────────────────── */
+.card {
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.012));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.05),
+    0 24px 60px -30px rgb(0 0 0 / 0.8);
+}
+.card[data-highlight="true"] {
+  border-color: color-mix(in srgb, var(--glow) 50%, transparent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--glow) 8%, transparent),
+    0 0 40px -8px color-mix(in srgb, var(--glow) 35%, transparent);
+}
+:root[data-theme="day"] .card {
+  background: linear-gradient(180deg, #fcfaf3, #f7f2e6);
+  border-color: rgb(var(--tint) / 0.12);
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 1px 2px rgb(70 55 25 / 0.07),
+    0 30px 50px -36px rgb(70 55 25 / 0.5);
+}
+:root[data-theme="day"] .card:hover { border-color: rgb(var(--tint) / 0.2); }
+:root[data-theme="day"] .card[data-highlight="true"] {
+  border-color: color-mix(in srgb, var(--glow) 55%, transparent);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--glow) 12%, transparent),
+    0 30px 50px -36px rgb(70 55 25 / 0.5);
+}
+
+/* The margin rule down the left of a page — brass at night, ledger red by day */
+.margin { background: color-mix(in srgb, var(--brass) 16%, transparent); }
+:root[data-theme="day"] .margin { background: color-mix(in srgb, var(--alert) 30%, transparent); }
+
+/* ── Timeline day marker ──────────────────────────────────────────────── */
+.marker {
+  border-color: var(--c);
+  background: var(--abyss);
+  box-shadow: 0 0 0 4px var(--abyss), 0 0 14px var(--c);
+}
+:root[data-theme="day"] .marker {
+  background: #fbf8f0;
+  box-shadow: 0 0 0 4px var(--abyss), 0 1px 3px rgb(70 55 25 / 0.3);
+}
+
+/* ── Selected pill (order toggle) ──────────────────────────────────────── */
+.pill {
+  background: rgb(255 255 255 / 0.08);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+}
+:root[data-theme="day"] .pill {
+  background: #fffdf8;
+  box-shadow:
+    0 0 0 1px rgb(var(--tint) / 0.11),
+    0 1px 2px rgb(70 55 25 / 0.1),
+    0 6px 14px -10px rgb(70 55 25 / 0.45);
+}
+
+/* ── Primary action (glow pill at night, harbour-blue ink by day) ────────── */
+.cta { box-shadow: 0 0 32px -8px var(--glow); }
+.cta:hover:not(:disabled) { box-shadow: 0 0 44px -6px var(--glow); }
+.ctaSm { box-shadow: 0 0 24px -6px var(--glow); }
+.ctaSm:disabled { box-shadow: none; }
+:root[data-theme="day"] .cta,
+:root[data-theme="day"] .ctaSm {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    0 10px 22px -12px color-mix(in srgb, var(--glow) 85%, transparent);
+}
+:root[data-theme="day"] .cta:hover:not(:disabled),
+:root[data-theme="day"] .ctaSm:hover:not(:disabled) {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    0 14px 28px -12px color-mix(in srgb, var(--glow) 90%, transparent);
+}
+:root[data-theme="day"] .ctaSm:disabled { box-shadow: none; }
+
+/* Small signal dots (status, today, composer) */
+.dot { box-shadow: 0 0 9px var(--dot, var(--glow)); }
+:root[data-theme="day"] .dot { box-shadow: none; }
+
+/* ── Composer ─────────────────────────────────────────────────────────── */
+.field {
+  background: rgb(255 255 255 / 0.03);
+}
+.field:hover { border-color: rgb(255 255 255 / 0.25); }
+.field:focus { background: rgb(255 255 255 / 0.05); border-color: color-mix(in srgb, var(--glow) 60%, transparent); }
+:root[data-theme="day"] .field {
+  background: rgb(255 253 247 / 0.8);
+  border-color: rgb(var(--tint) / 0.2);
+  box-shadow: inset 0 1px 1.5px rgb(70 55 25 / 0.07);
+}
+:root[data-theme="day"] .field:hover { border-color: rgb(var(--tint) / 0.34); }
+:root[data-theme="day"] .field:focus { background: #fffdf8; border-color: color-mix(in srgb, var(--glow) 70%, transparent); }
+/* Native option lists follow the page colours */
+.field option { background: var(--deep); color: var(--ink); }
+
+/* The writing surface: ruled like a printed log page */
+.ruled {
+  --rule: rgb(255 255 255 / 0.06);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(2rem - 1px),
+    var(--rule) calc(2rem - 1px),
+    var(--rule) 2rem
+  );
+  background-attachment: local;
+  background-position-y: -0.3rem;
+}
+:root[data-theme="day"] .ruled { --rule: color-mix(in srgb, var(--leg-1) 22%, transparent); }
+
+.marginRule { background: color-mix(in srgb, var(--brass) 25%, transparent); }
+.ruled:focus ~ .marginRule { background: var(--glow); box-shadow: 0 0 10px var(--glow); }
+:root[data-theme="day"] .marginRule { background: color-mix(in srgb, var(--alert) 38%, transparent); }
+:root[data-theme="day"] .ruled:focus ~ .marginRule { background: color-mix(in srgb, var(--alert) 70%, transparent); box-shadow: none; }
+
+/* ── Voyage strip cells ───────────────────────────────────────────────── */
+.cell {
+  border-color: color-mix(in srgb, var(--c) 25%, transparent);
+  background: color-mix(in srgb, var(--c) 5%, transparent);
+}
+.cell[data-logged="true"] {
+  border-color: var(--c);
+  background: var(--c);
+  box-shadow: 0 0 16px -2px color-mix(in srgb, var(--c) 67%, transparent);
+}
+:root[data-theme="day"] .cell {
+  border-color: color-mix(in srgb, var(--c) 30%, transparent);
+  background: color-mix(in srgb, var(--c) 4%, rgb(255 253 247 / 0.7));
+}
+:root[data-theme="day"] .cell:hover { border-color: color-mix(in srgb, var(--c) 60%, transparent); }
+:root[data-theme="day"] .cell[data-logged="true"] {
+  border-color: var(--c);
+  background: var(--c);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.18), 0 3px 8px -4px rgb(70 55 25 / 0.55);
+}
+.cellNum { color: var(--abyss); }
+:root[data-theme="day"] .cellNum { color: #fffdf7; }
+
+/* ── Empty-state illustration ─────────────────────────────────────────── */
+.page { fill: rgb(14 26 44 / 0.9); }
+:root[data-theme="day"] .page { fill: #fbf8ef; }
+.pen { filter: drop-shadow(0 0 3px color-mix(in srgb, var(--glow) 80%, transparent)); }
+:root[data-theme="day"] .pen { filter: none; }
+.halo { opacity: 1; }
+:root[data-theme="day"] .halo { opacity: 0.55; }
+
+.begin { background: rgb(255 255 255 / 0.03); }
+.begin:hover {
+  border-color: color-mix(in srgb, var(--glow) 40%, transparent);
+  background: color-mix(in srgb, var(--glow) 4%, transparent);
+  box-shadow: 0 0 40px -12px color-mix(in srgb, var(--glow) 50%, transparent);
+}
+:root[data-theme="day"] .begin {
+  background: linear-gradient(180deg, #fcfaf3, #f7f2e6);
+  border-color: rgb(var(--tint) / 0.14);
+  box-shadow: inset 0 1px 0 #fff, 0 20px 40px -30px rgb(70 55 25 / 0.5);
+}
+:root[data-theme="day"] .begin:hover {
+  border-color: color-mix(in srgb, var(--glow) 45%, transparent);
+  background: #fffdf8;
+  box-shadow: inset 0 1px 0 #fff, 0 24px 44px -28px rgb(70 55 25 / 0.55);
+}
+
+/* Ruled lines and margin in the illustration echo the composer's log page */
+.ruleStroke { stroke: var(--ink-4); }
+:root[data-theme="day"] .ruleStroke { stroke: color-mix(in srgb, var(--leg-1) 45%, transparent); }
+.marginStroke { stroke: color-mix(in srgb, var(--brass) 35%, transparent); }
+:root[data-theme="day"] .marginStroke { stroke: color-mix(in srgb, var(--alert) 55%, transparent); }

@@ -1,0 +1,211 @@
+/* Shared motion + chrome for the "Voyage in Numbers" figures.
+   Figures render complete on the server; the client arms them (data-phase =
+   "hidden") only when they start below the fold, then releases them on scroll. */
+
+/* Palette for the figures (see parts.tsx INK/SIG/GRID). Night values are the
+   original Night Chart literals; the day block re-inks them for chart paper. */
+.root {
+  --vz-ink: #eef3f8;
+  --vz-ink2: #a8b6c8;
+  --vz-ink3: #6a7b92;
+  --vz-ink4: #3d4b5f;
+  --vz-glow: #5ef2d6;
+  --vz-brass: #f4b860;
+  --vz-alert: #ff6b5b;
+  --vz-grid: rgb(255 255 255 / 0.06);
+  --vz-grid-strong: rgb(255 255 255 / 0.14);
+  --vz-knock: var(--abyss);
+  --vz-hilite: rgb(94 242 214 / 0.07);
+  --vz-spoke-on: #fff;
+  --vz-sea: rgb(255 255 255 / 0.22);
+}
+:global(:root[data-theme="day"]) .root {
+  --vz-ink: var(--ink);
+  --vz-ink2: var(--ink-2);
+  --vz-ink3: var(--ink-3);
+  --vz-ink4: var(--ink-4);
+  --vz-glow: var(--glow);
+  --vz-brass: var(--brass);
+  --vz-alert: var(--alert);
+  --vz-grid: rgb(var(--tint) / 0.13);
+  --vz-grid-strong: rgb(var(--tint) / 0.42);
+  --vz-hilite: rgb(37 101 145 / 0.08);
+  --vz-spoke-on: var(--ink);
+  --vz-sea: rgb(var(--tint) / 0.5);
+}
+
+/* Day chart: the cross-section as a printed plate. Water is powder blue
+   (tinted toward the leg's ink), the ground beneath is engraved hatching, the
+   canal pools read as water and the Waterford loupe is a paper inset. */
+:global(:root[data-theme="day"]) .root .water {
+  fill: color-mix(in srgb, var(--c) 26%, var(--powder));
+  fill-opacity: 0.9;
+}
+:global(:root[data-theme="day"]) .root .hatch {
+  stroke-opacity: 0.4;
+}
+:global(:root[data-theme="day"]) .root .poolTop { stop-opacity: 0.75; }
+:global(:root[data-theme="day"]) .root .poolBot { stop-opacity: 0.1; }
+/* Ribbons: a flat wash with an inked edge rather than a glowing gradient. */
+:global(:root[data-theme="day"]) .root .ribEnd { stop-opacity: 0.3; }
+:global(:root[data-theme="day"]) .root .ribMid { stop-opacity: 0.12; }
+:global(:root[data-theme="day"]) .root .ribbon {
+  stroke: var(--c);
+  stroke-opacity: 0.45;
+  stroke-width: 0.75;
+}
+:global(:root[data-theme="day"]) .root .pool {
+  fill: var(--powder);
+  fill-opacity: 1;
+}
+:global(:root[data-theme="day"]) .root .inset {
+  fill: var(--paper);
+  stroke: rgb(var(--tint) / 0.35);
+  filter: drop-shadow(0 6px 14px rgb(28 43 60 / 0.12));
+}
+:global(:root[data-theme="day"]) .root .insetPool {
+  fill: var(--powder);
+  fill-opacity: 0.75;
+}
+
+.fig {
+  position: relative;
+}
+
+/* Left-to-right wipe (applied to a clipPath rect, or any SVG element) */
+.wipe {
+  transform-box: fill-box;
+  transform-origin: left center;
+  transition: transform 1.8s cubic-bezier(0.65, 0, 0.35, 1) var(--d, 0s);
+}
+.fig[data-phase="hidden"] .wipe {
+  transform: scaleX(0);
+  transition: none;
+}
+
+/* Stroke draw — element needs pathLength="1" */
+.draw {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 2.4s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
+}
+.fig[data-phase="hidden"] .draw {
+  stroke-dashoffset: 1;
+  transition: none;
+}
+
+.fade {
+  transition: opacity 0.9s ease var(--d, 0s), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
+}
+.fig[data-phase="hidden"] .fade {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: none;
+}
+
+/* Grow from an origin (bars, radial spokes). Set --ox/--oy for the origin. */
+.grow {
+  transform-box: view-box;
+  transform-origin: var(--ox, 50%) var(--oy, 50%);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s), opacity 0.6s ease var(--d, 0s);
+}
+.fig[data-phase="hidden"] .grow {
+  transform: scale(var(--sx, 0), var(--sy, 0));
+  opacity: 0;
+  transition: none;
+}
+
+/* Bar grows along x from its own left edge */
+.growX {
+  transform-box: fill-box;
+  transform-origin: left center;
+  transition: transform 1.3s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
+}
+.fig[data-phase="hidden"] .growX {
+  transform: scaleX(0);
+  transition: none;
+}
+.growY {
+  transform-box: fill-box;
+  transform-origin: center top;
+  transition: transform 1.3s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0s);
+}
+.fig[data-phase="hidden"] .growY {
+  transform: scaleY(0);
+  transition: none;
+}
+
+/* Interactive marks */
+.hit {
+  cursor: pointer;
+  outline: none;
+}
+.hit:focus-visible .focusRing {
+  stroke: var(--glow);
+  stroke-width: 1.5;
+  opacity: 1;
+}
+.focusRing {
+  fill: none;
+  opacity: 0;
+}
+
+/* Floating tooltip card */
+.tip {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  width: 248px;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: linear-gradient(180deg, rgb(16 29 49 / 0.985), rgb(8 15 28 / 0.985));
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 24px 60px -18px rgb(0 0 0 / 0.8), inset 0 1px 0 rgb(255 255 255 / 0.06);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  animation: tipIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+:global(:root[data-theme="day"]) .tip {
+  background: rgb(247 242 230 / 0.97);
+  border-color: rgb(var(--tint) / 0.28);
+  box-shadow: 0 18px 40px -20px rgb(28 43 60 / 0.45), 0 1px 0 rgb(255 255 255 / 0.7) inset;
+}
+@keyframes tipIn {
+  from { opacity: 0; transform: var(--tf) translateY(4px); }
+  to { opacity: 1; transform: var(--tf); }
+}
+
+/* Data table disclosure */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.table th {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line-strong);
+  position: sticky;
+  top: 0;
+  background: var(--deep);
+}
+.table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-2);
+}
+.table tr:hover td {
+  background: rgb(var(--tint) / 0.03);
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wipe, .draw, .fade, .grow, .growX, .growY { transition: none !important; }
+  .tip { animation: none; }
+}

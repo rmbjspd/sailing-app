@@ -1,11 +1,13 @@
 "use client";
+import { useCallback } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 import type { JournalEntry } from "../types";
 
+// Stored under "journal:" as JournalEntry[] (newest-created first) — format unchanged.
 export function useJournal() {
-  const [entries, setEntries] = useLocalStorage<JournalEntry[]>("journal:", []);
+  const [entries, setEntries, ready] = useLocalStorage<JournalEntry[]>("journal:", []);
 
-  const addEntry = (entry: Omit<JournalEntry, "id" | "createdAt">) => {
+  const addEntry = useCallback((entry: Omit<JournalEntry, "id" | "createdAt">) => {
     const newEntry: JournalEntry = {
       ...entry,
       id: crypto.randomUUID(),
@@ -13,15 +15,15 @@ export function useJournal() {
     };
     setEntries(prev => [newEntry, ...prev]);
     return newEntry;
-  };
+  }, [setEntries]);
 
-  const updateEntry = (id: string, updates: Partial<JournalEntry>) => {
+  const updateEntry = useCallback((id: string, updates: Partial<JournalEntry>) => {
     setEntries(prev => prev.map(e => e.id === id ? { ...e, ...updates } : e));
-  };
+  }, [setEntries]);
 
-  const deleteEntry = (id: string) => {
+  const deleteEntry = useCallback((id: string) => {
     setEntries(prev => prev.filter(e => e.id !== id));
-  };
+  }, [setEntries]);
 
-  return { entries, addEntry, updateEntry, deleteEntry };
+  return { entries, addEntry, updateEntry, deleteEntry, ready };
 }
