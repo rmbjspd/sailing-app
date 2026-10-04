@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { WORLD_W, WORLD_D, project } from "@/lib/geo/projection";
 import type { TerrainData } from "./terrain";
-import { M2Y, BG } from "./constants";
+import { M2Y, BG, BG_DAY } from "./constants";
 
 // The night-chart terrain: one big displaced plane whose fragment shader does
 // all the cartography — hillshade from the real DEM, 100 m / 500 m contours on
@@ -50,17 +50,19 @@ const frag = /* glsl */ `
   uniform float uReveal;
   uniform vec2 uRevealOrigin;
   uniform vec3 uLight;
-  uniform vec3 uFog;
+  uniform float uDay;
+  uniform vec3 uFogN, uFogD;
+  uniform vec3 uLandLoN, uLandLoD, uLandHiN, uLandHiD, uContourN, uContourD;
+  uniform vec3 uWaterShallowN, uWaterShallowD, uWaterDeepN, uWaterDeepD;
+  uniform vec3 uShoreN, uShoreD, uGratN, uGratD;
   uniform float uFogDensity;
-  uniform vec3 uLandLo;
-  uniform vec3 uLandHi;
-  uniform vec3 uContour;
-  uniform vec3 uWaterShallow;
-  uniform vec3 uWaterDeep;
-  uniform vec3 uShore;
-  uniform vec3 uGrat;
   varying vec2 vUv;
   varying vec3 vWorld;
+
+  // Night: lines glow (additive). Day: lines are ink laid on the paper (mix).
+  vec3 mark(vec3 col, vec3 c, float a) {
+    return mix(col + c * a, mix(col, c, clamp(a * 2.2, 0.0, 1.0)), uDay);
+  }
 
   float hLand(vec2 uv) {
     float e = texture2D(uElev, uv).r;
@@ -86,6 +88,14 @@ const frag = /* glsl */ `
   }
 
   void main() {
+    vec3 uFog = mix(uFogN, uFogD, uDay);
+    vec3 uLandLo = mix(uLandLoN, uLandLoD, uDay);
+    vec3 uLandHi = mix(uLandHiN, uLandHiD, uDay);
+    vec3 uContour = mix(uContourN, uContourD, uDay);
+    vec3 uWaterShallow = mix(uWaterShallowN, uWaterShallowD, uDay);
+    vec3 uWaterDeep = mix(uWaterDeepN, uWaterDeepD, uDay);
+    vec3 uShore = mix(uShoreN, uShoreD, uDay);
+    vec3 uGrat = mix(uGratN, uGratD, uDay);
     vec2 uv = vUv;
     float e = texture2D(uElev, uv).r;
     float w = texture2D(uWater, uv).r;
@@ -102,9 +112,9 @@ const frag = /* glsl */ `
     vec3 land = mix(uLandLo, uLandHi, pow(t, 0.75));
     float diff = max(dot(n, uLight), 0.0);
     float rim = pow(1.0 - max(dot(n, V), 0.0), 3.0);
-    land *= 0.22 + diff * 1.25;
-    land += uContour * (rim * 0.10 + (1.0 - n.y) * 0.35);
-    land += uContour * (iso(landH / 100.0, 1.0) * 0.07 + iso(landH / 500.0, 1.5) * 0.20);
+    land *= mix(0.22 + diff * 1.25, 0.74 + diff * 0.36, uDay);
+    land = mark(land, uContour, (rim * 0.10 + (1.0 - n.y) * 0.35) * (1.0 - uDay * 0.6));
+    land = mark(land, uContour, iso(landH / 100.0, 1.0) * 0.07 + iso(landH / 500.0, 1.5) * 0.20);
 
     // ── Water ───────────────────────────────────────────────────────────
     // The source DEM only carries real bathymetry offshore (the Great Lakes
@@ -114,7 +124,7 @@ const frag = /* glsl */ `
     float dn = pow(smoothstep(0.0, 120.0, depth), 0.6);
     vec3 lake = mix(uWaterShallow, uWaterDeep, 0.55);
     vec3 water = mix(lake, mix(uWaterShallow, uWaterDeep, dn), known);
-    water += uShore * (iso(depth / 10.0, 1.0) * 0.05 + iso(depth / 50.0, 1.4) * 0.12) * known;
+    water = mark(water, uShore, (iso(depth / 10.0, 1.0) * 0.05 + iso(depth / 50.0, 1.4) * 0.12) * known);
     // broad, slow swell + fine ripples, lit by the moon
     vec2 wp = vWorld.xz * 9.0;
     float n1 = fbm(wp + vec2(uTime * 0.10, uTime * 0.07));
@@ -123,7 +133,7 @@ const frag = /* glsl */ `
     vec3 H = normalize(uLight + V);
     float spec = pow(max(dot(wn, H), 0.0), 70.0);
     float fres = pow(1.0 - max(V.y, 0.0), 4.0);
-    water += vec3(0.55, 0.78, 1.0) * spec * 0.12 + vec3(0.04, 0.13, 0.2) * fres;
+    water += (vec3(0.55, 0.78, 1.0) * spec * 0.12 + vec3(0.04, 0.13, 0.2) * fres) * (1.0 - uDay * 0.6);
     water *= 0.9 + 0.2 * n1;
 
     // ── Compose ─────────────────────────────────────────────────────────
@@ -131,23 +141,24 @@ const frag = /* glsl */ `
     vec3 col = mix(land, water, s);
     float fw = max(fwidth(w), 1e-4);
     float shore = 1.0 - smoothstep(0.0, fw * 1.1, abs(w - 0.5));
-    col += uShore * shore * 0.75;
+    col = mark(col, uShore, shore * mix(0.75, 0.42, uDay));
 
     // 1° graticule — the chart table
     float lng = -89.0 + uv.x * 18.0;
     float lat = 40.0 + uv.y * 7.5;
-    col += uGrat * max(iso(lng, 1.0), iso(lat, 1.0)) * 0.05;
+    col = mark(col, uGrat, max(iso(lng, 1.0), iso(lat, 1.0)) * mix(0.05, 0.07, uDay));
 
     // Drifting cloud shadows
     float cl = fbm(vWorld.xz * 0.38 + vec2(uTime * 0.010, uTime * 0.004));
-    col *= mix(1.0, 0.58, smoothstep(0.48, 0.78, cl));
+    col *= mix(1.0, mix(0.58, 0.86, uDay), smoothstep(0.48, 0.78, cl));
 
     // Intro reveal: a sonar sweep expanding from the origin (Chicago)
     float r = length(vWorld.xz - uRevealOrigin);
     float front = uReveal * 18.0;
     float revealed = smoothstep(front, front - 1.2, r);
     float ring = exp(-pow((r - front) * 5.0, 2.0)) * step(uReveal, 0.999);
-    col = col * revealed + uShore * ring * 0.9;
+    col = mix(uFog, col, revealed);
+    col = mark(col, uShore, ring * 0.9);
 
     // Soft vignette at the plane edges, then distance fog
     float edge = smoothstep(0.0, 0.07, uv.x) * smoothstep(1.0, 0.93, uv.x)
@@ -163,10 +174,12 @@ const frag = /* glsl */ `
 `;
 
 export default function TerrainMesh({
-  terrain, segments = [768, 444], reveal,
+  terrain, segments = [768, 444], reveal, day = false,
 }: {
   terrain: TerrainData;
   segments?: [number, number];
+  /** day chart (khaki / powder blue); cross-fades when it changes */
+  day?: boolean;
   /** 0..1 intro reveal, read every frame */
   reveal?: React.RefObject<number>;
 }) {
@@ -193,21 +206,25 @@ export default function TerrainMesh({
       uReveal: { value: reveal ? 0 : 1 },
       uRevealOrigin: { value: new THREE.Vector2(...project(-87.62, 41.88)) },
       uLight: { value: new THREE.Vector3(-0.55, 0.62, -0.56).normalize() },
-      uFog: { value: c(BG) },
+      uDay: { value: day ? 1 : 0 },
+      uFogN: { value: c(BG) }, uFogD: { value: c(BG_DAY) },
       uFogDensity: { value: 0.052 },
-      uLandLo: { value: c("#0b1322") },
-      uLandHi: { value: c("#3b4459") },
-      uContour: { value: c("#6fa6c8") },
-      uWaterShallow: { value: c("#0d3550") },
-      uWaterDeep: { value: c("#020711") },
-      uShore: { value: c("#5ef2d6") },
-      uGrat: { value: c("#f4b860") },
+      uLandLoN: { value: c("#0b1322") }, uLandLoD: { value: c("#ece4cc") },
+      uLandHiN: { value: c("#3b4459") }, uLandHiD: { value: c("#c9b68f") },
+      uContourN: { value: c("#6fa6c8") }, uContourD: { value: c("#6e5a36") },
+      uWaterShallowN: { value: c("#0d3550") }, uWaterShallowD: { value: c("#c3deee") },
+      uWaterDeepN: { value: c("#020711") }, uWaterDeepD: { value: c("#6f9fc4") },
+      uShoreN: { value: c("#5ef2d6") }, uShoreD: { value: c("#2f5f80") },
+      uGratN: { value: c("#f4b860") }, uGratD: { value: c("#8a6a35") },
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [terrain, reveal, segments]);
 
   useFrame((_, dt) => {
     if (!mat.current) return;
     mat.current.uniforms.uTime.value += Math.min(dt, 0.1);
+    const u = mat.current.uniforms.uDay;
+    u.value += ((day ? 1 : 0) - u.value) * (1 - Math.exp(-3 * Math.min(dt, 0.1)));
     if (reveal) mat.current.uniforms.uReveal.value = reveal.current ?? 1;
   });
 

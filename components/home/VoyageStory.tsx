@@ -110,7 +110,7 @@ export default function VoyageStory({ data }: { data: StoryData }) {
         <VoyageWorld mode="story" story={story} className="absolute inset-0" />
 
         {/* readability scrims */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_0%_50%,rgb(3_6_12/0.75),transparent_55%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_0%_50%,color-mix(in_srgb,var(--abyss)_75%,transparent),transparent_55%)]" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-abyss to-transparent" />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-abyss/80 to-transparent" />
 
@@ -153,7 +153,7 @@ export default function VoyageStory({ data }: { data: StoryData }) {
               </button>
             ))}
           </div>
-          <motion.div className="mt-1 h-px bg-white/40" style={{ width: railFill }} />
+          <motion.div className="mt-1 h-px bg-tint/40" style={{ width: railFill }} />
         </motion.nav>
 
         {/* Finale */}

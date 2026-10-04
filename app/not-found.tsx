@@ -18,7 +18,7 @@ export default function NotFound() {
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-3">
           <Link href="/" className="inline-flex min-h-11 items-center rounded-full bg-ink px-5 text-sm font-medium text-abyss hover:bg-white">The voyage</Link>
-          <Link href="/map" className="inline-flex min-h-11 items-center rounded-full border border-line-strong px-5 text-sm text-ink-2 hover:bg-white/5 hover:text-ink">Open the chart</Link>
+          <Link href="/map" className="inline-flex min-h-11 items-center rounded-full border border-line-strong px-5 text-sm text-ink-2 hover:bg-tint/5 hover:text-ink">Open the chart</Link>
         </div>
       </div>
     </section>

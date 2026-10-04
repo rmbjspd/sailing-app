@@ -51,3 +51,23 @@ out = os.path.join(ROOT, "public/geo")
 img.save(os.path.join(out, "chart-dark.webp"), quality=88, method=6)
 img.resize((W // 2, H // 2), Image.LANCZOS).save(os.path.join(out, "chart-dark-sm.webp"), quality=85, method=6)
 print("wrote chart-dark.webp", W, H)
+
+# ── Day chart: khaki chart paper, powder-blue water ──────────────────────────
+lvl = np.asarray(Image.open(os.path.join(ROOT, "public/geo/water-level.png")), dtype=np.float32)
+depth_m = np.clip(lvl - elev, 0, 400)
+t = np.clip(elev / 1400, 0, 1)[..., None]
+land_lo = np.array([236, 228, 207]); land_hi = np.array([205, 190, 156])
+dland = land_lo * (1 - t) + land_hi * t
+dland = dland * (0.72 + 0.36 * shade[..., None])
+dn = np.clip(depth_m / 220, 0, 1)[..., None] ** 0.6
+sea_sh = np.array([196, 222, 236]); sea_dp = np.array([128, 172, 204])
+dsea = sea_sh * (1 - dn) + sea_dp * dn
+# faint isobaths every 25 m where depth is real
+iso = (np.abs(((depth_m + 12.5) % 25) - 12.5) < 0.9) & (depth_m > 6)
+dsea = np.where(iso[..., None], dsea * 0.93, dsea)
+day = dland * (1 - w) + dsea * w
+day = day * (1 - edge[..., None] * 0.55) + np.array([52, 96, 128]) * edge[..., None] * 0.55
+dimg = Image.fromarray(np.clip(day, 0, 255).astype(np.uint8))
+dimg.save(os.path.join(out, "chart-day.webp"), quality=88, method=6)
+dimg.resize((W // 2, H // 2), Image.LANCZOS).save(os.path.join(out, "chart-day-sm.webp"), quality=85, method=6)
+print("wrote chart-day.webp", W, H)

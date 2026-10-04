@@ -18,11 +18,16 @@
   --shoal: #12223a;
 
   /* Glass panels */
-  --glass: rgb(255 255 255 / 0.035);
-  --glass-strong: rgb(255 255 255 / 0.06);
-  --glass-hover: rgb(255 255 255 / 0.08);
-  --line: rgb(255 255 255 / 0.08);
-  --line-strong: rgb(255 255 255 / 0.16);
+  /* Overlay tint: the colour hovers, hairlines and washes are mixed from.
+     White on the night chart, ink-navy on the day chart. Use rgb(var(--tint) / a)
+     in CSS or the Tailwind `tint` colour (bg-tint/[0.06], border-tint/10…). */
+  --tint: 255 255 255;
+
+  --glass: rgb(var(--tint) / 0.035);
+  --glass-strong: rgb(var(--tint) / 0.06);
+  --glass-hover: rgb(var(--tint) / 0.08);
+  --line: rgb(var(--tint) / 0.08);
+  --line-strong: rgb(var(--tint) / 0.16);
 
   /* Ink */
   --ink: #eef3f8;
@@ -47,6 +52,27 @@
   --leg-7: #ff8a5c;
   --leg-8: #ff5d8f;
   --spectrum: linear-gradient(90deg, var(--leg-1), var(--leg-2), var(--leg-3), var(--leg-4), var(--leg-5), var(--leg-6), var(--leg-7), var(--leg-8));
+  /* Per-leg, by id (lib/data/legStyle.ts → var(--leg-<id>)) */
+  --leg-lake-michigan: var(--leg-1);
+  --leg-north-channel: var(--leg-2);
+  --leg-lake-huron: var(--leg-3);
+  --leg-st-clair: var(--leg-4);
+  --leg-lake-erie: var(--leg-5);
+  --leg-erie-canal: var(--leg-6);
+  --leg-hudson: var(--leg-7);
+  --leg-sound-saybrook: var(--leg-8);
+  --leg-fallback: var(--glow);
+
+  /* Water and paper accents (used most by the day chart) */
+  --powder: #9fc6dd;
+  --paper: #f7f2e6;
+
+  /* Page washes (body background) */
+  --wash-1: rgb(30 70 120 / 0.22);
+  --wash-2: rgb(20 90 100 / 0.14);
+  --wash-3: rgb(40 30 90 / 0.18);
+  --shadow-rgb: 0 0 0;
+  --shadow-a: 0.6;
 
   --radius: 1rem;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -89,6 +115,9 @@
   --color-brass: var(--brass);
   --color-alert: var(--alert);
   --color-ok: var(--ok);
+  --color-tint: rgb(var(--tint));
+  --color-powder: var(--powder);
+  --color-paper: var(--paper);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -125,9 +154,9 @@ html {
 
 body {
   background:
-    radial-gradient(120% 80% at 15% -10%, rgb(30 70 120 / 0.22) 0%, transparent 55%),
-    radial-gradient(90% 70% at 100% 10%, rgb(20 90 100 / 0.14) 0%, transparent 50%),
-    radial-gradient(100% 60% at 50% 110%, rgb(40 30 90 / 0.18) 0%, transparent 60%),
+    radial-gradient(120% 80% at 15% -10%, var(--wash-1) 0%, transparent 55%),
+    radial-gradient(90% 70% at 100% 10%, var(--wash-2) 0%, transparent 50%),
+    radial-gradient(100% 60% at 50% 110%, var(--wash-3) 0%, transparent 60%),
     var(--abyss);
   background-attachment: fixed;
   color: var(--ink);
@@ -151,7 +180,7 @@ body {
 /* Thin, quiet scrollbars */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgb(255 255 255 / 0.14) transparent;
+  scrollbar-color: rgb(var(--tint) / 0.18) transparent;
 }
 
 /* Film grain — sits above everything, never intercepts input */
@@ -213,7 +242,7 @@ body {
 /* ── Surfaces ─────────────────────────────────────────────────────────────── */
 
 .glass {
-  background: linear-gradient(180deg, rgb(255 255 255 / 0.055), rgb(255 255 255 / 0.02));
+  background: linear-gradient(180deg, rgb(var(--tint) / 0.055), rgb(var(--tint) / 0.02));
   border: 1px solid var(--line);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.06),
@@ -248,8 +277,8 @@ body {
 /* Faint lat/long graticule used behind sections */
 .graticule {
   background-image:
-    linear-gradient(rgb(255 255 255 / 0.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(255 255 255 / 0.028) 1px, transparent 1px);
+    linear-gradient(rgb(var(--tint) / 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--tint) / 0.028) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
 }
@@ -278,7 +307,7 @@ body {
   to { background-position: 200% 0; }
 }
 .shimmer {
-  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.06), transparent);
+  background: linear-gradient(90deg, transparent, rgb(var(--tint) / 0.06), transparent);
   background-size: 200% 100%;
   animation: shimmer 2.2s linear infinite;
 }
@@ -299,6 +328,76 @@ body {
   }
   .grain::after { animation: none; }
 }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   DAY CHART — applied when <html data-theme="day"> (local daytime, or pinned).
+   Light khaki chart paper, powder-blue water, the leg palette deepened to ink.
+   Every text colour is ≥ 4.5:1 on the paper (WCAG AA).
+   ════════════════════════════════════════════════════════════════════════════ */
+:root[data-theme="day"] {
+  color-scheme: light;
+
+  --abyss: #efe8d6;     /* chart paper */
+  --deep: #e7dfca;
+  --trench: #ddd3bb;
+  --shoal: #d1c6aa;
+
+  --tint: 28 43 60;     /* ink-navy overlays */
+
+  --ink: #1c2b3c;
+  --ink-2: #3c4b5d;
+  --ink-3: #56636f;
+  --ink-4: #5c6772;
+
+  --glow: #256591;      /* harbour blue — primary interactive */
+  --glow-dim: #4f86ad;
+  --brass: #83581a;
+  --alert: #b03c29;
+  --ok: #256b47;
+
+  --leg-1: #2a64a3;
+  --leg-2: #14705a;
+  --leg-3: #196e8c;
+  --leg-4: #5f55c4;
+  --leg-5: #8146b5;
+  --leg-6: #875408;
+  --leg-7: #a3441d;
+  --leg-8: #b8345f;
+
+  --powder: #a9cfe4;
+  --paper: #f7f2e6;
+
+  --wash-1: rgb(169 207 228 / 0.55);   /* powder-blue sky, top left */
+  --wash-2: rgb(255 248 228 / 0.7);    /* warm light, top right */
+  --wash-3: rgb(196 214 222 / 0.45);   /* cool haze below */
+  --shadow-rgb: 70 55 25;
+  --shadow-a: 0.28;
+}
+
+:root[data-theme="day"] .glass {
+  background: linear-gradient(180deg, rgb(255 253 247 / 0.72), rgb(250 246 236 / 0.5));
+  border-color: rgb(28 43 60 / 0.1);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.8),
+    0 18px 40px -22px rgb(70 55 25 / 0.35);
+}
+:root[data-theme="day"] .glass-strong {
+  background: linear-gradient(180deg, rgb(252 249 241 / 0.94), rgb(246 241 229 / 0.9));
+  border-color: rgb(28 43 60 / 0.14);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 24px 60px -26px rgb(70 55 25 / 0.4);
+}
+:root[data-theme="day"] ::selection { background: rgb(169 207 228 / 0.7); }
+:root[data-theme="day"] .grain::after { opacity: 0.06; mix-blend-mode: multiply; filter: invert(1); }
+:root[data-theme="day"] .glow-ring { box-shadow: 0 0 0 1px rgb(37 101 145 / 0.45), 0 0 18px -6px rgb(37 101 145 / 0.45); }
+
+/* Theme-specific content (e.g. the day/night chart rasters) */
+:root[data-theme="day"] .night-only { display: none !important; }
+:root:not([data-theme="day"]) .day-only { display: none !important; }
+
+/* A soft cross-fade when the chart turns over at dawn or dusk */
+html.theme-fade, html.theme-fade * { transition: background-color 0.8s ease, color 0.8s ease, border-color 0.8s ease, fill 0.8s ease, stroke 0.8s ease !important; }
 
 /* ── Lenis smooth scroll ──────────────────────────────────────────────────── */
 html.lenis, html.lenis body { height: auto; }

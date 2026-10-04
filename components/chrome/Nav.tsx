@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { Compass, Map, ScrollText, PackageCheck, Feather, Users } from "lucide-react";
 import Mark from "./Mark";
+import ThemeToggle from "./ThemeToggle";
 
 const links = [
   { href: "/",           label: "Voyage",       icon: Compass      },
@@ -30,9 +31,9 @@ export default function Nav() {
         <Link
           href="/"
           aria-label="S/V Sabbatical — home"
-          className="pointer-events-auto glass-strong flex items-center gap-2.5 rounded-full py-1.5 pl-1.5 pr-4 transition-colors hover:bg-white/[0.06]"
+          className="pointer-events-auto glass-strong flex items-center gap-2.5 rounded-full py-1.5 pl-1.5 pr-4 transition-colors hover:bg-tint/[0.06]"
         >
-          <span className="grid size-8 place-items-center rounded-full bg-white/[0.04]">
+          <span className="grid size-8 place-items-center rounded-full bg-tint/[0.04]">
             <Mark className="size-6" />
           </span>
           <span className="leading-none">
@@ -66,7 +67,9 @@ export default function Nav() {
           })}
         </nav>
 
-        <span className="hidden w-[148px] md:block" aria-hidden />
+        <div className="pointer-events-auto glass-strong flex items-center rounded-full p-0.5 md:w-auto">
+          <ThemeToggle />
+        </div>
       </header>
 
       {/* Mobile dock (+ a scrim so content fades before it reaches the dock) */}
@@ -90,7 +93,7 @@ export default function Nav() {
               {active && (
                 <motion.span
                   layoutId="dock-active"
-                  className="absolute inset-0 rounded-xl bg-white/[0.08]"
+                  className="absolute inset-0 rounded-xl bg-tint/[0.08]"
                   transition={{ type: "spring", stiffness: 420, damping: 34 }}
                 />
               )}

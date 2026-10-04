@@ -103,7 +103,7 @@ export default function ChartExplorer() {
                 <p className="eyebrow">The Chart</p>
                 <p className="font-display mt-1 text-2xl font-light">{PORTS.length} ports of call</p>
               </div>
-              <button onClick={() => setListOpen(false)} className="grid size-9 place-items-center rounded-full text-ink-3 hover:bg-white/5 hover:text-ink" aria-label="Hide port list">
+              <button onClick={() => setListOpen(false)} className="grid size-9 place-items-center rounded-full text-ink-3 hover:bg-tint/5 hover:text-ink" aria-label="Hide port list">
                 <X className="size-4" />
               </button>
             </div>
@@ -129,7 +129,7 @@ export default function ChartExplorer() {
           >
             <div className="flex items-center justify-between border-b border-line px-5 py-3">
               <p className="font-display text-xl font-light">{PORTS.length} ports of call</p>
-              <button onClick={() => setSheet(false)} className="grid size-11 place-items-center rounded-full text-ink-3 hover:bg-white/5 hover:text-ink" aria-label="Close port list">
+              <button onClick={() => setSheet(false)} className="grid size-11 place-items-center rounded-full text-ink-3 hover:bg-tint/5 hover:text-ink" aria-label="Close port list">
                 <X className="size-4" />
               </button>
             </div>
@@ -166,7 +166,7 @@ export default function ChartExplorer() {
             </div>
             <button
               onClick={() => select(null)}
-              className="hidden size-11 shrink-0 place-items-center rounded-full border border-line text-ink-2 hover:bg-white/5 hover:text-ink sm:grid"
+              className="hidden size-11 shrink-0 place-items-center rounded-full border border-line text-ink-2 hover:bg-tint/5 hover:text-ink sm:grid"
               aria-label="Show the whole route"
               title="Whole route (Esc)"
             >
@@ -197,7 +197,7 @@ function PortList({ selected, onSelect }: { selected: string | null; onSelect: (
         if (!ports.length) return null;
         return (
           <li key={legId} className="mb-1">
-            <p className="eyebrow sticky top-0 z-10 flex items-center gap-2 bg-[rgb(10_20_35/0.92)] px-3 py-2 backdrop-blur" style={{ color: s.color }}>
+            <p className="eyebrow sticky top-0 z-10 flex items-center gap-2 bg-[color-mix(in_srgb,var(--deep)_92%,transparent)] px-3 py-2 backdrop-blur" style={{ color: s.color }}>
               <span className="num">{s.numeral}</span> {s.label}
             </p>
             <ul>
@@ -208,7 +208,7 @@ function PortList({ selected, onSelect }: { selected: string | null; onSelect: (
                     <button
                       onClick={() => onSelect(on ? null : p)}
                       aria-pressed={on}
-                      className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors ${on ? "bg-white/[0.09]" : "hover:bg-white/[0.04]"}`}
+                      className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors ${on ? "bg-tint/[0.09]" : "hover:bg-tint/[0.04]"}`}
                     >
                       <span className="num w-7 shrink-0 text-[11px] text-ink-3">{p.day === 0 ? "—" : String(p.day).padStart(2, "0")}</span>
                       <span className="size-2 shrink-0 rounded-full transition-transform group-hover:scale-125" style={{ background: s.color, boxShadow: on ? `0 0 12px ${s.color}` : undefined }} />
@@ -237,7 +237,7 @@ function Scrubber({ day, onChange }: { day: number; onChange: (d: number) => voi
           <span key={i} className="h-full flex-1 rounded-[2px] transition-opacity" style={{ background: legStyle(l).color, opacity: i < day ? 0.95 : 0.18 }} />
         ))}
       </div>
-      <span className="pointer-events-none absolute top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-abyss bg-ink shadow-[0_0_16px_rgba(255,255,255,0.6)]" style={{ left: `${(day / LAST_DAY) * 100}%` }} />
+      <span className="pointer-events-none absolute top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-abyss bg-ink shadow-[0_0_16px_rgb(var(--tint)/0.5)]" style={{ left: `${(day / LAST_DAY) * 100}%` }} />
       <input
         type="range" min={0} max={LAST_DAY} step={0.01} value={day}
         onChange={(e) => onChange(Number(e.target.value))}
@@ -268,7 +268,7 @@ function PortCard({ port, onClose, onStep }: { port: Waypoint; onClose: () => vo
           <p className="eyebrow" style={{ color: s.color }}>
             {port.day === 0 ? "Departure" : `Day ${port.day}`} · {s.label}
           </p>
-          <button onClick={onClose} className="-mr-2 -mt-2 grid size-9 shrink-0 place-items-center rounded-full text-ink-3 hover:bg-white/5 hover:text-ink" aria-label="Close">
+          <button onClick={onClose} className="-mr-2 -mt-2 grid size-9 shrink-0 place-items-center rounded-full text-ink-3 hover:bg-tint/5 hover:text-ink" aria-label="Close">
             <X className="size-4" />
           </button>
         </div>
@@ -302,17 +302,17 @@ function PortCard({ port, onClose, onStep }: { port: Waypoint; onClose: () => vo
           <a
             href={`https://www.google.com/maps/search/?api=1&query=${port.lat},${port.lng}`}
             target="_blank" rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-line-strong px-4 py-2 text-sm text-ink-2 hover:bg-white/5 hover:text-ink"
+            className="inline-flex items-center gap-2 rounded-full border border-line-strong px-4 py-2 text-sm text-ink-2 hover:bg-tint/5 hover:text-ink"
           >
             Harbour map <ExternalLink className="size-3.5" />
           </a>
         </div>
       </div>
       <div className="flex border-t border-line">
-        <button disabled={i <= 0} onClick={() => onStep(-1)} className="flex flex-1 items-center gap-2 px-5 py-3.5 text-sm text-ink-3 hover:bg-white/[0.03] hover:text-ink disabled:opacity-30">
+        <button disabled={i <= 0} onClick={() => onStep(-1)} className="flex flex-1 items-center gap-2 px-5 py-3.5 text-sm text-ink-3 hover:bg-tint/[0.03] hover:text-ink disabled:opacity-30">
           <ChevronLeft className="size-4" /> {i > 0 ? PORTS[i - 1].name.split(" / ")[0] : ""}
         </button>
-        <button disabled={i >= PORTS.length - 1} onClick={() => onStep(1)} className="flex flex-1 items-center justify-end gap-2 border-l border-line px-5 py-3.5 text-sm text-ink-3 hover:bg-white/[0.03] hover:text-ink disabled:opacity-30">
+        <button disabled={i >= PORTS.length - 1} onClick={() => onStep(1)} className="flex flex-1 items-center justify-end gap-2 border-l border-line px-5 py-3.5 text-sm text-ink-3 hover:bg-tint/[0.03] hover:text-ink disabled:opacity-30">
           {i < PORTS.length - 1 ? PORTS[i + 1].name.split(" / ")[0] : ""} <ChevronRight className="size-4" />
         </button>
       </div>

@@ -20,8 +20,9 @@ export interface RouteModel {
   legRanges: { legId: string; start: number; end: number }[];
   /** waypoints in day order with their route fraction and world position */
   stops: (Waypoint & { f: number; pos: THREE.Vector3 })[];
-  /** 1×256 RGBA texture of leg colours along the route (u = fraction) */
+  /** 1×512 RGBA textures of leg colours along the route (u = fraction), night / day palettes */
   legColorTex: THREE.DataTexture;
+  legColorTexDay: THREE.DataTexture;
   /** map a (fractional) voyage day 0..lastDay to route fraction */
   fractionForDay: (day: number) => number;
   /** inverse: route fraction to fractional voyage day */
@@ -140,25 +141,30 @@ export function buildRoute(t: TerrainData): RouteModel {
     return lastDay;
   };
 
-  // 7. Leg colour ramp texture.
-  const W = 512;
-  const col = new Uint8Array(W * 4);
-  const c = new THREE.Color();
-  for (let i = 0; i < W; i++) {
-    const f = (i + 0.5) / W;
-    const r = legRanges.find((lr) => f >= lr.start && f <= lr.end) ?? legRanges[legRanges.length - 1];
-    c.set(legStyle(r.legId).color);
-    col[i * 4] = Math.round(c.r * 255);
-    col[i * 4 + 1] = Math.round(c.g * 255);
-    col[i * 4 + 2] = Math.round(c.b * 255);
-    col[i * 4 + 3] = 255;
-  }
-  const legColorTex = new THREE.DataTexture(col, W, 1, THREE.RGBAFormat);
-  legColorTex.colorSpace = THREE.SRGBColorSpace;
-  legColorTex.magFilter = THREE.LinearFilter;
-  legColorTex.needsUpdate = true;
+  // 7. Leg colour ramp textures (night and day palettes).
+  const ramp = (day: boolean) => {
+    const W = 512;
+    const col = new Uint8Array(W * 4);
+    const c = new THREE.Color();
+    for (let i = 0; i < W; i++) {
+      const f = (i + 0.5) / W;
+      const r = legRanges.find((lr) => f >= lr.start && f <= lr.end) ?? legRanges[legRanges.length - 1];
+      const st = legStyle(r.legId);
+      // ramp bytes are sRGB (the texture is tagged SRGBColorSpace)
+      c.set(day ? st.hexDay : st.hex).convertLinearToSRGB();
+      col[i * 4] = Math.round(c.r * 255);
+      col[i * 4 + 1] = Math.round(c.g * 255);
+      col[i * 4 + 2] = Math.round(c.b * 255);
+      col[i * 4 + 3] = 255;
+    }
+    const tex = new THREE.DataTexture(col, W, 1, THREE.RGBAFormat);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.magFilter = THREE.LinearFilter;
+    tex.needsUpdate = true;
+    return tex;
+  };
 
-  return { curve, samples, legRanges, stops, legColorTex, fractionForDay, dayForFraction, lastDay };
+  return { curve, samples, legRanges, stops, legColorTex: ramp(false), legColorTexDay: ramp(true), fractionForDay, dayForFraction, lastDay };
 }
 
 export const LEGS = LEG_ORDER;

@@ -13,7 +13,8 @@ import Boat from "./Boat";
 import Labels from "./Labels";
 import { StoryRig, ExploreRig, type StoryState } from "./rigs";
 import StaticChart from "./StaticChart";
-import { BG } from "./constants";
+import { BG, BG_DAY } from "./constants";
+import { useTheme } from "@/lib/theme";
 
 export type { StoryState };
 
@@ -58,7 +59,19 @@ function ExploreProgress({ route, day, progress, activeIndex }: { route: RouteMo
   return null;
 }
 
-function Scene({ terrain, route, props, lowPower }: { terrain: TerrainData; route: RouteModel; props: VoyageWorldProps; lowPower: boolean }) {
+/** Cross-fades the clear colour between the night and day chart. */
+function Background({ day }: { day: boolean }) {
+  const col = useMemo(() => new THREE.Color(day ? BG_DAY : BG), []); // eslint-disable-line react-hooks/exhaustive-deps
+  const target = useMemo(() => new THREE.Color(), []);
+  useFrame(({ scene }, dt) => {
+    target.set(day ? BG_DAY : BG);
+    col.lerp(target, 1 - Math.exp(-3 * Math.min(dt, 0.1)));
+    scene.background = col;
+  });
+  return null;
+}
+
+function Scene({ terrain, route, props, lowPower, day }: { terrain: TerrainData; route: RouteModel; props: VoyageWorldProps; lowPower: boolean; day: boolean }) {
   const progress = useRef(0);
   const lineProgress = useRef(0);
   const activeIndex = useRef(0);
@@ -68,13 +81,13 @@ function Scene({ terrain, route, props, lowPower }: { terrain: TerrainData; rout
 
   return (
     <>
-      <color attach="background" args={[BG]} />
-      <ambientLight intensity={0.5} />
+      <Background day={day} />
+      <ambientLight intensity={day ? 0.9 : 0.5} />
       <directionalLight position={[-3, 5, -2]} intensity={1.6} color="#dfe9ff" />
-      <TerrainMesh terrain={terrain} segments={segments} reveal={props.mode === "story" ? reveal : undefined} />
-      <Labels terrain={terrain} />
-      <RouteLine route={route} progress={props.mode === "story" ? lineProgress : progress} />
-      <Beacons route={route} activeIndex={activeIndex} onSelect={props.mode === "explore" ? props.onStopSelect : undefined} />
+      <TerrainMesh terrain={terrain} segments={segments} reveal={props.mode === "story" ? reveal : undefined} day={day} />
+      <Labels terrain={terrain} day={day} />
+      <RouteLine route={route} progress={props.mode === "story" ? lineProgress : progress} day={day} />
+      <Beacons route={route} activeIndex={activeIndex} onSelect={props.mode === "explore" ? props.onStopSelect : undefined} day={day} />
       <Boat route={route} progress={progress} mastDown={mastDown} />
       {props.mode === "story" && props.story ? (
         <>
@@ -88,8 +101,8 @@ function Scene({ terrain, route, props, lowPower }: { terrain: TerrainData; rout
         </>
       )}
       <EffectComposer multisampling={lowPower ? 0 : 4}>
-        <Bloom mipmapBlur intensity={0.95} luminanceThreshold={0.62} luminanceSmoothing={0.25} radius={0.72} />
-        <Vignette eskil={false} offset={0.22} darkness={0.78} />
+        <Bloom mipmapBlur intensity={day ? 0.18 : 0.95} luminanceThreshold={day ? 0.96 : 0.62} luminanceSmoothing={0.25} radius={0.72} />
+        <Vignette eskil={false} offset={0.22} darkness={day ? 0.32 : 0.78} />
       </EffectComposer>
     </>
   );
@@ -103,6 +116,7 @@ export default function VoyageWorld(props: VoyageWorldProps) {
   const [failed, setFailed] = useState(false);
   const [lowPower, setLowPower] = useState(false);
   const [webgl, setWebgl] = useState<boolean | null>(null);
+  const day = useTheme() === "day";
   const [visible, setVisible] = useState(true);
   const [ready, setReady] = useState(false);
   const host = useRef<HTMLDivElement>(null);
@@ -141,7 +155,7 @@ export default function VoyageWorld(props: VoyageWorldProps) {
   }
 
   return (
-    <div ref={host} className={props.className} style={{ background: BG }}>
+    <div ref={host} className={props.className} style={{ background: "var(--abyss)" }}>
       {/* Poster frame: the baked 2D chart shows instantly while the terrain
           streams and decodes; the 3D canvas fades in over it. */}
       <StaticChart className={`absolute inset-0 transition-opacity duration-[2500ms] ${ready ? "opacity-0" : "opacity-60"}`} />
@@ -157,7 +171,7 @@ export default function VoyageWorld(props: VoyageWorldProps) {
         >
           <PerformanceMonitor onDecline={() => setLowPower(true)} />
           <Suspense fallback={null}>
-            <Scene terrain={data.terrain} route={data.route} props={props} lowPower={lowPower} />
+            <Scene terrain={data.terrain} route={data.route} props={props} lowPower={lowPower} day={day} />
           </Suspense>
         </Canvas>
       )}

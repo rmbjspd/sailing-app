@@ -30,7 +30,7 @@ export default function ExploreGrid() {
           <Reveal key={c.href} delay={i * 0.06} className={c.span ?? "md:col-span-2"}>
             <Link
               href={c.href}
-              className="group glass relative flex h-full min-h-[220px] flex-col justify-between overflow-hidden rounded-3xl p-7 transition-[transform,background] duration-500 hover:-translate-y-1 hover:bg-white/[0.06]"
+              className="group glass relative flex h-full min-h-[220px] flex-col justify-between overflow-hidden rounded-3xl p-7 transition-[transform,background] duration-500 hover:-translate-y-1 hover:bg-tint/[0.06]"
             >
               <div className="pointer-events-none absolute inset-0 opacity-70 transition-opacity duration-500 group-hover:opacity-100">{c.glyph}</div>
               <div className="relative flex items-start justify-between">
@@ -80,7 +80,7 @@ function DaysGlyph({ days }: { days: { id: string; n: number }[] }) {
 function StoresGlyph() {
   return (
     <svg viewBox="0 0 120 120" className="absolute right-6 top-14 size-24" aria-hidden>
-      <circle cx="60" cy="60" r="48" fill="none" stroke="rgb(255 255 255 / 0.08)" strokeWidth="8" />
+      <circle cx="60" cy="60" r="48" fill="none" stroke="rgb(var(--tint) / 0.08)" strokeWidth="8" />
       <circle cx="60" cy="60" r="48" fill="none" stroke="var(--glow)" strokeWidth="8" strokeLinecap="round" strokeDasharray="301" strokeDashoffset="110" transform="rotate(-90 60 60)" />
     </svg>
   );
@@ -103,7 +103,7 @@ function CrewGlyph() {
 function JournalGlyph() {
   return (
     <svg viewBox="0 0 200 60" className="absolute right-6 top-16 w-40" aria-hidden>
-      {[0, 1, 2, 3].map((i) => <line key={i} x1="0" x2={200 - i * 30} y1={8 + i * 14} y2={8 + i * 14} stroke="rgb(255 255 255 / 0.14)" />)}
+      {[0, 1, 2, 3].map((i) => <line key={i} x1="0" x2={200 - i * 30} y1={8 + i * 14} y2={8 + i * 14} stroke="rgb(var(--tint) / 0.14)" />)}
       <path d="M4 50 C 40 30, 70 58, 110 36 S 170 28, 196 40" fill="none" stroke="var(--brass)" strokeWidth="1.5" />
     </svg>
   );

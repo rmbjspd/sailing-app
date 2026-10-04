@@ -21,9 +21,20 @@ npm run build
 | `/journal` | The Logbook (state in `localStorage`) |
 | `/crew` | Crew Manifest — sign up for legs (password-gated, see below) |
 
-**Design system** — "Night Chart": tokens and utilities in `app/globals.css`, per-leg
-colours in `lib/data/legStyle.ts`, shared primitives in `components/kit`. Fonts:
-Fraunces (display), Geist (text), Geist Mono (numbers).
+**Design system** — tokens and utilities in `app/globals.css`, per-leg colours in
+`lib/data/legStyle.ts`, shared primitives in `components/kit`. Fonts: Fraunces
+(display), Geist (text), Geist Mono (numbers).
+
+**Day & night charts** — the site follows the viewer's local clock: the *day chart*
+(khaki chart paper, powder-blue water) from 06:30 to 19:30, the *night chart*
+otherwise, turning over live at dawn and dusk. The sun/moon button in the nav cycles
+Auto → Day → Night (stored per device under `sv-theme`). A pre-paint script in
+`app/layout.tsx` sets `<html data-theme>` before first paint, so there's no flash.
+Rules for components: use the theme tokens (`ink`, `abyss`, `line`, and `tint` for
+overlays — never literal white/black), `legStyle(id).color` for leg colours with
+`alpha(color, a)` for translucency, `<ChartImage/>` for the baked chart rasters, and
+`.day-only` / `.night-only` for anything that genuinely differs. The 3D world reads
+`useTheme()` and cross-fades its shaders.
 
 **Data** — `lib/data/itinerary.ts` is the single source of truth; every distance,
 lock count and date shown anywhere is derived from it (`lib/data/stats.ts`).

@@ -34,7 +34,7 @@ const PLACES: { name: string; lng: number; lat: number }[] = [
 
 const _fwd = new THREE.Vector3();
 
-export default function Labels({ terrain, opacity = 1 }: { terrain: TerrainData; opacity?: number }) {
+export default function Labels({ terrain, opacity = 1, day = false }: { terrain: TerrainData; opacity?: number; day?: boolean }) {
   // Every label turns (about the vertical) to stay upright for the current
   // camera heading, so nothing reads upside-down when the boat sails south.
   const turners = useRef<(THREE.Group | null)[]>([]);
@@ -63,8 +63,8 @@ export default function Labels({ terrain, opacity = 1 }: { terrain: TerrainData;
             rotation={[-Math.PI / 2, 0, (w.rot ?? 0) * 0.5]}
             fontSize={w.size}
             letterSpacing={0.12}
-            color="#8fc3dc"
-            fillOpacity={0.32 * opacity}
+            color={day ? "#2f5f80" : "#8fc3dc"}
+            fillOpacity={(day ? 0.5 : 0.32) * opacity}
             anchorX="center"
             anchorY="middle"
             renderOrder={1}
@@ -81,7 +81,7 @@ export default function Labels({ terrain, opacity = 1 }: { terrain: TerrainData;
           <group key={p.name} ref={reg()} position={[x, y, z]}>
             <mesh rotation={[-Math.PI / 2, 0, 0]}>
               <circleGeometry args={[0.012, 16]} />
-              <meshBasicMaterial color="#f4b860" transparent opacity={0.7 * opacity} toneMapped={false} />
+              <meshBasicMaterial color={day ? "#83581a" : "#f4b860"} transparent opacity={0.7 * opacity} toneMapped={false} />
             </mesh>
             <Text
               font="/fonts/geist-mono.ttf"
@@ -89,8 +89,8 @@ export default function Labels({ terrain, opacity = 1 }: { terrain: TerrainData;
               rotation={[-Math.PI / 2, 0, 0]}
               fontSize={0.045}
               letterSpacing={0.22}
-              color="#f4d7a6"
-              fillOpacity={0.62 * opacity}
+              color={day ? "#5e3f12" : "#f4d7a6"}
+              fillOpacity={(day ? 0.75 : 0.62) * opacity}
               anchorX="left"
               anchorY="middle"
             >

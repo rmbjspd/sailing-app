@@ -6,3 +6,4 @@ export const EXAGGERATION = 26;
 export const M2Y = METRES_TO_UNITS * EXAGGERATION;
 
 export const BG = "#03060c";
+export const BG_DAY = "#efe8d6";

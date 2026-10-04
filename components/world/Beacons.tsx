@@ -13,11 +13,11 @@ const beamVert = /* glsl */ `
   void main() { vY = uv.y; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
 `;
 const beamFrag = /* glsl */ `
-  uniform vec3 uColor; uniform float uIntensity;
+  uniform vec3 uColor; uniform float uIntensity; uniform float uDay;
   varying float vY;
   void main() {
-    float a = pow(1.0 - vY, 2.2) * uIntensity;
-    gl_FragColor = vec4(uColor * (0.6 + uIntensity * 1.6), a);
+    float a = pow(1.0 - vY, 2.2) * uIntensity * mix(1.0, 0.85, uDay);
+    gl_FragColor = vec4(uColor * mix(0.6 + uIntensity * 1.6, 1.0, uDay), a);
     #include <colorspace_fragment>
   }
 `;
@@ -26,7 +26,7 @@ const ringVert = /* glsl */ `
   void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
 `;
 const ringFrag = /* glsl */ `
-  uniform vec3 uColor; uniform float uTime; uniform float uIntensity; uniform float uActive;
+  uniform vec3 uColor; uniform float uTime; uniform float uIntensity; uniform float uActive; uniform float uDay;
   varying vec2 vUv;
   void main() {
     float r = length(vUv - 0.5) * 2.0;
@@ -38,25 +38,29 @@ const ringFrag = /* glsl */ `
     }
     float a = core * (0.5 + uIntensity) + ring * uActive * 0.9;
     if (a < 0.01) discard;
-    gl_FragColor = vec4(uColor * (1.0 + core * 2.0 * uIntensity), a);
+    gl_FragColor = vec4(uColor * mix(1.0 + core * 2.0 * uIntensity, 1.0, uDay), min(a, 1.0));
     #include <colorspace_fragment>
   }
 `;
 
 function Beacon({
-  stop, index, activeIndex, size, onSelect,
+  stop, index, activeIndex, size, onSelect, day,
 }: {
   stop: RouteModel["stops"][number];
   index: number;
   activeIndex: React.RefObject<number>;
   size: number;
   onSelect?: (id: string) => void;
+  day: boolean;
 }) {
   const beam = useRef<THREE.ShaderMaterial>(null);
   const ring = useRef<THREE.ShaderMaterial>(null);
-  const color = useMemo(() => new THREE.Color(legStyle(stop.leg).color), [stop.leg]);
-  const beamU = useMemo(() => ({ uColor: { value: color }, uIntensity: { value: 0.2 } }), [color]);
-  const ringU = useMemo(() => ({ uColor: { value: color }, uTime: { value: index * 0.37 }, uIntensity: { value: 0.2 }, uActive: { value: 0 } }), [color, index]);
+  // Night: additive light beams. Day: ink-coloured markers with normal blending
+  // (additive light vanishes on paper).
+  const color = useMemo(() => new THREE.Color(day ? legStyle(stop.leg).hexDay : legStyle(stop.leg).hex), [stop.leg, day]);
+  const blending = day ? THREE.NormalBlending : THREE.AdditiveBlending;
+  const beamU = useMemo(() => ({ uColor: { value: color }, uIntensity: { value: 0.2 }, uDay: { value: day ? 1 : 0 } }), [color, day]);
+  const ringU = useMemo(() => ({ uColor: { value: color }, uTime: { value: index * 0.37 }, uIntensity: { value: 0.2 }, uActive: { value: 0 }, uDay: { value: day ? 1 : 0 } }), [color, index, day]);
   const terminal = stop.day === 0 || index === -1;
   useFrame((_, dt) => {
     const a = activeIndex.current ?? -1;
@@ -80,7 +84,7 @@ function Beacon({
     <group position={stop.pos}>
       <mesh position={[0, h / 2, 0]} renderOrder={3}>
         <cylinderGeometry args={[0.0035 * size, 0.0035 * size, h, 8, 1, true]} />
-        <shaderMaterial ref={beam} vertexShader={beamVert} fragmentShader={beamFrag} uniforms={beamU} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
+        <shaderMaterial ref={beam} vertexShader={beamVert} fragmentShader={beamFrag} uniforms={beamU} transparent depthWrite={false} blending={blending} key={day ? "d" : "n"} />
       </mesh>
       {onSelect && (
         <mesh
@@ -95,17 +99,17 @@ function Beacon({
       )}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.002, 0]} renderOrder={3}>
         <planeGeometry args={[0.14 * size, 0.14 * size]} />
-        <shaderMaterial ref={ring} vertexShader={ringVert} fragmentShader={ringFrag} uniforms={ringU} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
+        <shaderMaterial ref={ring} vertexShader={ringVert} fragmentShader={ringFrag} uniforms={ringU} transparent depthWrite={false} blending={blending} key={day ? "d" : "n"} />
       </mesh>
     </group>
   );
 }
 
-export default function Beacons({ route, activeIndex, size = 1, onSelect }: { route: RouteModel; activeIndex: React.RefObject<number>; size?: number; onSelect?: (id: string) => void }) {
+export default function Beacons({ route, activeIndex, size = 1, onSelect, day = false }: { route: RouteModel; activeIndex: React.RefObject<number>; size?: number; onSelect?: (id: string) => void; day?: boolean }) {
   return (
     <group>
       {route.stops.map((s, i) => (
-        <Beacon key={s.id} stop={s} index={i} activeIndex={activeIndex} size={size} onSelect={onSelect} />
+        <Beacon key={s.id} stop={s} index={i} activeIndex={activeIndex} size={size} onSelect={onSelect} day={day} />
       ))}
     </group>
   );

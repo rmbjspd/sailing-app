@@ -4,6 +4,8 @@ import "./globals.css";
 import Nav from "@/components/chrome/Nav";
 import SmoothScroll from "@/components/chrome/SmoothScroll";
 import Footer from "@/components/chrome/Footer";
+import ThemeClock from "@/components/chrome/ThemeClock";
+import { THEME_SCRIPT } from "@/lib/themeScript";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -23,13 +25,18 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#03060c",
-  colorScheme: "dark",
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${geist.variable} ${geistMono.variable}`}>
+    // data-theme is set by the pre-paint script before hydration, hence the warning suppression.
+    <html lang="en" data-theme="night" suppressHydrationWarning className={`${fraunces.variable} ${geist.variable} ${geistMono.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body className="grain min-h-dvh antialiased">
+        <ThemeClock />
         {/* Without JS, scroll-reveal content must not stay at its initial hidden state. */}
         <noscript>
           <style>{`[data-reveal]{opacity:1!important;transform:none!important;filter:none!important}`}</style>

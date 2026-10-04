@@ -133,7 +133,7 @@ RI, CI = np.meshgrid(ri, ci, indexing="ij")
 floor = ndimage.map_coordinates(ez, [RI, CI], order=1, mode="nearest")
 # Light smoothing: the continental shelf is flat enough that quantisation
 # otherwise breaks the isobaths into dotted noise.
-floor = ndimage.gaussian_filter(floor, 1.2)
+floor = ndimage.gaussian_filter(floor, 2.0)
 elev = np.where(open_water, floor, elev)
 
 v = np.clip(np.round((elev + 1000) * 4), 0, 65535).astype(np.uint32)
