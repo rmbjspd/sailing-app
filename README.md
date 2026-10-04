@@ -35,9 +35,18 @@ into textures by the scripts in `scripts/geo/` (needs Python with pillow, numpy,
 ```bash
 python3 scripts/geo/bake-terrain.py   # public/geo/terrain.png  (AWS Terrain Tiles + Natural Earth)
 python3 scripts/geo/bake-water.py     # public/geo/water-level.png (per-lake surface levels)
+python3 scripts/geo/bake-route.py     # lib/data/routePath.ts (water-following track)
+python3 scripts/geo/audit-route.py    # reports any stretch of route over land (should be ~0 nm)
 python3 scripts/geo/bake-chart.py     # public/geo/chart-dark*.webp (2D night-chart raster)
 python3 scripts/geo/bake-profile.py   # lib/data/vizBathymetry.ts
 ```
+
+The route is generated, not hand-drawn: each overnight passage is a least-cost
+path through navigable water (Natural Earth coast and lakes, plus the canal and
+river channels listed in `scripts/geo/waterways.py`), kept a mile or two
+offshore on open water. To change the track, move a waypoint, add a `VIA`
+point in `bake-route.py`, or adjust a channel in `waterways.py`, then re-run the
+bakes in order.
 
 Projection and bounds live in `lib/geo/projection.ts` and must match the bake scripts.
 The source DEM has no Great Lakes bathymetry (lakes are flat at their surface), so

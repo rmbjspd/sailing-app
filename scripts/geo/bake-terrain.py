@@ -99,12 +99,22 @@ draw_geojson(d, lakes, 255)  # lakes back to water
 mask = mask.resize((OUT_W, OUT_H), Image.LANCZOS)
 # Soften the edge over ~2 px so the 0.5 iso-contour of the bilinearly-sampled
 # mask (the rendered shoreline) is smooth instead of stair-stepped.
-from PIL import ImageFilter
+from PIL import ImageFilter, ImageChops
+# Burn in the canal and river channels too narrow for Natural Earth's coastline
+# (scripts/geo/waterways.py) so they render as water under the route.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from waterways import rasterize
 mask = mask.filter(ImageFilter.GaussianBlur(1.1))
+mask = ImageChops.lighter(mask, rasterize(OUT_W, OUT_H, 1.8, ss=SS).resize((OUT_W, OUT_H), Image.LANCZOS))
 water = np.asarray(mask, dtype=np.float32)
 
 # Land pixels below 0 m (DEM noise along coasts) clamp to 1 m; keep bathymetry under water.
 elev = np.where(water < 128, np.maximum(elev, 1.0), elev)
+# Smooth the sea floor a little: the shelf is so flat that raw depth quantisation
+# otherwise breaks isobaths into dotted noise.
+from scipy import ndimage
+smooth_floor = ndimage.gaussian_filter(elev, 2.2)
+elev = np.where(water >= 128, np.minimum(smooth_floor, elev.max()), elev)
 
 v = np.clip(np.round((elev + 1000) * 4), 0, 65535).astype(np.uint32)
 out = np.zeros((OUT_H, OUT_W, 4), dtype=np.uint8)

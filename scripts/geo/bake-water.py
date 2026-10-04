@@ -18,10 +18,18 @@ from PIL import Image
 from scipy import ndimage
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from waterways import rasterize
+
 a = np.asarray(Image.open(os.path.join(ROOT, "public/geo/terrain.png")), dtype=np.float32)
 elev = (a[..., 0] * 256 + a[..., 1]) / 4 - 1000
-water = a[..., 2] > 127
-H, W = water.shape
+water_all = a[..., 2] > 127
+H, W = water_all.shape
+# Burned canal/river channels must not join separate lakes into one region
+# (the canal would otherwise give Erie, Ontario and the Atlantic one level).
+chan = ndimage.binary_dilation(np.asarray(rasterize(W, H, 1.8)) > 0, iterations=2) & water_all
+water = water_all & ~chan
 
 labels, n = ndimage.label(water)
 surface = np.zeros_like(elev)
@@ -44,6 +52,11 @@ for i in range(1, n + 1):
         cy, cx = int(ys.mean()), int(xs.mean())
         lng = -89 + cx / W * 18; lat = 47.5 - cy / H * 7.5
         print(f"region {i:4d} size {int(sizes[i-1]):7d} centre ({lng:.1f},{lat:.1f}) surface {lvl:6.1f} m  floor {elev[region].min():.0f} m")
+
+# Channels sit at the local valley floor (their own DEM surface).
+valley = ndimage.minimum_filter(elev, size=7)
+surface[chan] = np.maximum(valley[chan], 0)
+water = water_all
 
 # Spread each water level into the land (nearest water pixel) for clean filtering.
 _, (iy, ix) = ndimage.distance_transform_edt(~water, return_indices=True)
