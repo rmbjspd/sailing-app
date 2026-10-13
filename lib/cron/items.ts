@@ -82,6 +82,7 @@ export const WATCHED_ITEMS: WatchedItem[] = [
   // ── Navigation ──────────────────────────────────────────────────────
   // n2 (Garmin InReach Mini) intentionally omitted — already owned.
   // n10 (depth sounder) intentionally omitted — already aboard.
+  // n9 (autopilot) intentionally omitted — already aboard.
   {
     id: "n4", label: "Handheld VHF radio DSC GPS", category: "navigation", priority: "critical",
     brands: ["Standard Horizon", "Icom"],
@@ -93,11 +94,6 @@ export const WATCHED_ITEMS: WatchedItem[] = [
     id: "n11", label: "AIS Class B transceiver (transmit + receive)", category: "navigation", priority: "critical",
     brands: ["Vesper", "em-trak"],
     searchTerm: "AIS Class B transceiver transmit marine SOTDMA",
-  },
-  {
-    id: "n9", label: "Autopilot wheel pilot", category: "navigation", priority: "critical",
-    brands: ["Garmin"],
-    searchTerm: "Garmin Compact Reactor wheel pilot autopilot marine",
   },
   {
     // NOTE: sized for a larger boat. On the Oceanis 30.1 the lighter HALO20+
