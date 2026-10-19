@@ -36,11 +36,6 @@ export const WATCHED_ITEMS: WatchedItem[] = [
     searchTerm: "sailboat jackline webbing bow to stern safety",
   },
   {
-    id: "s4", label: "EPIRB / PLB", category: "safety", priority: "critical",
-    brands: ["ACR", "Ocean Signal"],
-    searchTerm: "ACR GlobalFix EPIRB PLB marine safety beacon",
-  },
-  {
     id: "s5", label: "Lifesling / horseshoe buoy + throw line", category: "safety", priority: "critical",
     brands: ["Lifesling"],
     searchTerm: "Lifesling overboard rescue system marine",
@@ -82,18 +77,13 @@ export const WATCHED_ITEMS: WatchedItem[] = [
   // ── Navigation ──────────────────────────────────────────────────────
   // n2 (Garmin InReach Mini) intentionally omitted — already owned.
   // n10 (depth sounder) intentionally omitted — already aboard.
+  // n11 (AIS Class B transceiver) omitted — standalone unit bought.
+  // s4 (EPIRB/PLB) omitted — ACR beacon bought.
   // n9 (autopilot) intentionally omitted — already aboard.
   {
     id: "n4", label: "Handheld VHF radio DSC GPS", category: "navigation", priority: "critical",
     brands: ["Standard Horizon", "Icom"],
     searchTerm: "handheld VHF radio DSC GPS floating waterproof marine",
-  },
-  {
-    // Was missing entirely despite being a `critical` checklist item and one
-    // of the most expensive things on the list.
-    id: "n11", label: "AIS Class B transceiver (transmit + receive)", category: "navigation", priority: "critical",
-    brands: ["Vesper", "em-trak"],
-    searchTerm: "AIS Class B transceiver transmit marine SOTDMA",
   },
   {
     // NOTE: sized for a larger boat. On the Oceanis 30.1 the lighter HALO20+
