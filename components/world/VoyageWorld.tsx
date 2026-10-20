@@ -156,8 +156,12 @@ export default function VoyageWorld(props: VoyageWorldProps) {
   const day = useTheme() === "day";
   const [visible, setVisible] = useState(true);
   const [ready, setReady] = useState(false);
-  // 0 = full post-processing, 1 = plain render (no composer), 2 = static chart
-  const [tier, setTier] = useState(0);
+  // 0 = full post-processing, 1 = plain render (no composer), 2 = static chart.
+  // ?render=basic / ?render=static force a tier, to bisect a GPU-specific problem.
+  const [tier, setTier] = useState(() => {
+    const q = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("render");
+    return q === "static" ? 2 : q === "basic" ? 1 : 0;
+  });
   const host = useRef<HTMLDivElement>(null);
   const { onReady } = props;
 
