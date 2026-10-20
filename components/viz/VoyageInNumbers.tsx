@@ -73,7 +73,7 @@ export default function VoyageInNumbers() {
             </Reveal>
 
             <div className="mt-12">
-              <p className="eyebrow mb-3"><span className="num text-ink-2">1A</span> · The whole voyage, Chicago → Old Saybrook</p>
+              <p className="eyebrow mb-3"><span className="num text-ink-2">1A</span> · The whole voyage, Winthrop Harbor → Old Saybrook</p>
               <div className="hidden md:block"><StaircaseOverview model={model} /></div>
               <div className="md:hidden"><StaircaseOverview model={model} compact /></div>
             </div>

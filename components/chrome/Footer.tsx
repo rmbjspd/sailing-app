@@ -12,7 +12,7 @@ export default function Footer() {
           <Mark className="size-10" />
           <div>
             <p className="font-display text-xl">S/V Sabbatical</p>
-            <p className="eyebrow mt-1">Chicago → Old Saybrook · Summer 2027</p>
+            <p className="eyebrow mt-1">Winthrop Harbor → Old Saybrook · Summer 2027</p>
           </div>
         </div>
         <p className="max-w-md text-xs leading-relaxed text-ink-3">

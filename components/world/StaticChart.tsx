@@ -15,7 +15,7 @@ export default function StaticChart({ className }: { className?: string }) {
   // never force position here or the box collapses to zero height.
   return (
     <div className={`overflow-hidden ${className ?? "relative h-full w-full"}`} style={{ background: "var(--abyss)" }}>
-      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full" role="img" aria-label="Chart of the voyage from Chicago to Old Saybrook">
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full" role="img" aria-label="Chart of the voyage from Winthrop Harbor to Old Saybrook">
         <ChartImage width={W} height={H} hiRes={false} />
         {routeSegments.map((s) => (
           <polyline

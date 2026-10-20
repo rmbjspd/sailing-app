@@ -152,7 +152,7 @@ const frag = /* glsl */ `
     float cl = fbm(vWorld.xz * 0.38 + vec2(uTime * 0.010, uTime * 0.004));
     col *= mix(1.0, mix(0.58, 0.86, uDay), smoothstep(0.48, 0.78, cl));
 
-    // Intro reveal: a sonar sweep expanding from the origin (Chicago)
+    // Intro reveal: a sonar sweep expanding from the origin (Winthrop Harbor)
     float r = length(vWorld.xz - uRevealOrigin);
     float front = uReveal * 18.0;
     float revealed = smoothstep(front, front - 1.2, r);

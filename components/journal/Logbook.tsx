@@ -122,7 +122,7 @@ export function Logbook() {
         title={<>The <em className="text-brass">Logbook</em></>}
         lede={
           <>
-            <span className="num">{LAST_DAY}</span>{" "}days from Chicago to Old Saybrook, one page at a time.
+            <span className="num">{LAST_DAY}</span>{" "}days from Winthrop Harbor to Old Saybrook, one page at a time.
             Wind, weather, who came alongside, how the light fell on the water &mdash; set it down
             while it&rsquo;s fresh. Entries are kept on this device.
           </>

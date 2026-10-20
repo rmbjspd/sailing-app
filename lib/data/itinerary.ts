@@ -3,18 +3,18 @@ import type { ItineraryDay } from "../types";
 export const itinerary: ItineraryDay[] = [
   // ---- LAKE MICHIGAN ----
   {
-    day: 1, from: "Chicago, IL", to: "St. Joseph, MI", distanceNm: 53, locks: 0,
-    leg: "lake-michigan", overnight: "Anchor's Way / St. Joseph Municipal Marina",
-    highlights: ["First open-water crossing of southern Lake Michigan", "St. Joseph's beach and waterfront restaurants — 'Riviera of the Midwest'"],
-    warnings: ["Depart early — afternoon thunderstorms common on Lake Michigan in June", "Keep a close eye on fuel: 53nm motoring in calm = most of your tank"],
-    notes: "Depart DuSable Harbor at first light. Set a course SE across southern Lake Michigan. Arrive by late afternoon. Refuel on arrival."
+    day: 1, from: "Winthrop Harbor, IL", to: "Grand Haven, MI", distanceNm: 78, locks: 0,
+    leg: "lake-michigan", overnight: "Grand Haven Municipal Marina",
+    highlights: ["Open-water crossing of the southern basin of Lake Michigan, out of sight of land for the middle of the day", "Grand Haven waterfront music fountain show in the evenings"],
+    warnings: ["Longest open-water crossing of the Lake Michigan leg — depart North Point Marina before first light and watch the forecast the night before", "Afternoon thunderstorms and NW winds can build 2–4ft chop; plan to be in by 3pm", "Full tank on departure; no harbor within reach for the middle 40 nm. Bail-out harbors if it kicks up: Waukegan or Racine early on, Holland or South Haven (~35 nm) on the Michigan side"],
+    notes: "Depart North Point Marina at first light and set a course ENE across the lake to Grand Haven, skipping St. Joseph. Refuel and pump out on arrival."
   },
   {
-    day: 2, from: "St. Joseph, MI", to: "Grand Haven, MI", distanceNm: 75, locks: 0,
+    day: 2, from: "Grand Haven, MI", to: "Grand Haven, MI", distanceNm: 0, locks: 0,
     leg: "lake-michigan", overnight: "Grand Haven Municipal Marina",
-    highlights: ["Pass South Haven and Saugatuck en route", "Grand Haven waterfront music fountain show in the evenings"],
-    warnings: ["Longest Lake Michigan day — ensure full tank departing St. Joseph", "Afternoon NW winds can build 2–4ft chop; plan to be in by 3pm", "Bail-out harbors if it kicks up: Holland (~35 nm) or South Haven (~20 nm)"],
-    notes: "Long day sail hugging Michigan's eastern shore. Refuel and pump out at Grand Haven."
+    highlights: ["Rest day after the crossing", "Grand Haven boardwalk, lighthouse pier and beaches"],
+    warnings: ["Use this day as the weather buffer for the Day 1 crossing — if Day 1 slips, this day absorbs it"],
+    notes: "Rest day and weather buffer (the day freed by skipping St. Joseph). Re-provision, check the rig and the engine after the long crossing, and top up fuel before the run north to Ludington."
   },
   {
     day: 3, from: "Grand Haven, MI", to: "Ludington, MI", distanceNm: 80, locks: 0,

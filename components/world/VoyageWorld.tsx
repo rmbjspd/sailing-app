@@ -40,6 +40,40 @@ function hasWebGL2() {
   }
 }
 
+/**
+ * Some GPU/driver combinations (seen on desktop Chrome) pass the WebGL2 check
+ * but present an all-black canvas — typically a failed multisampled / half-float
+ * post-processing framebuffer — which buries the poster chart and leaves the
+ * hero text unreadable. Once the scene has had time to reveal, sample a grid of
+ * pixels from the presented frame; if they are all identical, report it so the
+ * caller can step down to a simpler render path (and ultimately the static chart).
+ */
+function BlankFrameGuard({ onBlank }: { onBlank: () => void }) {
+  const frames = useRef(0);
+  const fired = useRef(false);
+  useFrame(({ gl }) => {
+    if (fired.current) return;
+    frames.current += 1;
+    if (frames.current !== 240) return;
+    const ctx = gl.getContext();
+    const w = ctx.drawingBufferWidth, h = ctx.drawingBufferHeight;
+    const px = new Uint8Array(4);
+    let lo = 255, hi = 0;
+    for (let i = 1; i <= 6; i++) {
+      for (let j = 1; j <= 6; j++) {
+        ctx.readPixels(Math.floor((w * i) / 7), Math.floor((h * j) / 7), 1, 1, ctx.RGBA, ctx.UNSIGNED_BYTE, px);
+        for (let k = 0; k < 3; k++) { lo = Math.min(lo, px[k]); hi = Math.max(hi, px[k]); }
+      }
+    }
+    if (hi - lo <= 2) {
+      fired.current = true;
+      console.warn("[VoyageWorld] canvas rendered a blank frame; falling back to a simpler render path");
+      onBlank();
+    }
+  }, 2);
+  return null;
+}
+
 /** Ticks a 0→1 ref once, for the intro sonar sweep. */
 function Reveal({ value, duration = 3.4 }: { value: React.RefObject<number>; duration?: number }) {
   useFrame((_, dt) => {
@@ -71,7 +105,7 @@ function Background({ day }: { day: boolean }) {
   return null;
 }
 
-function Scene({ terrain, route, props, lowPower, day }: { terrain: TerrainData; route: RouteModel; props: VoyageWorldProps; lowPower: boolean; day: boolean }) {
+function Scene({ terrain, route, props, lowPower, day, post, onBlank }: { terrain: TerrainData; route: RouteModel; props: VoyageWorldProps; lowPower: boolean; day: boolean; post: boolean; onBlank: () => void }) {
   const progress = useRef(0);
   const lineProgress = useRef(0);
   const activeIndex = useRef(0);
@@ -100,10 +134,13 @@ function Scene({ terrain, route, props, lowPower, day }: { terrain: TerrainData;
           <ExploreRig route={route} focusStopId={props.focusStopId} />
         </>
       )}
-      <EffectComposer multisampling={lowPower ? 0 : 4}>
-        <Bloom mipmapBlur intensity={day ? 0.18 : 0.95} luminanceThreshold={day ? 0.96 : 0.62} luminanceSmoothing={0.25} radius={0.72} />
-        <Vignette eskil={false} offset={0.22} darkness={day ? 0.32 : 0.78} />
-      </EffectComposer>
+      {post && (
+        <EffectComposer multisampling={lowPower ? 0 : 4}>
+          <Bloom mipmapBlur intensity={day ? 0.18 : 0.95} luminanceThreshold={day ? 0.96 : 0.62} luminanceSmoothing={0.25} radius={0.72} />
+          <Vignette eskil={false} offset={0.22} darkness={day ? 0.32 : 0.78} />
+        </EffectComposer>
+      )}
+      <BlankFrameGuard onBlank={onBlank} />
     </>
   );
 }
@@ -119,6 +156,12 @@ export default function VoyageWorld(props: VoyageWorldProps) {
   const day = useTheme() === "day";
   const [visible, setVisible] = useState(true);
   const [ready, setReady] = useState(false);
+  // 0 = full post-processing, 1 = plain render (no composer), 2 = static chart.
+  // ?render=basic / ?render=static force a tier, to bisect a GPU-specific problem.
+  const [tier, setTier] = useState(() => {
+    const q = typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("render");
+    return q === "static" ? 2 : q === "basic" ? 1 : 0;
+  });
   const host = useRef<HTMLDivElement>(null);
   const { onReady } = props;
 
@@ -150,7 +193,7 @@ export default function VoyageWorld(props: VoyageWorldProps) {
     return () => { cancelled = true; };
   }, [onReady]);
 
-  if (webgl === false || failed) {
+  if (webgl === false || failed || tier >= 2) {
     return <StaticChart className={props.className} />;
   }
 
@@ -161,6 +204,7 @@ export default function VoyageWorld(props: VoyageWorldProps) {
       <StaticChart className={`absolute inset-0 transition-opacity duration-[2500ms] ${ready ? "opacity-0" : "opacity-60"}`} />
       {data && (
         <Canvas
+          key={tier}
           onCreated={() => requestAnimationFrame(() => setReady(true))}
           style={{ position: "absolute", inset: 0, opacity: ready ? 1 : 0, transition: "opacity 1.2s ease" }}
           frameloop={visible ? "always" : "never"}
@@ -171,7 +215,7 @@ export default function VoyageWorld(props: VoyageWorldProps) {
         >
           <PerformanceMonitor onDecline={() => setLowPower(true)} />
           <Suspense fallback={null}>
-            <Scene terrain={data.terrain} route={data.route} props={props} lowPower={lowPower} day={day} />
+            <Scene terrain={data.terrain} route={data.route} props={props} lowPower={lowPower} day={day} post={tier === 0} onBlank={() => { setReady(false); setTier((t) => t + 1); }} />
           </Suspense>
         </Canvas>
       )}

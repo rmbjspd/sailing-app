@@ -12,8 +12,8 @@ export const legGuides: LegGuide[] = [
   {
     legId: "lake-michigan",
     title: "Lake Michigan",
-    subtitle: "Chicago to Mackinac Island",
-    captainIntro: `Chicago's lakefront drops away fast once you clear the breakwaters at DuSable Harbor — and right there is your first lesson in Great Lakes humility. You're on a freshwater sea now, 307 miles of open fetch to the north, and she doesn't care about your feelings. June is the transition month: the lake is cold (surface temps still 50–55°F in early June), air-sea temperature differences can produce fog banks that materialize without warning, and afternoon thunderstorms are Lake Michigan's summer calling card.
+    subtitle: "Winthrop Harbor to Mackinac Island",
+    captainIntro: `The Illinois shore drops away fast once you clear the breakwaters at North Point Marina — and right there is your first lesson in Great Lakes humility. You're on a freshwater sea now, 307 miles of open fetch to the north, and she doesn't care about your feelings. June is the transition month: the lake is cold (surface temps still 50–55°F in early June), air-sea temperature differences can produce fog banks that materialize without warning, and afternoon thunderstorms are Lake Michigan's summer calling card.
 
 Your strategy for the whole leg: launch early, push hard before noon, and be tucked into a harbor before the afternoon sea breeze builds toward the Michigan shore. The eastern shoreline is your friend — a string of well-maintained harbor towns spaced 40–80 nm apart, each with fuel, pump-out, and a cold beer waiting. Follow the eastern shore north, and Lake Michigan will feel manageable. Try to cut corners in the middle and she'll remind you who's in charge.
 
@@ -25,7 +25,7 @@ The payoff for doing it right is the approach to Mackinac — threading the Stra
       "The Manitou Passage between North and South Manitou Islands and the mainland concentrates and accelerates wind. When the lake forecast and passage forecast disagree, believe the passage.",
       "Don't ignore NOAA WX3 and WX4 — the Great Lakes-specific weather radio channels. Check them every morning before departing, and again at noon.",
       "Lake Michigan water temps stay below 60°F well into July. If someone goes overboard, cold water incapacitation is your biggest danger — jacklines and tethers for all crew whenever offshore.",
-      "Standing order for the open Lakes: inflatable PFD-harnesses worn and tethers clipped on every open-water leg, day or night. Brief a cold-water MOB recovery (Lifesling-and-winch hoist) before you leave Chicago — the plan is recovery, not just retrieval.",
+      "Standing order for the open Lakes: inflatable PFD-harnesses worn and tethers clipped on every open-water leg, day or night. Brief a cold-water MOB recovery (Lifesling-and-winch hoist) before you leave Winthrop Harbor — the plan is recovery, not just retrieval.",
       "For the long open-water days, run a simple two-watch rotation so the helm is always fresh and rested — fatigue is the quiet hazard on 70–85 nm passages. If conditions deteriorate, the natural haul-out / wait-it-out points down the route are Mackinac, Detroit, Buffalo, and NYC; don't be too proud to use them.",
     ],
     watchFor: [
@@ -106,7 +106,7 @@ The day 14 run (85 nm from Kincardine to Port Huron) is the longest single open-
     legId: "st-clair",
     title: "St. Clair River · Lake St. Clair · Detroit River",
     subtitle: "Port Huron to Detroit",
-    captainIntro: `Welcome back to the United States — and to the most traffic-dense water you've seen since leaving Chicago. The St. Clair River is 40 miles of regulated shipping highway running from Port Huron south to Lake St. Clair, carrying a substantial fraction of all commercial tonnage between the upper and lower Great Lakes. You will share this channel with 1,000-foot self-unloading lakers, Canadian salties, and cement ships — all moving faster than you, all unable to stop quickly, and none of whom can yield their lane.
+    captainIntro: `Welcome back to the United States — and to the most traffic-dense water you've seen since leaving Winthrop Harbor. The St. Clair River is 40 miles of regulated shipping highway running from Port Huron south to Lake St. Clair, carrying a substantial fraction of all commercial tonnage between the upper and lower Great Lakes. You will share this channel with 1,000-foot self-unloading lakers, Canadian salties, and cement ships — all moving faster than you, all unable to stop quickly, and none of whom can yield their lane.
 
 The good news: the current is with you. Two to three knots of south-flowing current adds free speed throughout the river transit. From Port Huron to Detroit is roughly 68 nautical miles, but your effective made-good will be 8–9 knots in the river — it's the most efficient nautical miles of the whole trip.
 

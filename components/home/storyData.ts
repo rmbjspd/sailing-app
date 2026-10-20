@@ -64,7 +64,7 @@ export function getStoryData(): StoryData {
   const lastDay = totals.dayEnd;
   const cumNm: number[] = [0];
   const cumLocks: number[] = [0];
-  const overnight: string[] = [waypoints.find((w) => w.day === 0)?.name ?? "Chicago"];
+  const overnight: string[] = [waypoints.find((w) => w.day === 0)?.name ?? "Winthrop Harbor"];
   for (let d = 1; d <= lastDay; d++) {
     const today = itinerary.filter((x) => x.day === d);
     cumNm[d] = cumNm[d - 1] + today.reduce((s, x) => s + x.distanceNm + (x.distanceMi ?? 0) * NM_PER_MI, 0);

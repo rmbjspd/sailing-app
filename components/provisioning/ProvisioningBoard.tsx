@@ -152,7 +152,7 @@ export function ProvisioningBoard() {
         title={<>Ready to cast <em className="text-glow">off?</em></>}
         lede={
           <>
-            Everything that needs to be aboard before the dock lines come in at DuSable Harbor.
+            Everything that needs to be aboard before the dock lines come in at North Point Marina.
             Tick each item as it&rsquo;s stowed &mdash; progress is kept on this device. The{" "}
             <span className="num text-alert">{CRITICAL_ITEMS.length}</span> critical items are the ones that decide the departure date.
           </>

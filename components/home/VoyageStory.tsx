@@ -198,7 +198,7 @@ function Hero({ data, opacity, y }: { data: StoryData; opacity: MotionValue<numb
           transition={{ delay: 0.45, duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
           className="font-display text-[clamp(3.4rem,11vw,10.5rem)] font-light leading-[0.86] tracking-[-0.035em]"
         >
-          Chicago <em className="text-ink-3">to</em>
+          Winthrop Harbor <em className="text-ink-3">to</em>
           <br />
           Old Saybrook
         </motion.h1>
