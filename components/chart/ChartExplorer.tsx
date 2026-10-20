@@ -44,7 +44,7 @@ export default function ChartExplorer() {
     select(next);
   }, [port, select]);
 
-  // Replay: sail from Chicago to Old Saybrook in ~24 s
+  // Replay: sail from Winthrop Harbor to Old Saybrook in ~24 s
   useEffect(() => {
     if (!playing) return;
     let last = performance.now();
@@ -150,7 +150,7 @@ export default function ChartExplorer() {
             <button
               onClick={togglePlay}
               className="grid size-11 shrink-0 place-items-center rounded-full bg-ink text-abyss transition-transform hover:scale-105 active:scale-95"
-              aria-label={playing ? "Pause voyage replay" : day >= LAST_DAY - 0.01 ? "Replay the voyage from Chicago" : `Sail on from Day ${Math.ceil(day)}`}
+              aria-label={playing ? "Pause voyage replay" : day >= LAST_DAY - 0.01 ? "Replay the voyage from Winthrop Harbor" : `Sail on from Day ${Math.ceil(day)}`}
             >
               {playing ? <Pause className="size-4" fill="currentColor" /> : <Play className="ml-0.5 size-4" fill="currentColor" />}
             </button>
@@ -158,7 +158,7 @@ export default function ChartExplorer() {
               <div className="mb-2 flex items-baseline justify-between gap-3">
                 <p className="truncate text-sm">
                   <span className="num text-ink">Day {String(dayInt).padStart(2, "0")}</span>
-                  <span className="text-ink-3"> · {dayInt === 0 ? "Departure, Chicago" : fmtDate(dayInt)}</span>
+                  <span className="text-ink-3"> · {dayInt === 0 ? "Departure, Winthrop Harbor" : fmtDate(dayInt)}</span>
                 </p>
                 <p className="eyebrow hidden truncate !text-[10px] sm:block" style={{ color: legStyle(leg).color }}>{legStyle(leg).label}</p>
               </div>

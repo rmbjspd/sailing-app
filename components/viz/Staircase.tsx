@@ -163,7 +163,7 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
     <div ref={ref} className={`${s.fig} relative`} data-phase={phase}>
       <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} className="block h-auto w-full overflow-visible" role="img"
         aria-labelledby={`${uid}-t ${uid}-d`}>
-        <title id={`${uid}-t`}>Water-surface elevation along the whole voyage, Chicago to Old Saybrook</title>
+        <title id={`${uid}-t`}>Water-surface elevation along the whole voyage, Winthrop Harbor to Old Saybrook</title>
         <desc id={`${uid}-d`}>
           {`The voyage begins on Lakes Michigan and Huron at ${surf0} ft above sea level, falls a few feet through the St. Clair and Detroit rivers to Lake Erie, then descends through ${model.lift.count} locks of the Erie Canal and the Troy lock to sea level on the Hudson. Beneath the surface line, the lake and sea floor under the track: the deepest water is ${fmt(deepest.depthFt)} ft on Day ${deepest.day} in Lake Michigan, where the floor lies ${fmt(-deepest.ft)} ft below sea level${erie && mich ? `; Lake Erie averages ${fmt(erie.meanFt)} ft under the keel against Lake Michigan's ${fmt(mich.meanFt)} ft` : ""}.`}
         </desc>
@@ -270,7 +270,7 @@ export function StaircaseOverview({ model, compact = false }: { model: WaterMode
         {/* annotations */}
         {!compact ? (
           <g className={s.fade} style={{ ["--d" as string]: "1.2s" }}>
-            <text x={sx(4)} y={sy(surf0) - 12} fontSize={9.5} letterSpacing="0.14em" className="font-mono" fill={INK.ink3}>CHICAGO · DAY 1</text>
+            <text x={sx(4)} y={sy(surf0) - 12} fontSize={9.5} letterSpacing="0.14em" className="font-mono" fill={INK.ink3}>WINTHROP HARBOR · DAY 1</text>
             <text x={sx(4) + 128} y={sy(surf0) - 12} fontSize={12} fill={INK.ink}>
               <tspan className="num" fill={SIG.brass}>{fmt(surf0, 1)} ft</tspan>
               <tspan fill={INK.ink2} dx={6}>Michigan and Huron: one surface, two names</tspan>

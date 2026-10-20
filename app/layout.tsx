@@ -18,9 +18,9 @@ const geist = Geist({ variable: "--font-geist", subsets: ["latin"], display: "sw
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "S/V Sabbatical — Chicago to Old Saybrook, Summer 2027",
+  title: "S/V Sabbatical — Winthrop Harbor to Old Saybrook, Summer 2027",
   description:
-    "A 35-day, 1,700-nautical-mile passage from Chicago to Old Saybrook, CT, through the Great Lakes, the North Channel, the Erie Canal, the Hudson River and Long Island Sound.",
+    "A 35-day, 1,660-nautical-mile passage from Winthrop Harbor to Old Saybrook, CT, through the Great Lakes, the North Channel, the Erie Canal, the Hudson River and Long Island Sound.",
 };
 
 export const viewport: Viewport = {

@@ -166,7 +166,7 @@ export function LogScrolly({
   const logged = sum ? sum : { cumNm: 0, cumMi: 0, cumLocks: 0 };
   const accent = leg?.color ?? "var(--glow)";
 
-  const chartTitle = "Chart of the voyage, Chicago to Old Saybrook";
+  const chartTitle = "Chart of the voyage, Winthrop Harbor to Old Saybrook";
   const chartDesc = `The route follows the log as you scroll. Now showing: ${eyebrow} — ${heading}. Every detail on this chart is also in the day-by-day list.`;
 
   const scrubValue = scrub ?? Math.max(activeDay, 1);

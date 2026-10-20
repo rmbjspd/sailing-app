@@ -7,7 +7,7 @@ import type { MapControls as MapControlsImpl } from "three-stdlib";
 import type { RouteModel } from "./route";
 
 export interface StoryState {
-  /** fractional voyage day, 0 (Chicago) → last day (Old Saybrook) */
+  /** fractional voyage day, 0 (Winthrop Harbor) → last day (Old Saybrook) */
   day: number;
   /** 0 = chase cam on the boat, 1 = whole-region overview */
   overview: number;
