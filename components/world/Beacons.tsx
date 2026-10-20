@@ -34,7 +34,8 @@ const ringFrag = /* glsl */ `
     float ring = 0.0;
     for (int i = 0; i < 2; i++) {
       float ph = fract(uTime * 0.45 + float(i) * 0.5);
-      ring += exp(-pow((r - ph) * 18.0, 2.0)) * (1.0 - ph);
+      float d = (r - ph) * 18.0; // d*d, not pow(d, 2.0): pow of a negative base is undefined in GLSL
+      ring += exp(-d * d) * (1.0 - ph);
     }
     float a = core * (0.5 + uIntensity) + ring * uActive * 0.9;
     if (a < 0.01) discard;

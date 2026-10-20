@@ -156,7 +156,8 @@ const frag = /* glsl */ `
     float r = length(vWorld.xz - uRevealOrigin);
     float front = uReveal * 18.0;
     float revealed = smoothstep(front, front - 1.2, r);
-    float ring = exp(-pow((r - front) * 5.0, 2.0)) * step(uReveal, 0.999);
+    float rd = (r - front) * 5.0; // rd*rd: pow() of a negative base is undefined in GLSL
+    float ring = exp(-rd * rd) * step(uReveal, 0.999);
     col = mix(uFog, col, revealed);
     col = mark(col, uShore, ring * 0.9);
 
@@ -165,7 +166,8 @@ const frag = /* glsl */ `
                * smoothstep(0.0, 0.10, uv.y) * smoothstep(1.0, 0.90, uv.y);
     col = mix(uFog, col, edge);
     float dist = length(cameraPosition - vWorld);
-    float fog = 1.0 - exp(-pow(dist * uFogDensity, 2.0));
+    float fd = dist * uFogDensity;
+    float fog = 1.0 - exp(-fd * fd);
     col = mix(col, uFog, fog);
 
     gl_FragColor = vec4(col, 1.0);
