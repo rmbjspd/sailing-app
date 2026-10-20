@@ -48,10 +48,13 @@ function hasWebGL2() {
  * pixels from the presented frame; if they are all identical, report it so the
  * caller can step down to a simpler render path (and ultimately the static chart).
  */
-function BlankFrameGuard({ onBlank }: { onBlank: () => void }) {
+function BlankFrameGuard({ onBlank, render }: { onBlank: () => void; render: boolean }) {
   const frames = useRef(0);
   const fired = useRef(false);
-  useFrame(({ gl }) => {
+  // A positive-priority subscriber switches off R3F's automatic render. The
+  // composer renders itself; without it (render = true) we have to draw the scene here.
+  useFrame(({ gl, scene, camera }) => {
+    if (render) gl.render(scene, camera);
     if (fired.current) return;
     frames.current += 1;
     if (frames.current !== 240) return;
@@ -140,7 +143,7 @@ function Scene({ terrain, route, props, lowPower, day, post, onBlank }: { terrai
           <Vignette eskil={false} offset={0.22} darkness={day ? 0.32 : 0.78} />
         </EffectComposer>
       )}
-      <BlankFrameGuard onBlank={onBlank} />
+      <BlankFrameGuard onBlank={onBlank} render={!post} />
     </>
   );
 }

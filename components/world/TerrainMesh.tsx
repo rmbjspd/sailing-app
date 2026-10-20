@@ -206,7 +206,7 @@ export default function TerrainMesh({
       uCell: { value: new THREE.Vector2(1 / segments[0], 1 / segments[1]) },
       uTime: { value: 0 },
       uReveal: { value: reveal ? 0 : 1 },
-      uRevealOrigin: { value: new THREE.Vector2(...project(-87.62, 41.88)) },
+      uRevealOrigin: { value: new THREE.Vector2(...project(-87.80, 42.485)) },
       uLight: { value: new THREE.Vector3(-0.55, 0.62, -0.56).normalize() },
       uDay: { value: day ? 1 : 0 },
       uFogN: { value: c(BG) }, uFogD: { value: c(BG_DAY) },
