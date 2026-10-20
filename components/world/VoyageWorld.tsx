@@ -32,6 +32,15 @@ export interface VoyageWorldProps {
   className?: string;
 }
 
+// ?post=ms4,u8,nobloom,novig tweaks the post-processing chain, to bisect a
+// GPU-specific black screen. Multisampling is off by default: an MSAA half-float
+// framebuffer renders black on some AMD / ANGLE-D3D11 setups.
+function readPostFlags(): Set<string> {
+  if (typeof window === "undefined") return new Set();
+  return new Set((new URLSearchParams(window.location.search).get("post") ?? "").split(","));
+}
+const POST = readPostFlags();
+
 function hasWebGL2() {
   try {
     return !!document.createElement("canvas").getContext("webgl2");
@@ -48,7 +57,7 @@ function hasWebGL2() {
  * pixels from the presented frame; if they are all identical, report it so the
  * caller can step down to a simpler render path (and ultimately the static chart).
  */
-function BlankFrameGuard({ onBlank, render }: { onBlank: () => void; render: boolean }) {
+function BlankFrameGuard({ onBlank, render, day }: { onBlank: () => void; render: boolean; day: boolean }) {
   const frames = useRef(0);
   const fired = useRef(false);
   // A positive-priority subscriber switches off R3F's automatic render. The
@@ -61,14 +70,17 @@ function BlankFrameGuard({ onBlank, render }: { onBlank: () => void; render: boo
     const ctx = gl.getContext();
     const w = ctx.drawingBufferWidth, h = ctx.drawingBufferHeight;
     const px = new Uint8Array(4);
-    let lo = 255, hi = 0;
+    let lo = 255, hi = 0, dark = 0;
     for (let i = 1; i <= 6; i++) {
       for (let j = 1; j <= 6; j++) {
         ctx.readPixels(Math.floor((w * i) / 7), Math.floor((h * j) / 7), 1, 1, ctx.RGBA, ctx.UNSIGNED_BYTE, px);
         for (let k = 0; k < 3; k++) { lo = Math.min(lo, px[k]); hi = Math.max(hi, px[k]); }
+        if (px[0] + px[1] + px[2] < 40) dark++;
       }
     }
-    if (hi - lo <= 2) {
+    // The day chart is pale paper: a mostly black frame is a failed render even
+    // if a few beacon pixels survive (which defeats the uniform check).
+    if (hi - lo <= 2 || (day && dark > 18)) {
       fired.current = true;
       console.warn("[VoyageWorld] canvas rendered a blank frame; falling back to a simpler render path");
       onBlank();
@@ -138,12 +150,12 @@ function Scene({ terrain, route, props, lowPower, day, post, onBlank }: { terrai
         </>
       )}
       {post && (
-        <EffectComposer multisampling={lowPower ? 0 : 4}>
-          <Bloom mipmapBlur intensity={day ? 0.18 : 0.95} luminanceThreshold={day ? 0.96 : 0.62} luminanceSmoothing={0.25} radius={0.72} />
-          <Vignette eskil={false} offset={0.22} darkness={day ? 0.32 : 0.78} />
+        <EffectComposer multisampling={POST.has("ms4") && !lowPower ? 4 : 0} frameBufferType={POST.has("u8") ? THREE.UnsignedByteType : THREE.HalfFloatType}>
+          {POST.has("nobloom") ? <></> : <Bloom mipmapBlur intensity={day ? 0.18 : 0.95} luminanceThreshold={day ? 0.96 : 0.62} luminanceSmoothing={0.25} radius={0.72} />}
+          {POST.has("novig") ? <></> : <Vignette eskil={false} offset={0.22} darkness={day ? 0.32 : 0.78} />}
         </EffectComposer>
       )}
-      <BlankFrameGuard onBlank={onBlank} render={!post} />
+      <BlankFrameGuard onBlank={onBlank} render={!post} day={day} />
     </>
   );
 }
