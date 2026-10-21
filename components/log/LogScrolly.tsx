@@ -314,7 +314,7 @@ export function LogScrolly({
 
       <div className="min-w-0 flex-1">{children}</div>
 
-      {/* ── Edge rail (wide screens): the 34 days as a vertical spectrum ── */}
+      {/* ── Edge rail (wide screens): the 33 days as a vertical spectrum ── */}
       <div
         aria-hidden
         className={`fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-end transition-opacity duration-500 min-[1400px]:flex 2xl:right-8 ${

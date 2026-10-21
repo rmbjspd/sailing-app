@@ -145,14 +145,14 @@ function canalMileposts(): number[] {
  * day widths always follow itinerary.ts distances.
  */
 export const CANAL_OVERNIGHT_MI: Record<number, number> = {
-  19: 0,       // Tonawanda (mast-down day)
-  20: 58,      // Brockport
-  21: 110,     // Newark, just upstream of E-28B
-  22: 165,     // Baldwinsville, just upstream of E-24
-  23: 207,     // Sylvan Beach, east end of Oneida Lake (~7 mi before E-22)
-  24: 258,     // Little Falls, between E-18 and E-17
-  25: 301.8,   // Amsterdam Riverlink Park, ~1.5 mi east of E-11
-  26: CANAL_LENGTH_MI, // Waterford, foot of the Flight
+  20: 0,       // Tonawanda (mast-down day)
+  21: 58,      // Brockport
+  22: 110,     // Newark, just upstream of E-28B
+  23: 165,     // Baldwinsville, just upstream of E-24
+  24: 207,     // Sylvan Beach, east end of Oneida Lake (~7 mi before E-22)
+  25: 258,     // Little Falls, between E-18 and E-17
+  26: 301.8,   // Amsterdam Riverlink Park, ~1.5 mi east of E-11
+  27: CANAL_LENGTH_MI, // Waterford, foot of the Flight
 };
 
 /** Black Rock Lock sits ~7.4 statute mi upstream of Tonawanda (E-35 → Black Rock ≈ 26 mi [OB]). */

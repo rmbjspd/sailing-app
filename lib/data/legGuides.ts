@@ -182,7 +182,7 @@ The Waterford Flight at the end — five locks dropping 169 feet in 1.5 miles �
     watchFor: [
       "Low bridges — design to a 14 ft 6 in (≈4.4 m) air-draft target, not 15 ft. The controlling westbound clearance (Guard Gate West at max pool) is approximately 14 ft 8 in. Double-check after mast-step at Tonawanda: measure to the top of every antenna, GPS puck, and wind instrument — not just the mast truck.",
       "Lift bridges in small towns — most open automatically when they see you coming, but some require a VHF hail (Ch. 13) or a wave. Slow down and be patient.",
-      "The Oneida Lake crossing (Day 23) — 20 miles of open water that can get choppy. The only truly open-water section on the canal. Make the go/no-go at Brewerton before you enter the lake: if the westerly is above about 10 knots, stay at Ess-Kay Yards and cross fresh in the morning calm before afternoon winds build.",
+      "The Oneida Lake crossing (Day 24) — 20 miles of open water that can get choppy. The only truly open-water section on the canal. Make the go/no-go at Brewerton before you enter the lake: if the westerly is above about 10 knots, stay at Ess-Kay Yards and cross fresh in the morning calm before afternoon winds build.",
       "Lock E-17 at Little Falls — the highest single lock at 40.5 feet. It's dramatic but well-operated. Follow crew instructions from the lock tender exactly.",
       "The Waterford Flight (Locks E-6 to E-2) — arrive at the top lock (E-6) by 2:30pm at the absolute latest. Once you start, you go through all five without stopping.",
     ],
@@ -234,11 +234,11 @@ This is one of America's great rivers, and it looks it. The Catskill Mountains p
 
 Once you clear Hell Gate and the Throgs Neck Bridge, Long Island Sound opens ahead of you like a reward. This is what the whole trip was building toward: a beam reach in southwest sea breeze, 12–15 knots, flat water, the North Fork of Long Island to starboard and the Connecticut hills to port, running east at hull speed with everything up. Summer mornings on the Sound are routinely excellent — the SW sea breeze fills in by 9–10am on most June and July days and holds until early evening. You will sail. Properly.
 
-The Sound is one of the great cruising grounds on the East Coast, and it's at its best in June and July. Oyster Bay, Port Jefferson, Greenport, Mystic — every stop is interesting, the food is good, and the sailing between them is better. Old Saybrook at the Connecticut River mouth is a genteel finish to a raucous journey.`,
+The Sound is one of the great cruising grounds on the East Coast, and it's at its best in June and July. Port Jefferson, Greenport, Mystic — every harbor on the Sound is interesting, the food is good, and the sailing between them is better, even the ones you sail past. Old Saybrook at the Connecticut River mouth is a genteel finish to a raucous journey.`,
     sailingTips: [
       "Hell Gate timing is mission-critical. The current reaches 5 knots and the eddies are violent on a big spring tide. Eastbound, ride the flood: enter the East River at the Battery about 1h45m after Battery low water and check the NOAA predictions for Hell Gate (NYH1924) — slack comes shortly after, and the flood then builds to about 3 knots. Take the West Channel past Roosevelt Island; the East Channel's lift bridge has only about 40 ft of clearance closed.",
       "SW sea breeze on Long Island Sound is highly reliable from mid-May through August. It typically builds from the SW in the morning, peaks 12–18 knots in early afternoon, and lays down by early evening. Plan departures to use it.",
-      "Plum Gut (between Orient Point on Long Island and Plum Island) is the way in and out of Greenport and has strong tidal currents (NOAA station LIS1012: about 2–3 knots on the Jul 22–23, 2027 predictions). Eastbound ride the ebb, westbound ride the flood — the flood sets into the Sound.",
+      "Plum Gut (between Orient Point on Long Island and Plum Island) is the way into Greenport and has strong tidal currents (NOAA station LIS1012: about 2–3 knots). It is not on the direct Port Jefferson to Old Saybrook route; if you detour to Greenport, ride the ebb eastbound and the flood westbound.",
       "The Connecticut River entrance at Old Saybrook has a shifting sandbar at the mouth — follow the marked channel, not the straight-line course on the chart.",
       "Long Island Sound thunderstorms in summer build rapidly over the land and track east-northeast. Watch the northwest horizon in the afternoon.",
     ],
@@ -249,9 +249,9 @@ The Sound is one of the great cruising grounds on the East Coast, and it's at it
       "Mystic River drawbridge — has a limited opening schedule. Call ahead.",
     ],
     bestStops: [
-      "Oyster Bay, NY: Theodore Roosevelt's Sagamore Hill home is here. Beautiful harbor. Brilliant for a first-night stop after the East River chaos.",
+      "Oyster Bay, NY (not a planned stop, but a good bail-out after the East River): Theodore Roosevelt's Sagamore Hill home is here. Beautiful harbor.",
       "Port Jefferson, NY: Deep harbor, charming town, excellent waterfront restaurants. One of the best natural harbors on the Sound's south shore.",
-      "Greenport, NY: The gem of the North Fork. Mitchell Park Marina is well-run. The town has excellent wine tasting rooms (North Fork AVA is seriously good), a maritime museum, and good restaurants. Shelter Island is accessible by ferry from here.",
+      "Greenport, NY (an optional detour that adds a day): The gem of the North Fork. Mitchell Park Marina is well-run. The town has excellent wine tasting rooms (North Fork AVA is seriously good), a maritime museum, and good restaurants. Shelter Island is accessible by ferry from here.",
       "Mystic, CT (optional side-trip from Old Saybrook — the voyage's official finish is Saybrook Point): Mystic Seaport Museum is outstanding — Charles W. Morgan, the last surviving wooden whaleship, is here. An easy day-sail east if you want to extend the trip; the Mystic River drawbridge has a limited opening schedule, so call ahead.",
       "Old Saybrook / Essex, CT: The Connecticut River at its most beautiful. Essex (5 nm upriver) is arguably the most handsome town in New England. The Griswold Inn has been operating since 1776. Steam train connects to a riverboat tour. A genuinely lovely place to end a voyage.",
     ],

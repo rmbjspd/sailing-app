@@ -4,7 +4,7 @@ import { Logbook } from "@/components/journal/Logbook";
 export const metadata: Metadata = {
   title: "The Logbook — S/V Sabbatical",
   description:
-    "A day-by-day journal of the 34-day passage from Winthrop Harbor to Old Saybrook — each entry tied to its voyage day, leg and landfall.",
+    "A day-by-day journal of the 33-day passage from Winthrop Harbor to Old Saybrook — each entry tied to its voyage day, leg and landfall.",
 };
 
 export default function JournalPage() {

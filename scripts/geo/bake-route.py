@@ -27,12 +27,10 @@ LEG_ORDER = ["lake-michigan", "north-channel", "lake-huron", "st-clair", "lake-e
 
 # Extra waypoints for passages where the cheapest water path isn't the one sailed.
 VIA = {
-    # Mackinac → Drummond: through the Les Cheneaux / De Tour Passage, not round Bois Blanc's south side
+    # Mackinac → Drummond: along the south of Les Cheneaux and through De Tour Passage, not round Bois Blanc's south side
     "drummond-island": [(-84.35, 45.93), (-83.92, 45.975)],
-    # Plum Gut: (-72.2075, 41.1592) is NOAA current station LIS1012. The land mask has no
-    # Plum Island, so without these the track cuts across it.
-    "greenport": [(-72.215, 41.200), (-72.2075, 41.1592), (-72.215, 41.125)],
-    "old-saybrook": [(-72.215, 41.125), (-72.2075, 41.1592), (-72.215, 41.200)],
+    # Cleveland → Erie: stay ~4 nm off Fairport / Ashtabula / Conneaut rather than ~15 nm out
+    "erie-pa": [(-81.28, 41.84), (-80.80, 41.99), (-80.55, 42.06)],
 }
 
 # The raster is too coarse to hold a channel as narrow as the East River's West Channel
@@ -40,7 +38,7 @@ VIA = {
 # which has a lift bridge (~40 ft closed). Splice this hand-set track (OSM West Channel +
 # Hell Gate centreline, south → north) over whatever the router drew inside the box.
 OVERRIDE = {
-    "oyster-bay": dict(
+    "port-jefferson": dict(
         box=(-73.975, -73.90, 40.735, 40.795),  # lng_min, lng_max, lat_min, lat_max
         pts=[(-73.9682, 40.7408), (-73.9629, 40.7511), (-73.9468, 40.7693), (-73.9399, 40.7755),
              (-73.9297, 40.7792), (-73.9214, 40.7831), (-73.9113, 40.7927)],

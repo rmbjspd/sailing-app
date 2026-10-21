@@ -182,7 +182,7 @@ export function waterModel(): WaterModel {
   push(detroitEnd, LAKE_DATUM_FT.erie, "lake-erie");
   // Steps through every lock.
   for (const l of locks) {
-    push(l.x, l.fromFt, l.day >= 28 && l.id === "Troy" ? "hudson" : legIdForX(days, l.x));
+    push(l.x, l.fromFt, l.id === "Troy" ? "hudson" : legIdForX(days, l.x));
     push(l.x, l.toFt, legIdForX(days, l.x + 1e-6));
   }
   const total = days[days.length - 1].x1;
