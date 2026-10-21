@@ -1,6 +1,6 @@
 # S/V Sabbatical — Winthrop Harbor → Old Saybrook, Summer 2027
 
-Planning site for a 34-day, ~1,610 nm passage on an Oceanis 30.1: Lake Michigan,
+Planning site for a 33-day, ~1,516 nm passage on an Oceanis 30.1: Lake Michigan,
 the North Channel, Lake Huron, the St. Clair and Detroit rivers, Lake Erie, the
 Erie Canal (mast down), the Hudson and Long Island Sound.
 

@@ -7,7 +7,7 @@ import { useViz } from "./VizContext";
 import s from "./viz.module.css";
 
 // "Dead Reckoning": the six operations you cannot be late for, pinned to the
-// 34-day calendar, with the brief for each below.
+// 33-day calendar, with the brief for each below.
 
 const toneColor = (t: CriticalOp["tone"]) => (t === "brass" ? SIG.brass : t === "alert" ? SIG.alert : SIG.glow);
 

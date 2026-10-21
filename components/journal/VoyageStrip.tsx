@@ -7,7 +7,7 @@ import css from "./journal.module.css";
 // The voyage as a row of pages: one cell per day, coloured by leg, lit when
 // the day has an entry. Logged days jump to their entry; empty days open the
 // composer for that day. Desktop: one continuous band grouped by leg.
-// Phone: a 7-column calendar (34 days = just under five weeks).
+// Phone: a 7-column calendar (33 days = just under five weeks).
 
 const LEGS = legGroups();
 
