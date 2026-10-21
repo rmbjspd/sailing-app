@@ -80,7 +80,7 @@ The logistics are modest: passports for everyone, a CBSA phone check-in at Meldr
     subtitle: "Tobermory to Port Huron via the Ontario Shore",
     captainIntro: `After the North Channel's granite intimacy, Lake Huron's Ontario shore is a different kind of sailing — open, exposed, and honest. Tobermory to Port Huron runs 150 nautical miles down Ontario's eastern shore of Lake Huron, past the nuclear-plant chimneys at Kincardine, across the lake's wide southern basin, and through the Blue Water Bridge into the controlled current of the St. Clair River.
 
-This is a working stretch. The Ontario shore has fewer emergency harbors than Michigan's side — the plan is correct to note this, and correct to advise watching the forecast. In good conditions it rewards patience: the water is deeper and more settled than Erie, the coast has a quiet dignity, and Kincardine's Scottish heritage makes for a memorable stop. If a Saturday alignment is possible, the bagpiper ceremony at the lighthouse at sunset is one of those quietly extraordinary moments that stays with you.
+This is a working stretch. The Ontario shore has fewer emergency harbors than Michigan's side — the plan is correct to note this, and correct to advise watching the forecast. In good conditions it rewards patience: the water is deeper and more settled than Erie, the coast has a quiet dignity, and Kincardine's Scottish heritage makes for a memorable stop. If you are a day or more behind schedule, the Phantom Piper playing at the lighthouse at dusk (July and August evenings, not Saturdays) is one of those quietly extraordinary moments that stays with you.
 
 The day 13 run (85 nm from Kincardine to Port Huron) is the longest single open-water day of the entire voyage. Pre-dawn departure, eyes on the barometer, and consider intermediate bail-outs at Bayfield or Grand Bend on the Ontario side if the weather turns.`,
     sailingTips: [
@@ -97,7 +97,7 @@ The day 13 run (85 nm from Kincardine to Port Huron) is the longest single open-
       "Lake St. Clair current begins immediately after the Blue Water Bridge — the current has you now. Plan accordingly.",
     ],
     bestStops: [
-      "Kincardine, ON (Day 12): Scottish heritage town with a genuine character. The Saturday-evening bagpiper-at-the-lighthouse ceremony is the most unexpectedly moving 20 minutes on the Ontario coast. Try to schedule Day 13 for a Saturday.",
+      "Kincardine, ON (Day 12): Scottish heritage town with a genuine character. The Phantom Piper at the lighthouse, at dusk on July and August evenings (not Saturdays, when the pipe band parades downtown), is the most unexpectedly moving 20 minutes on the Ontario coast. You arrive on June 30, probably a night before the season opens — check the Municipality of Kincardine's 2027 schedule.",
       "Southampton/Port Elgin, ON: Quiet, photogenic Lake Huron towns with basic marina services. Good bail-out or optional lunch stop on Day 12.",
     ],
   },

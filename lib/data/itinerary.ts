@@ -84,9 +84,9 @@ export const itinerary: ItineraryDay[] = [
   {
     day: 12, from: "Tobermory, ON", to: "Kincardine, ON", distanceNm: 65, locks: 0,
     leg: "lake-huron", overnight: "Kincardine Marina",
-    highlights: ["Scottish heritage town — famous Saturday evening bagpiper ceremony at sunset", "Wind farm coast along Ontario's Lake Huron shore", "Good restaurant options and a genuine local character"],
+    highlights: ["Scottish heritage town — the Phantom Piper plays at the lighthouse at dusk in July and August (not Saturdays); you arrive June 30, probably a night before the season opens", "Wind farm coast along Ontario's Lake Huron shore", "Good restaurant options and a genuine local character"],
     warnings: ["Long day — depart Tobermory early", "Ontario's Lake Huron shore has fewer emergency harbors than Michigan's side — watch the forecast"],
-    notes: "Head south down Ontario's Lake Huron coast. Kincardine is welcoming with a solid marina. If you arrive Saturday, the bagpiper ceremony at the lighthouse at sunset is not to be missed."
+    notes: "Head south down Ontario's Lake Huron coast. Kincardine is welcoming with a solid marina. The Phantom Piper at the lighthouse plays at dusk every evening except Saturdays, but the season is July 1 to August 31 — Day 12 is June 30, so check the Municipality of Kincardine's 2027 schedule, and if you are a day late you will catch it."
   },
   {
     day: 13, from: "Kincardine, ON", to: "Port Huron, MI", distanceNm: 85, locks: 0,

@@ -38,11 +38,18 @@ VIA = {
 # which has a lift bridge (~40 ft closed). Splice this hand-set track (OSM West Channel +
 # Hell Gate centreline, south → north) over whatever the router drew inside the box.
 OVERRIDE = {
-    "port-jefferson": dict(
+    "port-jefferson": [dict(
         box=(-73.975, -73.90, 40.735, 40.795),  # lng_min, lng_max, lat_min, lat_max
         pts=[(-73.9682, 40.7408), (-73.9629, 40.7511), (-73.9468, 40.7693), (-73.9399, 40.7755),
              (-73.9297, 40.7792), (-73.9214, 40.7831), (-73.9113, 40.7927)],
-    ),
+    )],
+    # Killarney village sits on a narrow E-W channel with George Island across it; the router's
+    # straight chord south crosses the island. Leave by the channel's east end instead
+    # (hand-set from OSM tiles: village, east along Killarney Channel, round George Island's east side).
+    "tobermory": [dict(
+        box=(-81.52, -81.50, 45.965, 45.975),
+        pts=[(-81.5089, 45.9708), (-81.5051, 45.9678), (-81.4961, 45.9672), (-81.4922, 45.9636), (-81.4914, 45.9582)],
+    )],
 }
 
 a = np.asarray(Image.open(os.path.join(ROOT, "public/geo/terrain.png")))
@@ -176,8 +183,7 @@ for prev, w in zip(wps, wps[1:]):
     sm = smooth(sm, 2)
     simp = simplify_safe(sm, 0.3)
     ll = [to_ll(r, c) for r, c in simp]
-    ov = OVERRIDE.get(w["id"])
-    if ov:
+    for ov in OVERRIDE.get(w["id"], []):
         x0, x1, y0, y1 = ov["box"]
         inside = [i for i, (lng, lat) in enumerate(ll) if x0 <= lng <= x1 and y0 <= lat <= y1]
         if inside:
