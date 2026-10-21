@@ -7,7 +7,7 @@ import { useDrawIn } from "./useDrawIn";
 import { useViz } from "./VizContext";
 import s from "./viz.module.css";
 
-// "35 Days": a voyage clock. One spoke per day, clockwise from the top;
+// "34 Days": a voyage clock. One spoke per day, clockwise from the top;
 // spoke length = distance made good, inner beads = locks, outer ring = leg.
 
 function place(name: string, end: "to" | "from" = "to") {

@@ -35,9 +35,9 @@ The payoff for doing it right is the approach to Mackinac — threading the Stra
       "Shallow water near the Michigan shoreline — the coastal shelf is gradual but 10-foot depths extend farther offshore than you'd expect in some spots.",
     ],
     bestStops: [
-      "Saugatuck, MI (Day 2 alternate): One of the prettiest towns on Lake Michigan. Galleries, restaurants, a schooner bar. Worth a half-day if schedule allows.",
-      "Sleeping Bear Dunes (Day 4): The dunes are visible from offshore — magnificent 400-foot sand bluffs. If you have time, anchor off Empire and dinghy in.",
-      "Mackinac Island (Day 5–6): Car-free, horse-drawn carriages, Fort Mackinac, Arch Rock. Grand Hotel porch is open for a drink (jacket required after 6pm — pack one). The fudge shops are unironically excellent.",
+      "Saugatuck, MI (Day 1 bail-out harbor, ~35 nm from the crossing's midpoint): One of the prettiest towns on Lake Michigan. Galleries, restaurants, a schooner bar. Worth a half-day if schedule allows.",
+      "Sleeping Bear Dunes (Day 3): The dunes are visible from offshore — magnificent 400-foot sand bluffs. If you have time, anchor off Empire and dinghy in.",
+      "Mackinac Island (Day 4–5): Car-free, horse-drawn carriages, Fort Mackinac, Arch Rock. Grand Hotel porch is open for a drink (jacket required after 6pm — pack one). The fudge shops are unironically excellent.",
     ],
   },
 
@@ -82,10 +82,10 @@ The logistics are modest: passports for everyone, a CBSA phone check-in at Meldr
 
 This is a working stretch. The Ontario shore has fewer emergency harbors than Michigan's side — the plan is correct to note this, and correct to advise watching the forecast. In good conditions it rewards patience: the water is deeper and more settled than Erie, the coast has a quiet dignity, and Kincardine's Scottish heritage makes for a memorable stop. If a Saturday alignment is possible, the bagpiper ceremony at the lighthouse at sunset is one of those quietly extraordinary moments that stays with you.
 
-The day 14 run (85 nm from Kincardine to Port Huron) is the longest single open-water day of the entire voyage. Pre-dawn departure, eyes on the barometer, and consider intermediate bail-outs at Bayfield or Grand Bend on the Ontario side if the weather turns.`,
+The day 13 run (85 nm from Kincardine to Port Huron) is the longest single open-water day of the entire voyage. Pre-dawn departure, eyes on the barometer, and consider intermediate bail-outs at Bayfield or Grand Bend on the Ontario side if the weather turns.`,
     sailingTips: [
-      "Day 13 (Tobermory → Kincardine, 65 nm) is long and relatively exposed. Southampton or Port Elgin (~45 nm from Tobermory) make natural intermediate bail-outs if the forecast sours — worth noting for peace of mind.",
-      "Day 14 (Kincardine → Port Huron, 85 nm) is the longest open-water day of the whole trip. Pre-dawn departure is not optional. Bayfield or Grand Bend (Ontario side, ~40 nm) or Harbor Beach (Michigan side, ~55 nm) are your mid-run shelters.",
+      "Day 12 (Tobermory → Kincardine, 65 nm) is long and relatively exposed. Southampton or Port Elgin (~45 nm from Tobermory) make natural intermediate bail-outs if the forecast sours — worth noting for peace of mind.",
+      "Day 13 (Kincardine → Port Huron, 85 nm) is the longest open-water day of the whole trip. Pre-dawn departure is not optional. Bayfield or Grand Bend (Ontario side, ~40 nm) or Harbor Beach (Michigan side, ~55 nm) are your mid-run shelters.",
       "Re-entering US waters at Port Huron requires immediate contact with US CBP — call 1-800-973-2867 or use the CBP videophone at the marina. Have all passports, vessel documents, and your CBSA clearance number ready. Don't tie up and go to dinner first.",
       "Fuel up before leaving Kincardine — Lake Huron's open-water stretch between Tobermory and Port Huron has fewer stops than you'd like.",
       "Watch for shoaling near the Michigan 'Thumb' peninsula as you round into the southern approach to Port Huron. The chart is your friend.",
@@ -97,8 +97,8 @@ The day 14 run (85 nm from Kincardine to Port Huron) is the longest single open-
       "Lake St. Clair current begins immediately after the Blue Water Bridge — the current has you now. Plan accordingly.",
     ],
     bestStops: [
-      "Kincardine, ON (Day 13): Scottish heritage town with a genuine character. The Saturday-evening bagpiper-at-the-lighthouse ceremony is the most unexpectedly moving 20 minutes on the Ontario coast. Try to schedule Day 13 for a Saturday.",
-      "Southampton/Port Elgin, ON: Quiet, photogenic Lake Huron towns with basic marina services. Good bail-out or optional lunch stop on Day 13.",
+      "Kincardine, ON (Day 12): Scottish heritage town with a genuine character. The Saturday-evening bagpiper-at-the-lighthouse ceremony is the most unexpectedly moving 20 minutes on the Ontario coast. Try to schedule Day 13 for a Saturday.",
+      "Southampton/Port Elgin, ON: Quiet, photogenic Lake Huron towns with basic marina services. Good bail-out or optional lunch stop on Day 12.",
     ],
   },
 
@@ -125,7 +125,7 @@ The discipline here is lane discipline. Stay out of the dredged commercial chann
       "Reconfirm US CBP clearance is complete before departing Port Huron. Running the St. Clair without cleared customs status is a federal violation.",
     ],
     bestStops: [
-      "Detroit, MI (Day 15): The Detroit Riverwalk has transformed the waterfront. Detroit City Marina is well-positioned for a night in the city. Fuel up before Lake Erie.",
+      "Detroit, MI (Day 14): The Detroit Riverwalk has transformed the waterfront. Detroit City Marina is well-positioned for a night in the city. Fuel up before Lake Erie.",
     ],
   },
 
@@ -173,7 +173,8 @@ The Waterford Flight at the end — five locks dropping 169 feet in 1.5 miles �
     sailingTips: [
       "Speed limit is 10 mph on the main canal, 5 mph through towns and near other boats. The bottom is silt and you can ruin your prop on a submerged obstruction if you're not paying attention.",
       "Budget 20–30 minutes per lock including approach and departure. 34 locks × 25 min = 14 hours of lock time across the canal. Factor this into your daily distance math.",
-      "Lock hours: officially 7am–5pm, with extended on-demand operations to 10pm during summer. Don't count on 10pm — be through your last lock by 4:30pm to be safe, especially for multiple-lock flights.",
+      "Lock hours: the 2026 Canal Corp schedule is 8:00–18:00 at most locks, extended to 21:00 only at E-8, E-23, E-24, E-32, E-33 and E-34/35 (confirm the 2027 hours in the spring Notice to Mariners). Plan to be through your last lock well before 6pm, and treat the Waterford Flight as an arrive-by-5pm run.",
+      "Kids aboard: New York requires a child under 12 to wear a securely fastened USCG-approved PFD underway on a boat this size — make it a standing order on deck and in locks. In the locks the kids sit in the cockpit centre, adults handle the lines, and nobody steps onto a lock wall. No swimming in the canal; use designated beaches only (Sylvan Beach, Verona Beach State Park). Bug spray for the Montezuma marshes.",
       "Canal town walls are free or cheap ($5–15/night for power). First come, first served. Arriving by 4pm almost always gets you a spot. After 6pm in peak summer, you might be rafting.",
       "The holding tank rules are enforced. Do not discharge overboard. Use pump-outs at Ilion, Ess-Kay at Brewerton, and other equipped marinas.",
       "Weeds and floating debris ('canalligators' in canal lore — logs and branches just awash) can foul your prop. Go slow through weedy stretches and have a mask and sharp knife ready.",
@@ -181,14 +182,14 @@ The Waterford Flight at the end — five locks dropping 169 feet in 1.5 miles �
     watchFor: [
       "Low bridges — design to a 14 ft 6 in (≈4.4 m) air-draft target, not 15 ft. The controlling westbound clearance (Guard Gate West at max pool) is approximately 14 ft 8 in. Double-check after mast-step at Tonawanda: measure to the top of every antenna, GPS puck, and wind instrument — not just the mast truck.",
       "Lift bridges in small towns — most open automatically when they see you coming, but some require a VHF hail (Ch. 13) or a wave. Slow down and be patient.",
-      "The Oneida Lake crossing (Day 24) — 20 miles of open water that can get choppy. The only truly open-water section on the canal. Stage at Brewerton the evening before and cross in the morning calm before afternoon winds build.",
+      "The Oneida Lake crossing (Day 23) — 20 miles of open water that can get choppy. The only truly open-water section on the canal. Make the go/no-go at Brewerton before you enter the lake: if the westerly is above about 10 knots, stay at Ess-Kay Yards and cross fresh in the morning calm before afternoon winds build.",
       "Lock E-17 at Little Falls — the highest single lock at 40.5 feet. It's dramatic but well-operated. Follow crew instructions from the lock tender exactly.",
       "The Waterford Flight (Locks E-6 to E-2) — arrive at the top lock (E-6) by 2:30pm at the absolute latest. Once you start, you go through all five without stopping.",
     ],
     bestStops: [
-      "Lockport, NY: The 'Flight of Five' — the original 1825 canal locks run parallel to the modern ones. The Lockport Cave tour goes underneath the canal. Fascinating.",
+      "Lockport, NY: The 'Flight of Five' — the original 1825 canal locks run parallel to the modern ones. The Lockport Cave tour goes underneath the canal (reportedly closed since 2023 — check before planning on it), and the Erie Canal Discovery Center (24 Church St) has a packet-boat film and model locks.",
       "Fairport, NY: The red liftbridge, the towpath trail, Moonlight Creamery ice cream. The most photogenic canal town. Great lunch stop.",
-      "Lyons, NY (optional diversion — not a scheduled overnight): The town smells like peppermint. This is not a joke — it's the peppermint oil capital of America. Worth a walk if you're ahead of schedule between Pittsford and Brewerton.",
+      "Lyons, NY (optional diversion — not a scheduled overnight): The town smells like peppermint. This is not a joke — it's the peppermint oil capital of America. Worth a walk if you're ahead of schedule between Newark and Baldwinsville.",
       "Sylvan Beach, NY: Retro amusement park at the east end of Oneida Lake. Something surreal about a Ferris wheel next to a canal lock.",
       "Little Falls, NY: Nestled in limestone cliffs. The Rotary Park dock is free and pretty. Moss Island and its glacial potholes are a 20-minute walk. Strongly recommend.",
       "Waterford, NY: Oldest continuously inhabited settlement in the US (they say). The welcome center at the bottom of the Flight often has volunteers who will literally hand you a beer. True story.",

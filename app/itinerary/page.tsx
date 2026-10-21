@@ -16,7 +16,7 @@ import styles from "@/components/log/log.module.css";
 export const metadata: Metadata = {
   title: "Ship’s Log — S/V Sabbatical",
   description:
-    "The day-by-day log of a 35-day passage from Winthrop Harbor to Old Saybrook: every leg, berth, lock, highlight and hazard, with the captain’s briefing for each chapter.",
+    "The day-by-day log of a 34-day passage from Winthrop Harbor to Old Saybrook: every leg, berth, lock, highlight and hazard, with the captain’s briefing for each chapter.",
 };
 
 export default function ItineraryPage() {

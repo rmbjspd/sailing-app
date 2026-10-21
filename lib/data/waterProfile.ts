@@ -139,20 +139,20 @@ function canalMileposts(): number[] {
 
 /**
  * Overnight stops on the canal, in statute miles east of Tonawanda — estimated
- * from the lock mileposts above (e.g. Brewerton village sits ~2.5 mi east of
- * E-23). Day 21 has no nearby lock to pin it, so the itinerary's own 40 mi is
- * used. Used only to place locks within the right day; the chart's day widths
- * always follow itinerary.ts distances.
+ * from the lock mileposts above, placed so each day holds the same locks as
+ * itinerary.ts (e.g. Baldwinsville sits just upstream of E-24, Little Falls
+ * just below E-17). Used only to place locks within the right day; the chart's
+ * day widths always follow itinerary.ts distances.
  */
 export const CANAL_OVERNIGHT_MI: Record<number, number> = {
-  20: 0,       // Tonawanda (mast-down day)
-  21: 40,      // Medina / Brockport — itinerary figure
-  22: 85.6,    // Pittsford, ~1.5 mi east of E-32
-  23: 188,     // Brewerton, ~2.5 mi east of E-23
-  24: 208.5,   // Sylvan Beach, east end of Oneida Lake (~6 mi before E-22)
-  25: 247,     // Ilion, ~3 mi east of E-19
-  26: 301.8,   // Amsterdam Riverlink Park, ~1.5 mi east of E-11
-  27: CANAL_LENGTH_MI, // Waterford, foot of the Flight
+  19: 0,       // Tonawanda (mast-down day)
+  20: 58,      // Brockport
+  21: 110,     // Newark, just upstream of E-28B
+  22: 165,     // Baldwinsville, just upstream of E-24
+  23: 207,     // Sylvan Beach, east end of Oneida Lake (~7 mi before E-22)
+  24: 258,     // Little Falls, between E-18 and E-17
+  25: 301.8,   // Amsterdam Riverlink Park, ~1.5 mi east of E-11
+  26: CANAL_LENGTH_MI, // Waterford, foot of the Flight
 };
 
 /** Black Rock Lock sits ~7.4 statute mi upstream of Tonawanda (E-35 → Black Rock ≈ 26 mi [OB]). */
