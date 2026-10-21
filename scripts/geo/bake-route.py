@@ -29,6 +29,22 @@ LEG_ORDER = ["lake-michigan", "north-channel", "lake-huron", "st-clair", "lake-e
 VIA = {
     # Mackinac → Drummond: through the Les Cheneaux / De Tour Passage, not round Bois Blanc's south side
     "drummond-island": [(-84.35, 45.93), (-83.92, 45.975)],
+    # Plum Gut: (-72.2075, 41.1592) is NOAA current station LIS1012. The land mask has no
+    # Plum Island, so without these the track cuts across it.
+    "greenport": [(-72.215, 41.200), (-72.2075, 41.1592), (-72.215, 41.125)],
+    "old-saybrook": [(-72.215, 41.125), (-72.2075, 41.1592), (-72.215, 41.200)],
+}
+
+# The raster is too coarse to hold a channel as narrow as the East River's West Channel
+# (Roosevelt Island is half a pixel wide), and the least-cost path takes the East Channel,
+# which has a lift bridge (~40 ft closed). Splice this hand-set track (OSM West Channel +
+# Hell Gate centreline, south → north) over whatever the router drew inside the box.
+OVERRIDE = {
+    "oyster-bay": dict(
+        box=(-73.975, -73.90, 40.735, 40.795),  # lng_min, lng_max, lat_min, lat_max
+        pts=[(-73.9682, 40.7408), (-73.9629, 40.7511), (-73.9468, 40.7693), (-73.9399, 40.7755),
+             (-73.9297, 40.7792), (-73.9214, 40.7831), (-73.9113, 40.7927)],
+    ),
 }
 
 a = np.asarray(Image.open(os.path.join(ROOT, "public/geo/terrain.png")))
@@ -162,6 +178,12 @@ for prev, w in zip(wps, wps[1:]):
     sm = smooth(sm, 2)
     simp = simplify_safe(sm, 0.3)
     ll = [to_ll(r, c) for r, c in simp]
+    ov = OVERRIDE.get(w["id"])
+    if ov:
+        x0, x1, y0, y1 = ov["box"]
+        inside = [i for i, (lng, lat) in enumerate(ll) if x0 <= lng <= x1 and y0 <= lat <= y1]
+        if inside:
+            ll = ll[:inside[0]] + ov["pts"] + ll[inside[-1] + 1:]
     nm = sum(math.hypot((b[0] - a_[0]) * math.cos(math.radians(43.75)), b[1] - a_[1]) * 60 for a_, b in zip(ll, ll[1:]))
     print(f"day {w['day']:2d} {prev['name'][:22]:22s} → {w['name'][:24]:24s} {nm:6.1f} nm  {len(ll):4d} pts", file=sys.stderr)
     seg_pts = legs[w["leg"]]

@@ -6,8 +6,8 @@ export const itinerary: ItineraryDay[] = [
     day: 1, from: "Winthrop Harbor, IL", to: "Grand Haven, MI", distanceNm: 78, locks: 0,
     leg: "lake-michigan", overnight: "Grand Haven Municipal Marina",
     highlights: ["Open-water crossing of the southern basin of Lake Michigan, out of sight of land for the middle of the day", "Grand Haven waterfront music fountain show in the evenings"],
-    warnings: ["Longest open-water crossing of the Lake Michigan leg — depart North Point Marina before first light and watch the forecast the night before", "Afternoon thunderstorms and NW winds can build 2–4ft chop; plan to be in by 3pm", "Full tank on departure; no harbor within reach for the middle 40 nm. Bail-out harbors if it kicks up: Waukegan or Racine early on, Holland or South Haven (~35 nm) on the Michigan side"],
-    notes: "Depart North Point Marina at first light and set a course ENE across the lake to Grand Haven, skipping St. Joseph. Refuel and pump out on arrival."
+    warnings: ["About 13–14 hours at 5.5–6 kt: leave North Point Marina around 04:45 CDT and expect to arrive 18:45–19:45 EDT — there is no 3pm arrival on a 78 nm day", "Go/no-go at 04:00: NWS open-lake forecast, NDBC buoy 45007 (South Michigan) and any Special Marine Warnings. If it is marginal, wait for the Day 2 buffer", "Roughly 5–6 hours in the middle with no harbor in reach (Holland ~35 nm, South Haven ~39 nm, Saugatuck ~35 nm; Racine only helps for the first 2–3 hours). Set a point of no return about 20 nm out, leave a float plan, and wear PFDs and tethers from the dock", "Clocks go from Central to Eastern time on the crossing — Grand Haven is an hour ahead of Winthrop Harbor", "Lake water is still in the 50s to low 60s °F in mid-June: fog over cold water and late-day thunderstorms are the hazards"],
+    notes: "Depart North Point Marina in the dark so you arrive in daylight, and set a course ENE across the lake to Grand Haven, skipping St. Joseph. Full tank on departure. Refuel and pump out on arrival."
   },
   {
     day: 2, from: "Grand Haven, MI", to: "Grand Haven, MI", distanceNm: 0, locks: 0,
@@ -115,8 +115,8 @@ export const itinerary: ItineraryDay[] = [
     day: 16, from: "Detroit, MI", to: "Put-in-Bay, OH", distanceNm: 55, locks: 0,
     leg: "lake-erie", overnight: "South Bass Island mooring or dock",
     highlights: ["Perry's Victory & International Peace Memorial (352ft) — take the elevator up for views", "Golf cart rentals for island tour", "Lively boating scene and live music"],
-    warnings: ["Lake Erie is the shallowest Great Lake — moderate winds create short, steep waves quickly", "Check forecast carefully; if Erie is kicking up, wait it out in Detroit"],
-    notes: "Enter Lake Erie via Detroit River. Arrive Put-in-Bay by early afternoon to secure a mooring."
+    warnings: ["Lake Erie is the shallowest Great Lake — moderate winds create short, steep waves quickly", "Check forecast carefully; if Erie is kicking up, wait it out in Detroit", "This day falls on Sunday, July 4 (2027): Put-in-Bay will be at its busiest of the year. Reserve a mooring or dock months ahead, and line up a fallback — Port Clinton, Middle Bass or Catawba"],
+    notes: "Enter Lake Erie via Detroit River. Arrive Put-in-Bay by early afternoon to secure a mooring — on the July 4 weekend, only if you have a reservation."
   },
   {
     day: 17, from: "Put-in-Bay, OH", to: "Cleveland, OH", distanceNm: 70, locks: 0,
@@ -207,17 +207,17 @@ export const itinerary: ItineraryDay[] = [
     notes: "Through Albany (mile 145). Arrive Catskill (mile 112) by early-to-mid afternoon to complete mast-step before dark. Allow 2–3hrs for re-rigging. Reconnect all electronics after stepping."
   },
   {
-    day: 29, from: "Catskill, NY", to: "Poughkeepsie or Newburgh, NY", distanceNm: 60, locks: 0,
+    day: 29, from: "Catskill, NY", to: "Poughkeepsie or Newburgh, NY", distanceNm: 33, locks: 0,
     leg: "hudson", overnight: "Shadows Marina or Poughkeepsie YC; or anchor at Newburgh",
     highlights: ["Hudson-Athens Lighthouse", "Kingston/Rondout Creek: Hudson River Maritime Museum (optional stop)", "Catskill Mountains backdrop to the west"],
-    warnings: ["Ride the ebb tide south — time departure for 1–2hrs after high water at your location"],
-    notes: "Mostly sailing now! SW breezes common in afternoon. Ride the ebb, motorsail if wind is light."
+    warnings: ["Ride the ebb tide south. Look up NOAA current predictions for the day (the upper-river ebb runs long — roughly 3:30 to 11:00 at Catskill on a typical day, max about 2 kt) rather than guessing from high water"],
+    notes: "Mostly sailing now! SW breezes common in afternoon. Ride the ebb, motorsail if wind is light. Catskill (river mile 112) to Poughkeepsie (mile 75) is only about 33 nm, so a short day — if you want to even out the next day, carry on to Newburgh or Cold Spring (~44–50 nm)."
   },
   {
-    day: 30, from: "Poughkeepsie, NY", to: "New York City", distanceNm: 75, locks: 0,
+    day: 30, from: "Poughkeepsie, NY", to: "New York City", distanceNm: 65, locks: 0,
     leg: "hudson", overnight: "Liberty Landing Marina, Jersey City",
     highlights: ["Bannerman's Castle ruins on Pollepel Island, just north of West Point", "West Point Military Academy perched on the bluffs", "Statue of Liberty and Ellis Island on approach to NY Harbor", "Time the final approach for golden hour — the Manhattan skyline lit by the low evening sun is the landfall of the whole voyage"],
-    warnings: ["Time the ebb through the Hudson Highlands — can run 2kt", "High ferry and commercial traffic near NYC; stay alert last 20nm", "Reserve Liberty Landing in advance — NYC slips fill fast"],
+    warnings: ["Time the ebb through the Hudson Highlands (NOAA current predictions for Poughkeepsie and the Highlands) — it can run 2kt", "High ferry and commercial traffic near NYC; stay alert last 20nm", "Reserve Liberty Landing in advance — NYC slips fill fast"],
     notes: "Arrive NYC mid-to-late afternoon. Day 31 is a layover: refuel, West Marine run, provision, enjoy the city."
   },
   {
@@ -233,7 +233,7 @@ export const itinerary: ItineraryDay[] = [
     day: 32, from: "New York Harbor", to: "Oyster Bay or Cold Spring Harbor, NY", distanceNm: 28, locks: 0,
     leg: "sound-saybrook", overnight: "Oyster Bay or Cold Spring Harbor marina",
     highlights: ["East River transit through Manhattan — dramatic urban sailing", "Long Island Sound opens up — excellent sailing begins", "SW sea breezes = beam reaching east"],
-    warnings: ["CRITICAL: Time the East River / Hell Gate carefully. Currents reach 4–5 knots at Hell Gate. Aim to pass Hell Gate at or just before slack water on a favorable ebb.", "Do NOT attempt Hell Gate on a strong opposing current"],
+    warnings: ["CRITICAL: Time the East River / Hell Gate carefully. Heading east you want the FLOOD, which sets toward the Sound (NOAA station NYH1924, Hell Gate). Currents reach 4–5 knots. A rule of thumb is to enter the East River at the Battery about 1h45m after Battery low water — on Jul 20, 2027 (predictions) that is about 06:00, with Hell Gate slack at 06:08 and the flood peaking at about 3.2 kt near 09:00. Recheck the tables for the day you actually go", "Do NOT attempt Hell Gate on a strong opposing current — days 32–35 fall just after the full moon, so currents run strong", "Take the West Channel past Roosevelt Island: the East Channel has a lift bridge with only about 40 ft of clearance when closed (the mast will be stepped by now)"],
     notes: "Short day to get onto LIS. Once through Hell Gate, the sailing is typically glorious — consistent SW sea breeze for a beam reach east."
   },
   {
@@ -244,17 +244,17 @@ export const itinerary: ItineraryDay[] = [
     notes: "Beautiful sailing day. Port Jefferson has full services."
   },
   {
-    day: 34, from: "Port Jefferson, NY", to: "Greenport, NY", distanceNm: 40, locks: 0,
+    day: 34, from: "Port Jefferson, NY", to: "Greenport, NY", distanceNm: 55, locks: 0,
     leg: "sound-saybrook", overnight: "Mitchell Park Marina, Greenport",
     highlights: ["North Fork wine country — some of the best in the Northeast", "Shelter Island accessible by short ferry from Greenport", "Eastern LIS: more open water, great sailing"],
-    warnings: ["Plum Gut (between Plum Island and Orient Point) has strong tidal currents — time your approach"],
-    notes: "Another excellent sailing day. Greenport is a great overnight — walk to wine tasting or ferry to Shelter Island."
+    warnings: ["Plum Gut (between Plum Island and Orient Point) is the way into Greenport and has strong tidal currents. Eastbound you want the ebb: on Jul 22, 2027 (NOAA predictions, station LIS1012) the ebb starts about 14:00 and peaks near 3 kt at 16:37, so leave Port Jefferson about 07:00 to reach the Gut around 14:00"],
+    notes: "About 55 nm — the track runs up to Plum Gut (~41 nm) and then ~13 nm on to Greenport. Another excellent sailing day. Greenport is a great overnight — walk to wine tasting or ferry to Shelter Island."
   },
   {
-    day: 35, from: "Greenport, NY", to: "Old Saybrook, CT", distanceNm: 50, locks: 0,
+    day: 35, from: "Greenport, NY", to: "Old Saybrook, CT", distanceNm: 21, locks: 0,
     leg: "sound-saybrook", overnight: "Saybrook Point Marina",
-    highlights: ["Plum Gut to Race Rock — exhilarating tidal current if timed right", "Mouth of the Connecticut River — a beautiful finish", "Essex (5nm upriver): one of the prettiest New England towns, Essex Steam Train connects to river boat tours", "Saybrook Point lighthouse"],
-    warnings: ["Connecticut River entrance can shoal; follow the marked channel", "Race Rock and The Race: tidal currents are fierce — cross near slack"],
-    notes: "ARRIVAL. A direct run across the Sound's eastern end. Time Race Rock near slack water, then follow the Connecticut River channel in. Arrive early and spend the afternoon on the river. The Connecticut River Valley is the perfect place to end a voyage."
+    highlights: ["Plum Gut with a fair tide — an exhilarating ride if timed right", "Mouth of the Connecticut River — a beautiful finish", "Essex (5nm upriver): one of the prettiest New England towns, Essex Steam Train connects to river boat tours", "Saybrook Point lighthouse"],
+    warnings: ["Connecticut River entrance can shoal; follow the marked channel", "Plum Gut currents are strong: heading west you want the flood (which sets into the Sound). On Jul 23, 2027 (NOAA predictions, LIS1012) the flood peaks at about 2 kt near 11:20, so leave Greenport about 08:00–08:30 to hit the Gut around 10:30–11:00. The Race (and Race Rock) are about 13 nm east of the Saybrook entrance and are not on this route", "Avoid a strong ebb against a SW breeze at the Connecticut River bar"],
+    notes: "ARRIVAL. About 21 nm: Greenport to Plum Gut (~13 nm), then across to the Saybrook breakwater (~8.5 nm). Ride the flood through the Gut, then follow the marked Connecticut River channel in — you should reach the entrance around 12:30–13:00 as the river current turns fair. Arrive early and spend the afternoon on the river. The Connecticut River Valley is the perfect place to end a voyage."
   },
 ];

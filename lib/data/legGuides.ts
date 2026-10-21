@@ -229,22 +229,22 @@ This is one of America's great rivers, and it looks it. The Catskill Mountains p
     legId: "sound-saybrook",
     title: "Long Island Sound → Old Saybrook",
     subtitle: "New York to the Connecticut River",
-    captainIntro: `Exit New York through the East River — a canyon of glass and steel with some of the most interesting tidal hydraulics in North America. Hell Gate, where the Harlem River, the Long Island Sound tidal flow, and the upper East River meet, runs up to 5 knots on a good spring tide. Time it correctly and you'll rocket through on rails at 9 knots; time it wrong and you'll be doing 2 knots against a wall of current while tugboats pass you in both directions. Check the tide tables for Hell Gate specifically, plan to pass at or just before slack, and enjoy the view.
+    captainIntro: `Exit New York through the East River — a canyon of glass and steel with some of the most interesting tidal hydraulics in North America. Hell Gate, where the Harlem River, the Long Island Sound tidal flow, and the upper East River meet, runs up to 5 knots on a good spring tide. Time it correctly and you'll rocket through on rails at 9 knots; time it wrong and you'll be doing 2 knots against a wall of current while tugboats pass you in both directions. Heading east you want the flood, which sets toward the Sound: check the NOAA current predictions for Hell Gate (station NYH1924) and plan to ride it, and enjoy the view.
 
 Once you clear Hell Gate and the Throgs Neck Bridge, Long Island Sound opens ahead of you like a reward. This is what the whole trip was building toward: a beam reach in southwest sea breeze, 12–15 knots, flat water, the North Fork of Long Island to starboard and the Connecticut hills to port, running east at hull speed with everything up. Summer mornings on the Sound are routinely excellent — the SW sea breeze fills in by 9–10am on most June and July days and holds until early evening. You will sail. Properly.
 
 The Sound is one of the great cruising grounds on the East Coast, and it's at its best in June and July. Oyster Bay, Port Jefferson, Greenport, Mystic — every stop is interesting, the food is good, and the sailing between them is better. Old Saybrook at the Connecticut River mouth is a genteel finish to a raucous journey.`,
     sailingTips: [
-      "Hell Gate timing is mission-critical. The current reaches 5 knots and the eddies are violent on a big spring tide. Check admiralty tables for 'Hell Gate, NY' — the window of manageable current around slack is only 45–60 minutes. Don't miss it.",
+      "Hell Gate timing is mission-critical. The current reaches 5 knots and the eddies are violent on a big spring tide. Eastbound, ride the flood: enter the East River at the Battery about 1h45m after Battery low water and check the NOAA predictions for Hell Gate (NYH1924) — slack comes shortly after, and the flood then builds to about 3 knots. Take the West Channel past Roosevelt Island; the East Channel's lift bridge has only about 40 ft of clearance closed.",
       "SW sea breeze on Long Island Sound is highly reliable from mid-May through August. It typically builds from the SW in the morning, peaks 12–18 knots in early afternoon, and lays down by early evening. Plan departures to use it.",
-      "Plum Gut (between Orient Point on Long Island and Plum Island) has strong tidal currents up to 5 knots — similar precautions to Hell Gate apply. Cross near slack.",
+      "Plum Gut (between Orient Point on Long Island and Plum Island) is the way in and out of Greenport and has strong tidal currents (NOAA station LIS1012: about 2–3 knots on the Jul 22–23, 2027 predictions). Eastbound ride the ebb, westbound ride the flood — the flood sets into the Sound.",
       "The Connecticut River entrance at Old Saybrook has a shifting sandbar at the mouth — follow the marked channel, not the straight-line course on the chart.",
       "Long Island Sound thunderstorms in summer build rapidly over the land and track east-northeast. Watch the northwest horizon in the afternoon.",
     ],
     watchFor: [
       "Hell Gate current — see above. It's not dangerous if timed correctly; it's exciting and potentially damaging if not.",
       "High ferry and commercial traffic density between Port Jefferson and Bridgeport — the cross-Sound ferries run on fixed schedules and move fast.",
-      "Race Rock and The Race (Block Island Sound entrance) — tidal currents are fierce at Race Rock at the eastern end of the Sound. If you push beyond Greenport, plan the passage for slack.",
+      "Race Rock and The Race (Block Island Sound entrance) — tidal currents are fierce, up to about 4 knots. They are about 13 nm east of the Saybrook entrance and not on the Greenport to Old Saybrook route; they only matter if you detour to Fishers Island or Mystic, and then plan the passage for slack.",
       "Mystic River drawbridge — has a limited opening schedule. Call ahead.",
     ],
     bestStops: [
