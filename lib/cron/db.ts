@@ -12,6 +12,7 @@ export interface PricePoint {
   price: number;
   retailer: string;
   source: "serpapi";
+  brand: string | null; // which watched brand; null on rows from before brand filtering
   checked_at: string; // ISO timestamp
 }
 
@@ -29,17 +30,17 @@ export interface ConfirmedDeal {
 }
 
 /**
- * Returns the 12-month price history for a given item, oldest first. Points
- * recorded before `notBefore` (an ISO timestamp) are excluded.
+ * Returns the 12-month price history for a given item, oldest first. Only
+ * brand-matched points count: rows with no `brand` were the cheapest result
+ * of any brand and would hold the 12-month minimum artificially low.
  */
-export async function getPriceHistory(itemId: string, notBefore?: string): Promise<PricePoint[]> {
-  const yearAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString();
-  // ISO-8601 UTC strings compare correctly as strings.
-  const since = notBefore && notBefore > yearAgo ? notBefore : yearAgo;
+export async function getPriceHistory(itemId: string): Promise<PricePoint[]> {
+  const since = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString();
   const { data, error } = await client()
     .from("deal_price_history")
-    .select("item_id, price, retailer, source, checked_at")
+    .select("item_id, price, retailer, source, brand, checked_at")
     .eq("item_id", itemId)
+    .not("brand", "is", null)
     .gte("checked_at", since)
     .order("checked_at", { ascending: true });
   if (error) throw new Error(`price history query failed: ${error.message}`);

@@ -10,13 +10,10 @@ const DEAL_TOLERANCE = 0.02;
 // …AND at least 5% below the typical (median) price over that period, so an
 // item whose price never moves doesn't "alert" every week at 0% off.
 const MIN_SAVING_PCT = 5;
-// Don't judge a "12-month low" until there are a few weeks of prices to
-// compare against. Weekly scans → alerts can start after 4 weeks.
+// Don't judge a "12-month low" until there are a few weeks of brand-matched
+// prices to compare against (older rows without a brand are ignored — see
+// getPriceHistory). Weekly scans → alerts can start after 4 weeks.
 const MIN_HISTORY_POINTS = 4;
-// Prices recorded before this were the cheapest result of ANY brand (see
-// brandMatch.ts), so they aren't comparable with brand-filtered prices and
-// would hold the 12-month minimum artificially low for a year.
-const BRAND_FILTERED_SINCE = "2026-11-23T00:00:00.000Z";
 
 export interface ScanResult {
   scanned: number;
@@ -64,7 +61,7 @@ export async function runDealScan(): Promise<ScanResult> {
       // ── Load prior 12-month history from Supabase ───────────────────
       // Today's price is deliberately NOT part of the baseline: comparing it
       // with a minimum that includes itself made every saving ≤ 0%.
-      const prior = (await getPriceHistory(item.id, BRAND_FILTERED_SINCE)).map((p) => p.price);
+      const prior = (await getPriceHistory(item.id)).map((p) => p.price);
       if (prior.length < MIN_HISTORY_POINTS) {
         result.buildingHistory++;
         return;

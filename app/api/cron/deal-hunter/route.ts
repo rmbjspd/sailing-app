@@ -18,6 +18,9 @@ export async function GET(request: NextRequest) {
     return Response.json(result);
   } catch (err) {
     console.error("[deal-hunter] scan failed:", err);
-    return Response.json({ error: "Scan failed" }, { status: 500 });
+    // The route is behind CRON_SECRET, so returning the reason is safe, and it
+    // puts e.g. a missing database column straight into the workflow log.
+    const detail = err instanceof Error ? err.message : String(err);
+    return Response.json({ error: "Scan failed", detail }, { status: 500 });
   }
 }

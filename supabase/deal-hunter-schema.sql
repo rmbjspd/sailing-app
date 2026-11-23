@@ -7,8 +7,14 @@ create table if not exists deal_price_history (
   price       numeric     not null,
   retailer    text        not null,
   source      text        not null check (source in ('serpapi')),
+  brand       text,
   checked_at  timestamptz not null default now()
 );
+
+-- Migration for databases created before `brand` existed — safe to re-run.
+-- `brand` is the watched brand the price is for. Rows without one were the
+-- cheapest result of ANY brand and are ignored by the 12-month comparison.
+alter table deal_price_history add column if not exists brand text;
 
 create index if not exists idx_dph_item_checked
   on deal_price_history (item_id, checked_at desc);
