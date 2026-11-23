@@ -52,3 +52,23 @@ jobs:
             echo "::error::Deal scan returned HTTP $code (see response body above)."
             exit 1
           fi
+
+      - name: Check the alert email went out
+        # Deals that never reach your inbox are the failure this catches: the
+        # scan returns 200 either way, so check the alert status it reports.
+        run: |
+          status=$(jq -r '.alert.status // "missing"' response.json)
+          confirmed=$(jq -r '.confirmed // 0' response.json)
+          echo "Confirmed deals: $confirmed · alert status: $status"
+          case "$status" in
+            sent|no_deals) ;;
+            not_configured)
+              echo "::error::$confirmed deal(s) found but no email sent — missing $(jq -r '.alert.missing | join(", ")' response.json) in Vercel env vars."
+              exit 1 ;;
+            failed)
+              echo "::error::$confirmed deal(s) found but the alert email failed: $(jq -r '.alert.error' response.json)"
+              exit 1 ;;
+            *)
+              echo "::error::Response has no alert status — is the deployed app on the latest version?"
+              exit 1 ;;
+          esac

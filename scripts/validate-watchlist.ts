@@ -10,6 +10,7 @@
 
 import { WATCHED_ITEMS } from "../lib/cron/items";
 import { getApproval, APPROVED_BRANDS } from "../lib/cron/approvedBrands";
+import { matchBrand, queriesFor } from "../lib/cron/brandMatch";
 
 // Declared locally so this runs without @types/node resolution.
 declare const process: { exit(code: number): never };
@@ -89,6 +90,44 @@ if (unused.length === 0) {
 } else {
   console.log(`  info — ${unused.length} unused: ${unused.map((u) => u.brand).join(", ")}`);
 }
+
+// ── 5. Brand matching ────────────────────────────────────────────────────
+// Prices only count when a shopping result's title names one of the item's
+// brands. If a brand can't match its own name, the item can never price.
+console.log("\n[5] Brand matching");
+let unmatchable = 0;
+for (const item of WATCHED_ITEMS) {
+  for (const b of item.brands) {
+    const got = matchBrand(`${b} sample product title`, item.brands);
+    if (got !== b) {
+      fail(`"${item.id}" brand "${b}" does not match a title naming it (matched ${got ?? "nothing"})`);
+      unmatchable++;
+    }
+  }
+}
+if (unmatchable === 0) console.log("  ok — every brand matches a title that names it");
+
+// ── 6. Approval verification ─────────────────────────────────────────────
+// Publication-based approvals are seeded from reputation until checked
+// against the source. Commodity entries make no publication claim.
+console.log("\n[6] Approval verification");
+const claimed = APPROVED_BRANDS.filter(
+  (b) => !b.sources.every((s) => s === "Commodity — no marine seal required")
+);
+const unverified = claimed.filter((b) => !b.verified);
+if (unverified.length === 0) {
+  console.log(`  ok — all ${claimed.length} publication-based approvals verified`);
+} else {
+  warn(
+    `${unverified.length} of ${claimed.length} publication-based approvals are unverified; ` +
+      `alerts label them "(unverified)". Confirm against the source and set verified: true.`
+  );
+}
+
+// ── 7. Search volume ─────────────────────────────────────────────────────
+console.log("\n[7] Search volume");
+const weekly = WATCHED_ITEMS.reduce((n, i) => n + queriesFor(i).length, 0);
+console.log(`  info — ${weekly} Serper queries per weekly scan (~${weekly * 52}/year)`);
 
 // ── Summary ──────────────────────────────────────────────────────────────
 console.log("\n" + "=".repeat(50));

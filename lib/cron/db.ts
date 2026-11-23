@@ -28,9 +28,14 @@ export interface ConfirmedDeal {
   confirmed_at: string;
 }
 
-/** Returns the 12-month price history for a given item, oldest first. */
-export async function getPriceHistory(itemId: string): Promise<PricePoint[]> {
-  const since = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString();
+/**
+ * Returns the 12-month price history for a given item, oldest first. Points
+ * recorded before `notBefore` (an ISO timestamp) are excluded.
+ */
+export async function getPriceHistory(itemId: string, notBefore?: string): Promise<PricePoint[]> {
+  const yearAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString();
+  // ISO-8601 UTC strings compare correctly as strings.
+  const since = notBefore && notBefore > yearAgo ? notBefore : yearAgo;
   const { data, error } = await client()
     .from("deal_price_history")
     .select("item_id, price, retailer, source, checked_at")

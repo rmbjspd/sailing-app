@@ -20,11 +20,9 @@ export interface WatchedItem {
 
 export const WATCHED_ITEMS: WatchedItem[] = [
   // ── Safety ──────────────────────────────────────────────────────────
-  {
-    id: "s1", label: "Inflatable PFD-harness", category: "safety", priority: "critical",
-    brands: ["Mustang", "Spinlock"],
-    searchTerm: "inflatable pfd harness sailing offshore",
-  },
+  // OWNED — no longer watched:
+  //   s1  Inflatable PFD-harness — Spinlock DeckVest 6D bought Sep 2026.
+  //       Re-add (brands Mustang, Spinlock) if buying units for crew.
   {
     id: "s2", label: "Safety tethers double-clip 4-set", category: "safety", priority: "critical",
     brands: ["Spinlock", "Wichard"],
@@ -80,18 +78,11 @@ export const WATCHED_ITEMS: WatchedItem[] = [
   // n11 (AIS Class B transceiver) omitted — standalone unit bought.
   // s4 (EPIRB/PLB) omitted — ACR beacon bought.
   // n9 (autopilot) intentionally omitted — already aboard.
+  // n21 (radar) omitted — B&G HALO20+ bought Nov 2026.
   {
     id: "n4", label: "Handheld VHF radio DSC GPS", category: "navigation", priority: "critical",
     brands: ["Standard Horizon", "Icom"],
     searchTerm: "handheld VHF radio DSC GPS floating waterproof marine",
-  },
-  {
-    // NOTE: sized for a larger boat. On the Oceanis 30.1 the lighter HALO20+
-    // is the better fit — weight aloft and power draw both matter more on a
-    // 9,100 lb hull. Left as-is pending a call on which to track.
-    id: "n21", label: "Radar — B&G HALO24 dome w/ Doppler", category: "navigation", priority: "important",
-    brands: ["B&G"],
-    searchTerm: "B&G HALO24 radar dome Doppler",
   },
   {
     // In-hull (shoot-through) CHIRP fishfinder transducer.
@@ -131,7 +122,9 @@ export const WATCHED_ITEMS: WatchedItem[] = [
   {
     // Moved from `navigation`, where it was passing the brand gate on Garmin's
     // approval while the product actually searched for is an Anker power bank.
-    id: "n16", label: "Portable battery banks 2x", category: "electrical", priority: "important",
+    // One of the two was bought Jun 2026 (Anker 20,000mAh, $47.49), so this
+    // now tracks the second only.
+    id: "n16", label: "Portable battery bank (1 more)", category: "electrical", priority: "important",
     brands: ["Anker"],
     searchTerm: "Anker portable power bank 20000mah waterproof",
     asin: "B07QXV6N1B",
