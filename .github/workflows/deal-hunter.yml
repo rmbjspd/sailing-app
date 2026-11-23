@@ -48,6 +48,10 @@ jobs:
             echo "::error::HTTP 401 — the CRON_SECRET here does not match the one set in Vercel."
             exit 1
           fi
+          if [ "$code" = "503" ]; then
+            echo "::error::HTTP 503 — CRON_SECRET is not set in Vercel. Add it under Project → Settings → Environment Variables (same value as this repo's secret) and redeploy."
+            exit 1
+          fi
           if [ "$code" != "200" ]; then
             echo "::error::Deal scan returned HTTP $code (see response body above)."
             exit 1
