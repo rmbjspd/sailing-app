@@ -97,10 +97,18 @@ function buildEmail(deals: ConfirmedDeal[]): string {
 </html>`;
 }
 
+/** Env vars the alert email needs that aren't set. */
+export function missingEmailConfig(): string[] {
+  return [
+    !process.env.RESEND_API_KEY && "RESEND_API_KEY",
+    !process.env.DEAL_ALERT_TO && "DEAL_ALERT_TO",
+  ].filter(Boolean) as string[];
+}
+
 export async function sendDealAlert(deals: ConfirmedDeal[]): Promise<AlertStatus> {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.DEAL_ALERT_TO;
-  const missing = [!apiKey && "RESEND_API_KEY", !to && "DEAL_ALERT_TO"].filter(Boolean) as string[];
+  const missing = missingEmailConfig();
   if (missing.length > 0) {
     console.error(`[deal-hunter] ${deals.length} deal(s) found but email not configured: missing ${missing.join(", ")}`);
     return { status: "not_configured", missing };

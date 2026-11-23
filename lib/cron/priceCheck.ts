@@ -82,7 +82,7 @@ async function serperPrice(item: WatchedItem): Promise<PriceResult | null> {
     title: best.title,
     retailer: best.source,
     buyUrl: best.link || null,
-    points: [{ item_id: item.id, price: best.price, retailer: best.source, source: "serpapi", brand: best.brand, checked_at: now }],
+    points: [{ item_id: item.id, price: best.price, retailer: best.source, source: "serpapi", checked_at: now }],
   };
 }
 

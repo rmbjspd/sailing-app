@@ -2,7 +2,7 @@ import { WATCHED_ITEMS } from "./items";
 import { getApproval } from "./approvedBrands";
 import { checkPrice } from "./priceCheck";
 import { getPriceHistory, appendPrices, logDeal, type ConfirmedDeal } from "./db";
-import { sendDealAlert, type AlertStatus } from "./notify";
+import { sendDealAlert, missingEmailConfig, type AlertStatus } from "./notify";
 
 // Fire only if today's price is within 2% of the lowest price in the prior
 // 12 months…
@@ -11,9 +11,14 @@ const DEAL_TOLERANCE = 0.02;
 // item whose price never moves doesn't "alert" every week at 0% off.
 const MIN_SAVING_PCT = 5;
 // Don't judge a "12-month low" until there are a few weeks of brand-matched
-// prices to compare against (older rows without a brand are ignored — see
-// getPriceHistory). Weekly scans → alerts can start after 4 weeks.
+// prices to compare against (older any-brand rows are never read — see
+// historyKey in db.ts). Weekly scans → alerts can start after 4 weeks.
 const MIN_HISTORY_POINTS = 4;
+
+// Settings the scan can't run without. Checked up front so a misconfigured
+// deployment fails on the first run with a message naming what to set,
+// instead of quietly reporting "no deals" every week.
+const REQUIRED_ENV = ["SERPER_API_KEY", "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"];
 
 export interface ScanResult {
   scanned: number;
@@ -25,6 +30,9 @@ export interface ScanResult {
   confirmed: number;
   deals: ConfirmedDeal[];
   alert: AlertStatus;
+  // Email settings that are missing. Reported on every run, not just when a
+  // deal turns up, so the first manual run shows everything left to set.
+  emailNotConfigured: string[];
 }
 
 function median(xs: number[]): number {
@@ -34,6 +42,11 @@ function median(xs: number[]): number {
 }
 
 export async function runDealScan(): Promise<ScanResult> {
+  const missing = REQUIRED_ENV.filter((k) => !process.env[k]);
+  if (missing.length > 0) {
+    throw new Error(`Not set in this deployment's environment variables: ${missing.join(", ")}`);
+  }
+
   const result: ScanResult = {
     scanned: WATCHED_ITEMS.length,
     priceCheckFailed: 0,
@@ -44,6 +57,7 @@ export async function runDealScan(): Promise<ScanResult> {
     confirmed: 0,
     deals: [],
     alert: { status: "no_deals" },
+    emailNotConfigured: missingEmailConfig(),
   };
 
   const allNewPoints: Parameters<typeof appendPrices>[0] = [];

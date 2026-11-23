@@ -76,3 +76,8 @@ jobs:
               echo "::error::Response has no alert status — is the deployed app on the latest version?"
               exit 1 ;;
           esac
+          email_missing=$(jq -r '(.emailNotConfigured // []) | join(", ")' response.json)
+          if [ -n "$email_missing" ]; then
+            echo "::error::The scan ran, but alert emails can't be sent until these are set in Vercel env vars: $email_missing"
+            exit 1
+          fi
