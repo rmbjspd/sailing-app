@@ -49,3 +49,8 @@ next-env.d.ts
 .validate-tmp
 .geo-cache/
 /shots/
+
+# private keys — never commit these
+sshkey*
+id_rsa*
+id_ed25519*

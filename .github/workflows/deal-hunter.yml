@@ -48,7 +48,36 @@ jobs:
             echo "::error::HTTP 401 — the CRON_SECRET here does not match the one set in Vercel."
             exit 1
           fi
+          if [ "$code" = "503" ]; then
+            echo "::error::HTTP 503 — CRON_SECRET is not set in Vercel. Add it under Project → Settings → Environment Variables (same value as this repo's secret) and redeploy."
+            exit 1
+          fi
           if [ "$code" != "200" ]; then
             echo "::error::Deal scan returned HTTP $code (see response body above)."
+            exit 1
+          fi
+
+      - name: Check the alert email went out
+        # Deals that never reach your inbox are the failure this catches: the
+        # scan returns 200 either way, so check the alert status it reports.
+        run: |
+          status=$(jq -r '.alert.status // "missing"' response.json)
+          confirmed=$(jq -r '.confirmed // 0' response.json)
+          echo "Confirmed deals: $confirmed · alert status: $status"
+          case "$status" in
+            sent|no_deals) ;;
+            not_configured)
+              echo "::error::$confirmed deal(s) found but no email sent — missing $(jq -r '.alert.missing | join(", ")' response.json) in Vercel env vars."
+              exit 1 ;;
+            failed)
+              echo "::error::$confirmed deal(s) found but the alert email failed: $(jq -r '.alert.error' response.json)"
+              exit 1 ;;
+            *)
+              echo "::error::Response has no alert status — is the deployed app on the latest version?"
+              exit 1 ;;
+          esac
+          email_missing=$(jq -r '(.emailNotConfigured // []) | join(", ")' response.json)
+          if [ -n "$email_missing" ]; then
+            echo "::error::The scan ran, but alert emails can't be sent until these are set in Vercel env vars: $email_missing"
             exit 1
           fi
